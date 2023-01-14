@@ -4,13 +4,16 @@ export type CardinalDirection = 'N' | 'S' | 'E' | 'W';
 
 export type Direction = CardinalDirection | 'NE' | 'NW' | 'SE' | 'SW';
 
-const DEFAULT_RADIUS = 0.3;
+const DEFAULT_RADIUS = 0.35;
+
+export type PieceType = 'King' | 'Queen' | 'Bishop' | 'Knight' | 'Rook' | 'Pawn';
 
 export class Piece {
   public history: Position[] = [];
 
   constructor(
     public black: boolean,
+    public type: PieceType,
     public position: Position,
     public radius: number = DEFAULT_RADIUS,
   ) {}

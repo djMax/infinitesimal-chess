@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Image, View } from 'react-native';
+import { observer } from '@legendapp/state/react';
+import { Image, ImageStyle, View } from 'react-native';
+import { GameState } from '../state';
+import { Piece, PieceType } from '../models/Piece';
 
 const GRID = Array(8).fill(0);
 
@@ -7,7 +10,35 @@ function background(x: number, y: number) {
   return (x + y) % 2 === 0 ? '#FFDEAD' : '#DFB787';
 }
 
-export function Board({ size, top, left }: { size: number, top: number, left: number }) {
+const BlackPieces: Record<PieceType, any> = {
+  Pawn: require('../../assets/bp.png'),
+  Bishop: require('../../assets/bb.png'),
+  King: require('../../assets/bk.png'),
+  Knight: require('../../assets/bn.png'),
+  Queen: require('../../assets/bq.png'),
+  Rook: require('../../assets/br.png'),
+};
+
+const WhitePieces: Record<PieceType, any> = {
+  Pawn: require('../../assets/wp.png'),
+  Bishop: require('../../assets/wb.png'),
+  King: require('../../assets/wk.png'),
+  Knight: require('../../assets/wn.png'),
+  Queen: require('../../assets/wq.png'),
+  Rook: require('../../assets/wr.png'),
+}
+
+function getStyle(piece: Piece, size: number): ImageStyle {
+  return {
+    position: 'absolute',
+    width: size * piece.radius * 2,
+    height: size * piece.radius * 2,
+    left: size * piece.position.x - size * piece.radius,
+    top: size * 8 - size * piece.position.y - size * piece.radius,
+  };
+}
+
+export const Board = observer(({ size, top, left }: { size: number, top: number, left: number }) => {
   return (
     <View style={{ borderWidth: 2, position: 'absolute', top, left }}>
       {GRID.map((_, y) => (
@@ -24,13 +55,13 @@ export function Board({ size, top, left }: { size: number, top: number, left: nu
           ))}
         </View>
       ))}
-      <Image source={require('../../assets/bq.png')} style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: size * 0.8,
-        height: size * 0.8,
-      }} />
+      {GameState.board.black.map((piece, i) => (
+        <Image source={BlackPieces[piece.type.get()]} key={i} style={getStyle(piece.get(), size)} />
+      ))}
+      {GameState.board.white.map((piece, i) => (
+        <Image source={WhitePieces[piece.type.get()]} key={i} style={getStyle(piece.get(), size)} />
+      ))}
     </View>
   );
-}
+});
+
