@@ -32,4 +32,8 @@ export class Piece {
   getMaximumMove(direction: Direction): Position {
     return this.position;
   }
+
+  toString() {
+    return `${this.black ? 'Black' : 'White'} ${this.type} ${this.position.toString()}`;
+  }
 }

@@ -3,6 +3,8 @@ import { makeStyles } from "@rneui/themed";
 import { Button, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Board } from "../components/Board";
+import { Position } from "../models/Position";
+import { getOverlappingPiece } from "../models/topology";
 import { GameState } from "../state";
 
 export const GameScreen = observer(() => {
@@ -16,7 +18,10 @@ export const GameScreen = observer(() => {
     <SafeAreaView style={styles.container}>
       <Board size={size} top={top} left={left} />
       <Button title="HELLO" onPress={() => {
+        const p = GameState.board.white[0].position.get();
         GameState.board.white[0].position.y.set(4.5);
+        const o = getOverlappingPiece(GameState.board.white[0].get(), new Position(p.x, 0), GameState.board.black.get());
+        console.log(o?.toString());
       }}/>
     </SafeAreaView>
   );
