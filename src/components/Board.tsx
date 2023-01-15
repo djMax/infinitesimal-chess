@@ -3,6 +3,8 @@ import { observer } from '@legendapp/state/react';
 import { Image, ImageStyle, View } from 'react-native';
 import { GameState } from '../state';
 import { Piece, PieceType } from '../models/Piece';
+import { Status } from './Status';
+import { useTheme } from '@rneui/themed';
 
 const GRID = Array(8).fill(0);
 
@@ -39,8 +41,17 @@ function getStyle(piece: Piece, size: number): ImageStyle {
 }
 
 export const Board = observer(({ size, top, left }: { size: number, top: number, left: number }) => {
+  const { theme } = useTheme();
+
   return (
-    <View style={{ borderWidth: 2, position: 'absolute', top, left }}>
+    <>
+    <View style={{ position: 'absolute', top: top - 80 }}>
+      <Status black={false} />
+    </View>
+    <View style={{ position: 'absolute', top: top + size * 8 + 60 }}>
+      <Status black={true} />
+    </View>
+    <View style={{ borderWidth: 2, borderColor: theme.colors.black, position: 'absolute', top, left }}>
       {GRID.map((_, y) => (
         <View key={y} style={{ height: size, flexDirection: 'row' }}>
           {GRID.map((_, x) => (
@@ -62,6 +73,7 @@ export const Board = observer(({ size, top, left }: { size: number, top: number,
         <Image source={WhitePieces[piece.type.get()]} key={i} style={getStyle(piece.get(), size)} />
       ))}
     </View>
+    </>
   );
 });
 
