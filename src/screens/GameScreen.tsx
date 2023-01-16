@@ -11,7 +11,7 @@ export const GameScreen = observer(() => {
   const styles = useStyles();
   const w = useWindowDimensions();
   const size = Math.floor((Math.min(w.width, w.height) - 10) / 8);
-  const top = Math.floor((w.height - 4 - size * 8) / 2);
+  const top = Math.floor((w.height - 4 - size * 8) / 2) - 60;
   const left = Math.floor((w.width - 4 - size * 8) / 2);
 
   return (

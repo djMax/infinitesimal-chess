@@ -2,8 +2,9 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createTheme, lightColors, darkColors, ThemeProvider, useThemeMode, useTheme } from '@rneui/themed';
-import { Platform, useColorScheme, View } from 'react-native';
+import { Platform, Pressable, useColorScheme, View } from 'react-native';
 import { GameScreen } from './src/screens/GameScreen';
+import { SettingsButton } from './src/components/SettingsButton';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,7 +41,13 @@ const App = () => {
       <ColorScheme>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Game" component={GameScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Game" component={GameScreen} options={{
+              headerTitle: '',
+              headerShadowVisible: false,
+              headerRight() {
+                return <SettingsButton />
+              },
+            }} />
           </Stack.Navigator>
         </NavigationContainer>
       </ColorScheme>
