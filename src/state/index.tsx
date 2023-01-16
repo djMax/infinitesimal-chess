@@ -18,10 +18,11 @@ export const GameState = observable({
   whiteToMove: true,
 });
 
-export const Settings = observable({
+export const GameSettings = observable({
   boardSettings: {
     background: 'default',
+    halo: true,
   },
 });
 
-persistObservable(Settings, { local: 'settings' });
+persistObservable(GameSettings, { local: 'settings' });

@@ -1,12 +1,7 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createTheme, lightColors, darkColors, ThemeProvider, useThemeMode, useTheme } from '@rneui/themed';
-import { Platform, Pressable, useColorScheme, View } from 'react-native';
-import { GameScreen } from './src/screens/GameScreen';
-import { SettingsButton } from './src/components/SettingsButton';
-
-const Stack = createNativeStackNavigator();
+import { Platform, useColorScheme } from 'react-native';
+import { Navigation } from './screens/Nav';
 
 const theme = createTheme({
   lightColors: {
@@ -39,17 +34,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <ColorScheme>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Game" component={GameScreen} options={{
-              headerTitle: '',
-              headerShadowVisible: false,
-              headerRight() {
-                return <SettingsButton />
-              },
-            }} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <Navigation />
       </ColorScheme>
     </ThemeProvider>
   );

@@ -1,11 +1,11 @@
 import { observer } from "@legendapp/state/react";
-import { makeStyles } from "@rneui/themed";
 import { Button, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Board } from "../components/Board";
 import { Position } from "../models/Position";
 import { getOverlappingPiece } from "../models/topology";
 import { GameState } from "../state";
+import { useStyles } from "../styles";
 
 export const GameScreen = observer(() => {
   const styles = useStyles();
@@ -15,7 +15,7 @@ export const GameScreen = observer(() => {
   const left = Math.floor((w.width - 4 - size * 8) / 2);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.boardContainer}>
       <Board size={size} top={top} left={left} />
       <Button title="HELLO" onPress={() => {
         const p = GameState.board.white[0].position.get();
@@ -26,12 +26,3 @@ export const GameScreen = observer(() => {
     </SafeAreaView>
   );
 });
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-}));
