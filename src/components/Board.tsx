@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { observer } from '@legendapp/state/react';
 import { Image, ImageStyle, View } from 'react-native';
-import { GameState } from '../state';
+import { GameSettings, GameState } from '../state';
 import { Piece, PieceType } from '../models/Piece';
 import { Status } from './Status';
 import { useTheme } from '@rneui/themed';
+import { useStyles } from '../styles';
 
 const GRID = Array(8).fill(0);
 
@@ -31,7 +32,12 @@ const WhitePieces: Record<PieceType, any> = {
 }
 
 function getStyle(piece: Piece, size: number): ImageStyle {
+  const baseStyle = GameSettings.boardSettings.halo.get() ? {
+    borderRadius: size * piece.radius,
+    backgroundColor: piece.black ? '#FFFFFFB0' : '#00000050',
+  } : {};
   return {
+    ...baseStyle,
     position: 'absolute',
     width: size * piece.radius * 2,
     height: size * piece.radius * 2,
@@ -42,6 +48,8 @@ function getStyle(piece: Piece, size: number): ImageStyle {
 
 export const Board = observer(({ size, top, left }: { size: number, top: number, left: number }) => {
   const { theme } = useTheme();
+  const styles = useStyles();
+  const useBg = GameSettings.boardSettings.background.get() === 'default';
 
   return (
     <>
@@ -60,14 +68,14 @@ export const Board = observer(({ size, top, left }: { size: number, top: number,
             style={{
               width: size,
               height: size,
-              backgroundColor: background(x, y),
+              backgroundColor: useBg ? background(x, y) : undefined,
             }}
           />
           ))}
         </View>
       ))}
       {GameState.board.black.map((piece, i) => (
-        <Image source={BlackPieces[piece.type.get()]} key={i} style={getStyle(piece.get(), size)} />
+        <Image source={BlackPieces[piece.type.get()]} key={i} style={[getStyle(piece.get(), size)]} />
       ))}
       {GameState.board.white.map((piece, i) => (
         <Image source={WhitePieces[piece.type.get()]} key={i} style={getStyle(piece.get(), size)} />
