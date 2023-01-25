@@ -17,7 +17,7 @@ export const GameScreen = observer(() => {
   return (
     <SafeAreaView style={styles.boardContainer}>
       <Board size={size} top={top} left={left} />
-      <Button title="HELLO" onPress={() => {
+      <Button title="FOOBAR" onPress={() => {
         const p = GameState.board.white[0].position.get();
         GameState.board.white[0].position.y.set(4.5);
         const o = getOverlappingPiece(GameState.board.white[0].get(), new Position(p.x, 0), GameState.board.black.get());

@@ -2,15 +2,11 @@ import { Direction, Piece } from "../Piece";
 import { Position } from "../Position";
 
 export class Queen extends Piece {
-  constructor(black: boolean, position: Position) {
-    super(black, 'Queen', position);
+  constructor(black: boolean, position: Position, radius?: number) {
+    super(black, 'Queen', position, radius);
   }
 
   availableDirections(): Direction[] {
-    return [this.black ? 'S' : 'N'];
-  }
-
-  getMaximumMove(direction: Direction): Position {
-    return this.position;
+    return ['N', 'S', 'E', 'W', 'NE', 'SE', 'NW', 'SW'];
   }
 }

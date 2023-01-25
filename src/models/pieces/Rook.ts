@@ -7,10 +7,6 @@ export class Rook extends Piece {
   }
 
   availableDirections(): Direction[] {
-    return [this.black ? 'S' : 'N'];
-  }
-
-  getMaximumMove(direction: Direction): Position {
-    return this.position;
+    return ['E', 'W', 'N', 'S'];
   }
 }

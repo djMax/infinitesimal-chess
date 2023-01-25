@@ -7,7 +7,7 @@ export class King extends Piece {
   }
 
   availableDirections(): Direction[] {
-    return [this.black ? 'S' : 'N'];
+    return []
   }
 
   getMaximumMove(direction: Direction): Position {

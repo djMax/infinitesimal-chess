@@ -7,7 +7,7 @@ export class Bishop extends Piece {
   }
 
   availableDirections(): Direction[] {
-    return [this.black ? 'S' : 'N'];
+    return ['NE', 'NW', 'SE', 'SW'];
   }
 
   getMaximumMove(direction: Direction): Position {
