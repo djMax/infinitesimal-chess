@@ -24,8 +24,8 @@ function getStartAndEndOfOverlap(start: Piece, end: Position, target: Piece) {
   const intersection = l.intersection(enlargedPiece); 
   console.log(intersection.getCoordinate);
   
-
 }
+
 
 function getMinMax(intersection: jsts.geom.Geometry): [Position, Position] {
   const coordinates = intersection.getCoordinates();

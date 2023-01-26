@@ -12,6 +12,7 @@ const persistLocal = Platform.select<ObservablePersistenceConfig['persistLocal']
 // Global configuration
 configureObservablePersistence({ persistLocal });
 
+
 export const GameState = observable({
   board: defaultBoard(),
   proposed: {
@@ -21,6 +22,7 @@ export const GameState = observable({
   },
   dead: [] as Piece[],
   whiteToMove: true,
+  size: 8,
 });
 
 export const GameSettings = observable({
