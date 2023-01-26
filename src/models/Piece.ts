@@ -13,13 +13,16 @@ export type PieceType = 'King' | 'Queen' | 'Bishop' | 'Knight' | 'Rook' | 'Pawn'
 
 export class Piece {
   public history: Position[] = [];
+  public id: string;
 
   constructor(
     public black: boolean,
     public type: PieceType,
     public position: Position,
     public radius: number = DEFAULT_RADIUS,
-  ) { }
+  ) {
+    this.id = `${this.black ? 'B' : 'W'}${this.type}${this.position.x - radius}}`
+  }
 
   /**
    * Get the available directions this piece can move in.
@@ -67,7 +70,7 @@ export class Piece {
         if (southMoveLimit > westMoveLimit) {
           return new Position(this.position.x - westMoveLimit, this.position.y - westMoveLimit);
         }
-        return new Position(this.position.x - southMoveLimit, this.position.y - southMoveLimit);        
+        return new Position(this.position.x - southMoveLimit, this.position.y - southMoveLimit);
     }
   }
 
@@ -77,7 +80,7 @@ export class Piece {
     const whiteOverlapping = getOverlappingPiece(this, trajectory, state.board.black.get());
     if (this.black) {
       if (blackOverlapping == undefined) {
-        // (whiteOverlapping == undefined) ? trajectory : 
+        // (whiteOverlapping == undefined) ? trajectory :
       }
     }
   }
