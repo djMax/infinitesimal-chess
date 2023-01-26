@@ -52,7 +52,7 @@ persistObservable(GameSettings, { local: 'settings' });
 
 function findTakenPiece(piece: Piece) {
   const candidates = piece.black ? GameState.board.white : GameState.board.black;
-  return candidates.find((p) => p.position.squareDistance(piece.position) < (p.radius + piece.radius) ** 2);
+  return candidates.filter((p) => p.position.get().squareDistance(piece.position) < (p.radius.get() + piece.radius) ** 2);
 }
 
 // Commit the proposed move and update state
@@ -65,15 +65,17 @@ export function completeMove() {
   GameState.proposed.piece.assign({ position: newPos, history: [...proposed.history, newPos] });
   GameState.proposed.assign({ piece: undefined, direction: undefined, threatened: undefined, distance: 1 });
 
-  const taken = findTakenPiece(proposed);
-  if (taken) {
-    const target = GameState.board[proposed.black ? 'white' : 'black'];
-    const piece = target.find((p) => p.id === taken.id)!;
-    GameState.dead.push(piece);
-    target.splice(target.indexOf(piece), 1);
-    if (taken.type === 'King') {
-      GameState.gameOver.set(true);
-    }
+  const takes = findTakenPiece(proposed);
+  if (takes?.length) {
+    takes.forEach((taken) => {
+      const target = GameState.board[proposed.black ? 'white' : 'black'];
+      const piece = target.find((p) => p.id === taken.id)!;
+      GameState.dead.push(piece);
+      target.splice(target.indexOf(piece), 1);
+      if (taken.type === 'King') {
+        GameState.gameOver.set(true);
+      }
+    });
   }
 
   GameState.whiteToMove.set(!GameState.whiteToMove.get());
