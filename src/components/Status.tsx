@@ -3,8 +3,11 @@ import { observer } from "@legendapp/state/react";
 import { Button, Icon, Slider, Text } from "@rneui/themed";
 import { ImageStyle, Pressable, View, ViewStyle } from "react-native";
 import { Direction } from "../models/Piece";
-import { GameState } from "../state";
+import { completeMove, GameState, resetGame } from "../state";
 import { PieceImage } from "./PieceImage";
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../screens/RootStackParamList';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const DIR_SIZE = { width: 50, height: 50 };
 
@@ -46,6 +49,7 @@ function Arrow({ direction, available, onPress }: { direction: Direction, availa
 };
 
 export const Status = observer(() => {
+  const nav = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const whiteToMove = GameState.whiteToMove.get();
   const proposed = GameState.proposed.get();
   const directions = proposed.piece?.availableDirections(GameState) || [];
@@ -53,6 +57,20 @@ export const Status = observer(() => {
   const onPress = React.useCallback((direction: Direction) => {
     GameState.proposed.direction.set(direction);
   }, []);
+
+  if (GameState.gameOver.get()) {
+    const king = GameState.dead.find((p) => p.type === 'King');
+    return (
+      <View style={{ width: '100%', alignItems: 'center', flex: 1, alignContent: 'space-between' }}>
+        <Text h1>Game Over</Text>
+        <Text>{king?.black ? 'White' : 'Black'} Wins!</Text>
+
+        <View style={{ width: '100%' }}>
+          <Button title="New Game" style={{ marginTop: 25, width: '100%' }} onPress={resetGame} />
+        </View>
+      </View>
+    );
+  }
 
   if (proposed.piece) {
     return (
@@ -81,14 +99,7 @@ export const Status = observer(() => {
               <Button
                 title="Complete Move"
                 style={{ marginTop: 15 }}
-                onPress={() => {
-                  const newPos = proposed.piece!.getScaledMove(GameState, proposed.direction!, proposed.distance);
-                  GameState.proposed.piece.assign({ position: newPos });
-                  GameState.proposed.piece.set(undefined);
-                  GameState.proposed.direction.set(undefined);
-                  GameState.proposed.distance.set(1);
-                  GameState.whiteToMove.set(!GameState.whiteToMove.get());
-                }}
+                onPress={completeMove}
               />
             ): undefined}
           </View>

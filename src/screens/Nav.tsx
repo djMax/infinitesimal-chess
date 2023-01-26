@@ -4,19 +4,19 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GameScreen } from './GameScreen';
 import { SettingsButton } from '../components/SettingsButton';
 import { SettingsScreen } from './SettingsScreen';
-
-export type RootStackParamList = {
-  Game: undefined;
-  Settings: undefined;
-};
+import { IntroScreen } from './IntroScreen';
+import { RootStackParamList } from './RootStackParamList';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const Navigation = () => (
   <NavigationContainer>
     <Stack.Navigator>
+      <Stack.Screen name="Intro" component={IntroScreen} />
       <Stack.Screen name="Game" component={GameScreen} options={{
         headerTitle: '',
+        headerBackTitleVisible: false,
+        headerBackVisible: false,
         headerShadowVisible: false,
         headerRight() {
           return <SettingsButton />

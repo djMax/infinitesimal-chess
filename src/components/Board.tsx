@@ -76,7 +76,7 @@ export const Board = observer(({ size, top, left }: { size: number, top: number,
     GameState.proposed.piece.set(piece);
   }, []);
 
-  const selectedPiece = GameState.proposed.piece?.id.get();
+  const selectedPiece = GameState.proposed.piece.get()?.id || '';
 
   return (
     <>

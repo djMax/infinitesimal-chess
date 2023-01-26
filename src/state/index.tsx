@@ -21,6 +21,7 @@ export const GameState = observable({
   },
   dead: [] as Piece[],
   whiteToMove: true,
+  gameOver: false,
   size: 8,
 });
 
@@ -31,6 +32,44 @@ export const GameSettings = observable({
   },
 });
 
+export function resetGame() {
+  GameState.assign({
+    board: defaultBoard(),
+    dead: [],
+    whiteToMove: true,
+    gameOver: false,
+  });
+}
+
 export type GameState = typeof GameState;
 
 persistObservable(GameSettings, { local: 'settings' });
+
+function findTakenPiece(piece: Piece) {
+  const candidates = piece.black ? GameState.board.white : GameState.board.black;
+  return candidates.find((p) => p.position.squareDistance(piece.position) < (p.radius + piece.radius) ** 2);
+}
+
+// Commit the proposed move and update state
+export function completeMove() {
+  const proposed = GameState.proposed.piece.get()!;
+  const dir = GameState.proposed.direction.get()!;
+  const dist = GameState.proposed.distance.get();
+
+  const newPos = proposed.getScaledMove(GameState, dir, dist);
+  GameState.proposed.piece.assign({ position: newPos });
+  GameState.proposed.assign({ piece: undefined, direction: undefined, distance: 1 });
+
+  const taken = findTakenPiece(proposed);
+  if (taken) {
+    const target = GameState.board[proposed.black ? 'white' : 'black'];
+    const piece = target.find((p) => p.id === taken.id)!;
+    GameState.dead.push(piece);
+    target.splice(target.indexOf(piece), 1);
+    if (taken.type === 'King') {
+      GameState.gameOver.set(true);
+    }
+  }
+
+  GameState.whiteToMove.set(!GameState.whiteToMove.get());
+}
