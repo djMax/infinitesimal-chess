@@ -17,6 +17,7 @@ export const GameState = observable({
   proposed: {
     piece: undefined as (Piece | undefined),
     direction: undefined as (Direction | undefined),
+    threatened: undefined as (Piece | undefined),
     distance: 1,
   },
   dead: [] as Piece[],
@@ -24,6 +25,10 @@ export const GameState = observable({
   gameOver: false,
   size: 8,
 });
+
+export function getAllPieces() {
+  return [...GameState.board.white, ...GameState.board.black];
+}
 
 export const GameSettings = observable({
   boardSettings: {
@@ -57,8 +62,8 @@ export function completeMove() {
   const dist = GameState.proposed.distance.get();
 
   const newPos = proposed.getScaledMove(GameState, dir, dist);
-  GameState.proposed.piece.assign({ position: newPos });
-  GameState.proposed.assign({ piece: undefined, direction: undefined, distance: 1 });
+  GameState.proposed.piece.assign({ position: newPos, history: [...proposed.history, newPos] });
+  GameState.proposed.assign({ piece: undefined, direction: undefined, threatened: undefined, distance: 1 });
 
   const taken = findTakenPiece(proposed);
   if (taken) {

@@ -12,39 +12,26 @@ interface OverlappingPiece {
   piece: Piece;
 }
 
-function getStartAndEndOfOverlap(start: Piece, end: Position, target: Piece) {
-  const enlargedPiece = geo
-    .createPoint(new Coordinate(target.position.x, target.position.y))
-    .buffer(target.radius + start.radius, 64, buffer.BufferParameters.CAP_ROUND);
-  const sCoord = new Coordinate(start.position.x, start.position.y);
-  const eCoord = new Coordinate(end.x, end.y);
-  const l = geo.createLineString([sCoord, eCoord]);
-  
+function getStartAndEndOfOverlap(attacker: Piece, line: jsts.geom.LineString, target: Piece) {
+  const shapes = new (jsts as any).util.GeometricShapeFactory();
+  shapes.setNumPoints(64);
+  shapes.setCentre(new Coordinate(target.position.x, target.position.y));
+  shapes.setSize((target.radius + attacker.radius) * 2);
+  const enlargedPiece = shapes.createCircle();
   // Find out where l and enlargedPiece intersect
-  const intersection = l.intersection(enlargedPiece); 
-  console.log(intersection.getCoordinate);
-  
-}
+  const intersection = line.intersection(enlargedPiece);
+  if (intersection.getNumPoints() < 2) {
+    return undefined;
+  }
 
-
-function getMinMax(intersection: jsts.geom.Geometry): [Position, Position] {
-  const coordinates = intersection.getCoordinates();
-  const minMax = coordinates.reduce((acc, coord) => {
-    if (coord.x < acc.min.x) {
-      acc.min.x = coord.x;
-    }
-    if (coord.x > acc.max.x) {
-      acc.max.x = coord.x;
-    }
-    if (coord.y < acc.min.y) {
-      acc.min.y = coord.y;
-    }
-    if (coord.y > acc.max.y) {
-      acc.max.y = coord.y;
-    }
-    return acc;
-  }, { min: { x: Infinity, y: Infinity }, max: { x: -Infinity, y: -Infinity } });
-  return [new Position(minMax.min.x, minMax.min.y), new Position(minMax.max.x, minMax.max.y)];
+  const mapped = intersection
+    .getCoordinates()
+    .map((c) => ({
+      at: new Position(c.x, c.y),
+      dist: attacker.position.squareDistance(new Position(c.x, c.y)),
+    }))
+    .sort((a, b) => a.dist - b.dist);
+  return { start: mapped[0].at, end: mapped[1].at };
 }
 
 /**
@@ -61,25 +48,16 @@ export function getOverlappingPiece(p: Piece, end: Position, pieces: Piece[]): O
     .sort((a, b) => p.position.squareDistance(a.position) - p.position.squareDistance(b.position));
   const sCoord = new Coordinate(p.position.x, p.position.y);
   const eCoord = new Coordinate(end.x, end.y);
-  const l = geo.createLineString([sCoord, eCoord]);
-  const poly = l.buffer(p.radius, 64, buffer.BufferParameters.CAP_ROUND);
-
-  let intersection: [Position, Position] | undefined;
-  const firstPiece = sortedOthers.find((p) => {
-    const pBuffer = geo
-      .createPoint(new Coordinate(p.position.x, p.position.y))
-      .buffer(p.radius, 64, buffer.BufferParameters.CAP_ROUND);
-    if (pBuffer.intersects(poly)) {
-      intersection = getMinMax(pBuffer.intersection(poly));
-      return true;
+  const l = geo.createLineString([sCoord, eCoord]);    
+  
+  for (let i = 0; i < sortedOthers.length; i++) {
+    const other = sortedOthers[i];
+    const intersection = getStartAndEndOfOverlap(p, l, other);
+    if (intersection) {      
+      return { piece: other, min: intersection.start, max: intersection.end };
     }
-    return false;
-  });
-
-  if (intersection) {
-    console.log('ENVELOPE', intersection);
-    return { piece: firstPiece!, min: intersection[0], max: intersection[1] };
   }
+
   return undefined;
 }
 

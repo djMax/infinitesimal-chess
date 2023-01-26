@@ -45,7 +45,7 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
   if (proposed === piece) {
     Object.assign(imgStyle, {
       borderRadius: size * piece.radius,
-      backgroundColor: piece.black ? '#FF0000B0' : '#FF000050',
+      backgroundColor: piece.black ? '#00FF00B0' : '#00FF000050',
     });
 
     if (direction) {
@@ -53,6 +53,14 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
       viewStyle.left = size * position.x - size * piece.radius;
       viewStyle.top = size * boardSize - size * position.y - size * piece.radius;
       console.log(position.toString());
+    }
+  } else if (direction && proposed && proposed.black !== piece.black) {
+    const curCenter = proposed.getScaledMove(GameState, direction, amount);
+    if (curCenter.squareDistance(piece.position) < (piece.radius + proposed.radius) ** 2) {
+      Object.assign(imgStyle, {
+        borderRadius: size * piece.radius,
+        backgroundColor: piece.black ? '#FF0000B0' : '#FF00000050',
+      });  
     }
   }
 

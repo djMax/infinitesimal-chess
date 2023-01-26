@@ -1,5 +1,5 @@
 import { Position } from "./Position";
-import { GameState } from "../state/index"
+import { GameState, getAllPieces } from "../state/index"
 import { getOverlappingPiece } from "./topology";
 
 
@@ -29,6 +29,18 @@ export class Piece {
    */
   availableDirections(state: GameState): Direction[] {
     return [];
+  }
+
+  getMaximumMoveWithCollision(state: GameState, direction: Direction): Position {
+    const end = this.getMaximumMove(state, direction);
+    const overlap = getOverlappingPiece(this, end, getAllPieces());
+    if (overlap == undefined) {
+      return end;
+    }
+    if (overlap.piece.black == this.black) {
+      return overlap.min;
+    }
+    return overlap.max;
   }
 
   /**
@@ -76,7 +88,7 @@ export class Piece {
   }
 
   getScaledMove(state: GameState, direction: Direction, scale: number): Position {
-    const maxMove = this.getMaximumMove(state, direction);
+    const maxMove = this.getMaximumMoveWithCollision(state, direction);
     return Position.interpolate(this.position, maxMove, scale);
   }
 
