@@ -1,3 +1,4 @@
+import { GameState } from "../../state";
 import { Direction, Piece } from "../Piece";
 import { Position } from "../Position";
 
@@ -6,11 +7,11 @@ export class Bishop extends Piece {
     super(black, 'Bishop', position);
   }
 
-  availableDirections(): Direction[] {
-    return ['NE', 'NW', 'SE', 'SW'];
+  availableDirections(state: GameState): Direction[] {
+    return this.filterForBounds(['NE', 'NW', 'SE', 'SW'], state.size.get());
   }
 
-  getMaximumMove(direction: Direction): Position {
+  getMaximumMove(state: GameState, direction: Direction): Position {
     return this.position;
   }
 }

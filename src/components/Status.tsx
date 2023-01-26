@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from "@legendapp/state/react";
-import { Icon, Slider, Text } from "@rneui/themed";
+import { Button, Icon, Slider, Text } from "@rneui/themed";
 import { ImageStyle, Pressable, View, ViewStyle } from "react-native";
 import { Direction } from "../models/Piece";
 import { GameState } from "../state";
@@ -48,7 +48,7 @@ function Arrow({ direction, available, onPress }: { direction: Direction, availa
 export const Status = observer(() => {
   const whiteToMove = GameState.whiteToMove.get();
   const proposed = GameState.proposed.get();
-  const directions = proposed.piece?.availableDirections() || [];
+  const directions = proposed.piece?.availableDirections(GameState) || [];
 
   const onPress = React.useCallback((direction: Direction) => {
     GameState.proposed.direction.set(direction);
@@ -75,16 +75,30 @@ export const Status = observer(() => {
           </View>
         </View>
         {proposed.direction && (
-        <View>
-          <Slider maximumValue={1} minimumValue={0} value={proposed.distance} onValueChange={GameState.proposed.distance.set} />
-        </View>
+          <View>
+            <Slider maximumValue={1} minimumValue={0} value={proposed.distance} onValueChange={GameState.proposed.distance.set} />
+            {proposed.distance ? (
+              <Button
+                title="Complete Move"
+                style={{ marginTop: 15 }}
+                onPress={() => {
+                  const newPos = proposed.piece!.getScaledMove(GameState, proposed.direction!, proposed.distance);
+                  GameState.proposed.piece.assign({ position: newPos });
+                  GameState.proposed.piece.set(undefined);
+                  GameState.proposed.direction.set(undefined);
+                  GameState.proposed.distance.set(1);
+                  GameState.whiteToMove.set(!GameState.whiteToMove.get());
+                }}
+              />
+            ): undefined}
+          </View>
         )}
       </>
     )
   }
 
   return (
-    <View>
+    <View style={{ alignItems: 'center' }}>
       <Text h4>{whiteToMove ? 'White to move' : 'Black to move'}</Text>
     </View>
   )

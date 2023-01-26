@@ -27,15 +27,16 @@ export class Piece {
   /**
    * Get the available directions this piece can move in.
    */
-  availableDirections(): Direction[] {
+  availableDirections(state: GameState): Direction[] {
     return [];
   }
 
   /**
-   * Get the furthest point to which this piece can move in a given direction.
+   * Get the point to which this piece can move in a given direction.
    * @param direction The direction to move.
    */
-  getMaximumMove(direction: Direction, boardSize: number): Position {
+  getMaximumMove(state: GameState, direction: Direction): Position {
+    const boardSize = state.size.get();
     const southMoveLimit = this.position.y - this.radius;
     const northMoveLimit = boardSize - this.radius - this.position.y;
     const eastMoveLimit = boardSize - this.radius - this.position.x;
@@ -74,6 +75,12 @@ export class Piece {
     }
   }
 
+  getScaledMove(state: GameState, direction: Direction, scale: number): Position {
+    const maxMove = this.getMaximumMove(state, direction);
+    return Position.interpolate(this.position, maxMove, scale);
+  }
+
+  /*
   limitToCollision(direction: Direction, state: typeof GameState): Piece {
     const trajectory = this.getMaximumMove(direction, state.size.get());
     const blackOverlapping = getOverlappingPiece(this, trajectory, state.board.black.get());
@@ -84,8 +91,26 @@ export class Piece {
       }
     }
   }
+  */
 
   toString() {
     return `${this.black ? 'Black' : 'White'} ${this.type} ${this.position.toString()}`;
+  }
+
+  filterForBounds(directions: Direction[], size: number) {
+    return directions.filter((direction) => {
+      return direction.split('').every((cardinal) => {
+        switch (cardinal) {
+          case 'E':
+            return this.position.x < size - this.radius;
+          case 'W':
+            return this.position.x > this.radius;
+          case 'N':
+            return this.position.y < size - this.radius;
+          case 'S':
+            return this.position.y > this.radius;
+        }
+      });
+    });
   }
 }

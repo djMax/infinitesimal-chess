@@ -1,3 +1,4 @@
+import { GameState } from "../../state";
 import { Direction, Piece } from "../Piece";
 import { Position } from "../Position";
 
@@ -6,11 +7,7 @@ export class Knight extends Piece {
     super(black, 'Knight', position);
   }
 
-  availableDirections(): Direction[] {
+  availableDirections(state: GameState): Direction[] {
     return [this.black ? 'S' : 'N'];
-  }
-
-  getMaximumMove(direction: Direction): Position {
-    return this.position;
   }
 }

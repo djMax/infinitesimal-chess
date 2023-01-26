@@ -1,3 +1,4 @@
+import { GameState } from "../../state";
 import { Direction, Piece } from "../Piece";
 import { Position } from "../Position";
 
@@ -6,7 +7,7 @@ export class Queen extends Piece {
     super(black, 'Queen', position, radius);
   }
 
-  availableDirections(): Direction[] {
-    return ['N', 'S', 'E', 'W', 'NE', 'SE', 'NW', 'SW'];
+  availableDirections(state: GameState): Direction[] {
+    return this.filterForBounds(['N', 'S', 'E', 'W', 'NE', 'SE', 'NW', 'SW'], state.size.get());
   }
 }

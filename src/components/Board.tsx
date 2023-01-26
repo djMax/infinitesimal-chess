@@ -21,11 +21,12 @@ interface PressablePieceProps {
   selected: boolean;
 }
 
-function PressablePiece({ piece, size, onPress, selected }: PressablePieceProps) {
+const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) => {
+  const boardSize = GameState.size.get();
   const viewStyle: ViewStyle = {
     position: 'absolute',
     left: size * piece.position.x - size * piece.radius,
-    top: size * 8 - size * piece.position.y - size * piece.radius,
+    top: size * boardSize - size * piece.position.y - size * piece.radius,
   };
   const imgStyle = GameSettings.boardSettings.halo.get() ? {
     borderRadius: size * piece.radius,
@@ -37,11 +38,22 @@ function PressablePiece({ piece, size, onPress, selected }: PressablePieceProps)
     height: size * piece.radius * 2,
   };
 
-  if (selected) {
+  const proposed = GameState.proposed.piece.get();
+  const direction = GameState.proposed.direction.get();
+  const amount = GameState.proposed.distance.get();
+
+  if (proposed === piece) {
     Object.assign(imgStyle, {
       borderRadius: size * piece.radius,
       backgroundColor: piece.black ? '#FF0000B0' : '#FF000050',
     });
+
+    if (direction) {
+      const position = piece.getScaledMove(GameState, direction, amount);
+      viewStyle.left = size * position.x - size * piece.radius;
+      viewStyle.top = size * boardSize - size * position.y - size * piece.radius;
+      console.log(position.toString());
+    }
   }
 
   return (
@@ -49,7 +61,7 @@ function PressablePiece({ piece, size, onPress, selected }: PressablePieceProps)
       <PieceImage piece={piece} style={imgStyle} />
     </Pressable>
   );
-}
+});
 
 export const Board = observer(({ size, top, left }: { size: number, top: number, left: number }) => {
   const { theme } = useTheme();
@@ -68,7 +80,7 @@ export const Board = observer(({ size, top, left }: { size: number, top: number,
 
   return (
     <>
-    <View style={{ position: 'absolute', top: top + size * 8 + 30, width: '90%' }}>
+    <View style={{ position: 'absolute', top: top + size * GameState.size.get() + 30, width: '90%' }}>
       <Status />
     </View>
     <View style={{ borderWidth: 2, borderColor: theme.colors.black, position: 'absolute', top, left }}>

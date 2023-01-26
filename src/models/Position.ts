@@ -28,7 +28,7 @@ export class Position {
     if (start.y === end.y) {
       return new Position(start.x + Math.min(len, width) * sign(end.x - start.x), end.y);
     }
-    
+
     const exLen = height * height + width * width ;
     if (exLen <= len * len) {
       return end;
@@ -40,6 +40,10 @@ export class Position {
     return new Position(newX, newY);
   }
 
-  
+  static interpolate(start: Position, end: Position, percentage: number) {
+    const newX = Math.floor((start.x + (end.x - start.x) * percentage) * 100) / 100;
+    const newY = Math.floor((start.y + (end.y - start.y) * percentage) * 100) / 100;
+    return new Position(newX, newY);
+  }
 }
 

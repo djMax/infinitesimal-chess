@@ -1,3 +1,4 @@
+import { GameState } from "../../state";
 import { Direction, Piece } from "../Piece";
 import { Position } from "../Position";
 
@@ -8,19 +9,22 @@ export class Pawn extends Piece {
     super(black, 'Pawn', position, radius);
   }
 
-  availableDirections(): Direction[] {
-    return this.black ? ['S', 'SW', 'SE'] : ['N', 'NW', 'NE'];
+  availableDirections(state: GameState): Direction[] {
+    return this.filterForBounds(
+      this.black ? ['S', 'SW', 'SE'] : ['N', 'NW', 'NE'],
+      state.size.get(),
+    );
   }
 
-  getMaximumMove(direction: Direction, boardSize: number): Position {
+  getMaximumMove(state: GameState, direction: Direction): Position {
     if (['S', 'N'].includes(direction)) {
       const isFirst = this.history.length === 0;
-      const proposedEnd = super.getMaximumMove(direction, boardSize);
+      const proposedEnd = super.getMaximumMove(state, direction);
       return Position.maxLength(this.position, proposedEnd, isFirst ? 2 : 1)
     }
 
     // Take move (diagonal) can move max of sqrt(2)
-    const proposedEnd = super.getMaximumMove(direction, boardSize);
+    const proposedEnd = super.getMaximumMove(state, direction);
     return Position.maxLength(this.position, proposedEnd, ROOT2);
   }
 }
