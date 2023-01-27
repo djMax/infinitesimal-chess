@@ -48,16 +48,28 @@ export function getOverlappingPiece(p: Piece, end: Position, pieces: Piece[]): O
     .sort((a, b) => p.position.squareDistance(a.position) - p.position.squareDistance(b.position));
   const sCoord = new Coordinate(p.position.x, p.position.y);
   const eCoord = new Coordinate(end.x, end.y);
-  const l = geo.createLineString([sCoord, eCoord]);    
-  
+  const l = geo.createLineString([sCoord, eCoord]);
+
+  const overlaps: OverlappingPiece[] = [];
   for (let i = 0; i < sortedOthers.length; i++) {
     const other = sortedOthers[i];
     const intersection = getStartAndEndOfOverlap(p, l, other);
-    if (intersection) {      
-      return { piece: other, min: intersection.start, max: intersection.end };
+    if (intersection) {
+      overlaps.push({ piece: other, min: intersection.start, max: intersection.end });
+    }
+    if (overlaps.length === 2) {
+      // If the piece BEHIND the overlapping one is the same color, but the first is not,
+      // we have to make sure the min of the second piece is not before the max of the first
+      if (p.black !== overlaps[0].piece.black && p.black === overlaps[1].piece.black) {
+        return {
+          piece: overlaps[0].piece,
+          min: overlaps[0].min,
+          max: [overlaps[0].max, overlaps[1].min].sort((a, b) => a.squareDistance(p.position) - b.squareDistance(p.position))[0],
+        };
+      }
     }
   }
 
-  return undefined;
+  return overlaps[0];
 }
 

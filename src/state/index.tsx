@@ -37,11 +37,11 @@ export const GameSettings = observable({
   },
 });
 
-export function resetGame() {
+export function resetGame(board = defaultBoard(), whiteToMove: boolean = true) {
   GameState.assign({
-    board: defaultBoard(),
+    board,
     dead: [],
-    whiteToMove: true,
+    whiteToMove,
     gameOver: false,
   });
 }
@@ -62,7 +62,7 @@ export function completeMove() {
   const dist = GameState.proposed.distance.get();
 
   const newPos = proposed.getScaledMove(GameState, dir, dist);
-  GameState.proposed.piece.assign({ position: newPos, history: [...proposed.history, newPos] });
+  GameState.proposed.piece.assign({ position: newPos, history: [...proposed.history, proposed.position] });
   GameState.proposed.assign({ piece: undefined, direction: undefined, threatened: undefined, distance: 1 });
 
   const takes = findTakenPiece(proposed);

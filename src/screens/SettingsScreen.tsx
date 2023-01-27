@@ -1,10 +1,13 @@
 import { observer } from "@legendapp/state/react";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ListItem, Switch, Text } from "@rneui/themed";
 import { View } from "react-native";
-import { GameSettings } from "../state";
+import { pawnDevelopment } from "../models";
+import { GameSettings, resetGame } from "../state";
 import { useStyles } from "../styles";
+import { RootStackParamList } from "./RootStackParamList";
 
-export const SettingsScreen = observer(() => {
+export const SettingsScreen = observer(({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   const styles = useStyles();
 
   return (
@@ -32,6 +35,16 @@ export const SettingsScreen = observer(() => {
             GameSettings.boardSettings.halo.set(v);
           }}
         />
+      </ListItem>
+
+      <Text style={styles.sectionTitle}>Sample Games</Text>
+      <ListItem onPress={() => {
+        resetGame(pawnDevelopment(), false);
+        navigation.goBack();
+      }}>
+        <ListItem.Content>
+          <ListItem.Title>Simple Pawn Development</ListItem.Title>
+        </ListItem.Content>
       </ListItem>
     </View>
   );

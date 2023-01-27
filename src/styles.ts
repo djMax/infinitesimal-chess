@@ -8,13 +8,13 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
   },
   sectionTitle: {
+    marginTop: 20,
     fontWeight: '600',
     paddingBottom: 5,
     paddingLeft: 15,
     fontSize: 18,
   },
   settingsContainer: {
-    marginTop: 20,
     flex: 1,
   },
 }));
