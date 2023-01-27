@@ -108,7 +108,11 @@ export const Status = observer(() => {
               onValueChange={GameState.proposed.distance.set}
             />
             {proposed.distance ? (
-              <Button title="Complete Move" style={{ marginTop: 15 }} onPress={completeMove} />
+              <Button
+                title="Complete Move"
+                style={{ marginTop: 15 }}
+                onPress={() => completeMove(GameState)}
+              />
             ) : undefined}
           </View>
         )}

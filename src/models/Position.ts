@@ -1,6 +1,20 @@
+import type { Direction } from "./Piece";
+
 function sign(v: number) {
   return v > 0 ? 1 : -1;
 }
+
+const ANGLE_MAP: Record<string, Direction> = {
+  '0': 'E',
+  '45': 'NE',
+  '90': 'N',
+  '135': 'NW',
+  '180': 'W',
+  '-180': 'W',
+  '-135': 'SW',
+  '-90': 'S',
+  '-45': 'SE',
+};
 
 export class Position {
   constructor(public x: number, public y: number) {}
@@ -39,5 +53,12 @@ export class Position {
     const newX = Math.floor((start.x + (end.x - start.x) * percentage) * 100) / 100;
     const newY = Math.floor((start.y + (end.y - start.y) * percentage) * 100) / 100;
     return new Position(newX, newY);
+  }
+
+  static getDirection(start: Position, end: Position) {
+    // Find the angle between start and end
+    const angle = (Math.atan2(end.y - start.y, end.x - start.x) * 180) / Math.PI;
+    const rounded = Math.round(angle / 45) * 45;
+    return ANGLE_MAP[rounded];
   }
 }

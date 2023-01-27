@@ -7,6 +7,7 @@ import { Pressable, View, ViewStyle } from 'react-native';
 import { PieceImage } from './PieceImage';
 import { Status } from './Status';
 import { Piece } from '../models/Piece';
+import { Position } from '../models/Position';
 import { GameSettings, GameState } from '../state';
 
 const GRID = Array(8).fill(0);
@@ -74,9 +75,28 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
   );
 });
 
+function getBoardPosition(x: number, y: number, squareSize: number, boardSize: number) {
+  return [x / squareSize, boardSize - y / squareSize];
+}
+
+function handleBoardPress(x: number, y: number) {
+  const p = GameState.proposed.get();
+  if (!p.piece) {
+    return;
+  }
+  const dir = p.piece.availableDirections(GameState);
+  const start = p.piece.position;
+  const end = new Position(x, y);
+  const pressedDir = Position.getDirection(start, end);
+  if (dir.includes(pressedDir)) {
+    GameState.proposed.direction.set(pressedDir);
+  }
+}
+
 export const Board = observer(
   ({ size, top, left }: { size: number; top: number; left: number }) => {
     const { theme } = useTheme();
+    const [offset, setOffset] = React.useState({ x: 0, y: 0 });
     const useBg = GameSettings.boardSettings.background.get() === 'default';
 
     const onPiecePress = React.useCallback((piece: Observable<Piece>) => {
@@ -95,8 +115,27 @@ export const Board = observer(
     const selectedPiece = GameState.proposed.piece.get()?.id || '';
 
     return (
-      <View>
-        <View
+      <View
+        ref={(view) => {
+          if (!view) {
+            return;
+          }
+          view.measureInWindow((x, y) => {
+            setOffset({ x, y });
+          });
+        }}>
+        <Pressable
+          onTouchStart={(event) => {
+            if (selectedPiece) {
+              const [x, y] = getBoardPosition(
+                event.nativeEvent.pageX - offset.x,
+                event.nativeEvent.pageY - offset.y,
+                size,
+                GameState.size.get(),
+              );
+              handleBoardPress(x, y);
+            }
+          }}
           style={{
             borderWidth: 2,
             borderColor: theme.colors.black,
@@ -138,7 +177,7 @@ export const Board = observer(
               />
             )}
           </For>
-        </View>
+        </Pressable>
         <Status />
       </View>
     );
