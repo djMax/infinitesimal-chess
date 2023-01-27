@@ -1,13 +1,11 @@
+import { observer } from '@legendapp/state/react';
+import { Button, Icon, Slider, Text } from '@rneui/themed';
 import * as React from 'react';
-import { observer } from "@legendapp/state/react";
-import { Button, Icon, Slider, Text } from "@rneui/themed";
-import { ImageStyle, Pressable, View, ViewStyle } from "react-native";
-import { Direction } from "../models/Piece";
-import { completeMove, GameState, resetGame } from "../state";
-import { PieceImage } from "./PieceImage";
-import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../screens/RootStackParamList';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Pressable, View, ViewStyle } from 'react-native';
+
+import { PieceImage } from './PieceImage';
+import { Direction } from '../models/Piece';
+import { completeMove, GameState, resetGame } from '../state';
 
 const DIR_SIZE = { width: 50, height: 50 };
 
@@ -22,15 +20,21 @@ const Rotations = {
   SE: 135,
 };
 
-function Arrow({ direction, available, onPress }: { direction: Direction, available: Direction[], onPress: (d: Direction) => void }) {
+function Arrow({
+  direction,
+  available,
+  onPress,
+}: {
+  direction: Direction;
+  available: Direction[];
+  onPress: (d: Direction) => void;
+}) {
   const proposedDir = GameState.proposed.direction.get();
   const isProposed = proposedDir === direction;
   const anyProposed = proposedDir !== undefined;
 
   if (!available.includes(direction)) {
-    return (
-      <View style={DIR_SIZE}></View>
-    );
+    return <View style={DIR_SIZE} />;
   }
 
   const style: ViewStyle = {
@@ -46,10 +50,9 @@ function Arrow({ direction, available, onPress }: { direction: Direction, availa
       <Icon name="arrow-up" type="feather" style={style} size={DIR_SIZE.height} />
     </Pressable>
   );
-};
+}
 
 export const Status = observer(() => {
-  const nav = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const whiteToMove = GameState.whiteToMove.get();
   const proposed = GameState.proposed.get();
   const directions = proposed.piece?.availableDirections(GameState) || [];
@@ -66,7 +69,11 @@ export const Status = observer(() => {
         <Text>{king?.black ? 'White' : 'Black'} Wins!</Text>
 
         <View style={{ width: '100%' }}>
-          <Button title="New Game" style={{ marginTop: 25, width: '100%' }} onPress={resetGame} />
+          <Button
+            title="New Game"
+            style={{ marginTop: 25, width: '100%' }}
+            onPress={() => resetGame()}
+          />
         </View>
       </View>
     );
@@ -94,23 +101,24 @@ export const Status = observer(() => {
         </View>
         {proposed.direction && (
           <View>
-            <Slider maximumValue={1} minimumValue={0} value={proposed.distance} onValueChange={GameState.proposed.distance.set} />
+            <Slider
+              maximumValue={1}
+              minimumValue={0}
+              value={proposed.distance}
+              onValueChange={GameState.proposed.distance.set}
+            />
             {proposed.distance ? (
-              <Button
-                title="Complete Move"
-                style={{ marginTop: 15 }}
-                onPress={completeMove}
-              />
-            ): undefined}
+              <Button title="Complete Move" style={{ marginTop: 15 }} onPress={completeMove} />
+            ) : undefined}
           </View>
         )}
       </>
-    )
+    );
   }
 
   return (
     <View style={{ alignItems: 'center' }}>
       <Text h4>{whiteToMove ? 'White to move' : 'Black to move'}</Text>
     </View>
-  )
+  );
 });

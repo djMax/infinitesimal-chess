@@ -56,7 +56,6 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
       const position = piece.getScaledMove(GameState, direction, amount);
       viewStyle.left = size * position.x - size * r;
       viewStyle.top = size * boardSize - size * position.y - size * r;
-      console.log(position.toString());
     }
   } else if (direction && proposed && proposed.black !== piece.black.get()) {
     const curCenter = proposed.getScaledMove(GameState, direction, amount);
