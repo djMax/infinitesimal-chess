@@ -7,7 +7,7 @@ import { PieceImage } from './PieceImage';
 import { Direction } from '../models/Piece';
 import { completeMove, GameState, resetGame } from '../state';
 
-const DIR_SIZE = { width: 50, height: 50 };
+const DIR_SIZE = { width: 30, height: 30 };
 
 const Rotations = {
   N: 0,

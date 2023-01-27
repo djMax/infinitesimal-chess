@@ -8,7 +8,8 @@ import { useStyles } from '../styles';
 export const GameScreen = observer(() => {
   const styles = useStyles();
   const w = useWindowDimensions();
-  const size = Math.floor((Math.min(w.width, w.height) - 10) / 8);
+  const baseScale = Math.min(w.width, w.height - 300);
+  const size = Math.floor((baseScale - 10) / 8);
   const top = 40;
   const left = Math.floor((w.width - 4 - size * 8) / 2);
 

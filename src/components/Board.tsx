@@ -95,22 +95,12 @@ export const Board = observer(
     const selectedPiece = GameState.proposed.piece.get()?.id || '';
 
     return (
-      <>
-        <View
-          style={{
-            position: 'absolute',
-            top: top + size * GameState.size.get() + 30,
-            width: '90%',
-          }}>
-          <Status />
-        </View>
+      <View>
         <View
           style={{
             borderWidth: 2,
             borderColor: theme.colors.black,
-            position: 'absolute',
-            top,
-            left,
+            marginBottom: 10,
           }}>
           {GRID.map((_, y) => (
             <View key={y} style={{ height: size, flexDirection: 'row' }}>
@@ -149,7 +139,8 @@ export const Board = observer(
             )}
           </For>
         </View>
-      </>
+        <Status />
+      </View>
     );
   },
 );
