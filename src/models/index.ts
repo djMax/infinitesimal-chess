@@ -94,3 +94,45 @@ export function pawnDevelopment(): Pieces {
     ],
   };
 }
+
+export function testDoubleCaptureBoard(): Pieces {
+  return {
+    black: [
+      new King(true, p(4, 7)),
+      new Bishop(true, p(4, 4)),
+      new Bishop(true, p(5, 4)),
+    ],
+    white: [
+      new King(false, p(4, 0)),
+      new Rook(false, p(4.5, 2)),
+    ],
+  };
+}
+
+export function testQueenInstamate(): Pieces {
+  return {
+    black: [
+      new King(true, p(4, 7)),
+      ...Array(8).fill(0).map((_, i) => new Pawn(true, p(i, 6))),
+    ],
+    white: [
+      new King(false, p(1, 0)),
+      new Queen(false, p(4, 0)),
+    ],
+  };
+}
+
+export function testBackrankPosition(): Pieces {
+  return {
+    black: [
+      new King(true, p(4, 7)),
+      ...Array(8).fill(0).map((_, i) => new Pawn(true, p(i, 6))),
+    ],
+    white: [
+      new King(false, p(4, 0)),
+      new Queen(false, p(7, 7)),
+    ],
+  };
+}
+
+
