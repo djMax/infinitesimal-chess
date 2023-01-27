@@ -139,9 +139,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		13B07F861A680F5B00A75B9A /* infinitesimalchess */ = {
+		13B07F861A680F5B00A75B9A /* ε Chess */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "infinitesimalchess" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ε Chess" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -155,7 +155,7 @@
 			);
 			dependencies = (
 			);
-			name = infinitesimalchess;
+			name = "ε Chess";
 			productName = infinitesimalchess;
 			productReference = 13B07F961A680F5B00A75B9A /* infinitesimalchess.app */;
 			productType = "com.apple.product-type.application";
@@ -187,7 +187,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* infinitesimalchess */,
+				13B07F861A680F5B00A75B9A /* ε Chess */,
 			);
 		};
 /* End PBXProject section */
@@ -313,6 +313,8 @@
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = infinitesimalchess/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ε Chess";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.board-games";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -340,6 +342,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 54FF8Y3E4G;
 				INFOPLIST_FILE = infinitesimalchess/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ε Chess";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.board-games";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -468,7 +472,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "infinitesimalchess" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ε Chess" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
