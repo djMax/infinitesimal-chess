@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const Navigation = () => (
   <NavigationContainer>
     <Stack.Navigator>
-      <Stack.Screen name="Intro" component={IntroScreen} />
+      <Stack.Screen name="Intro" component={IntroScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name="Game"
         component={GameScreen}

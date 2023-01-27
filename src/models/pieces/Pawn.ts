@@ -21,7 +21,6 @@ export class Pawn extends Piece {
 
       const end = this.getMaximumMove(state, d);
       const overlap = getOverlappingPiece(this, end, [...state.board.black, ...state.board.white]);
-      console.log('overlapping piece', d, overlap?.piece.black !== this.black);
       return overlap?.piece && overlap.piece.black !== this.black;
     });
   }
