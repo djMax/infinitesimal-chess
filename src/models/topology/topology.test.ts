@@ -1,7 +1,7 @@
-import { getOverlappingPiece, getStartAndEndOfOverlap } from ".";
-import { Pawn } from "../pieces/Pawn";
-import { Queen } from "../pieces/Queen";
-import { Position } from "../Position";
+import { getOverlappingPiece } from '.';
+import { Position } from '../Position';
+import { Pawn } from '../pieces/Pawn';
+import { Queen } from '../pieces/Queen';
 
 describe('topology', () => {
   it('should compute the points properly', () => {
@@ -29,6 +29,8 @@ describe('topology', () => {
     const pawn3 = new Pawn(false, new Position(5, 5));
     expect(getOverlappingPiece(queen, new Position(8, 8), [pawn])?.piece).toEqual(pawn);
     expect(getOverlappingPiece(queen, new Position(8, 8), [pawn2])?.piece).toEqual(undefined);
-    expect(getOverlappingPiece(queen, new Position(8, 8), [pawn2, pawn3, pawn])?.piece).toEqual(pawn);
+    expect(getOverlappingPiece(queen, new Position(8, 8), [pawn2, pawn3, pawn])?.piece).toEqual(
+      pawn,
+    );
   });
 });

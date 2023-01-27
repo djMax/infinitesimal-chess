@@ -1,6 +1,6 @@
-import { GameState } from "../../state";
-import { Direction, Piece } from "../Piece";
-import { Position } from "../Position";
+import { GameState } from '../../state';
+import { Direction, Piece } from '../Piece';
+import { Position } from '../Position';
 
 export class Queen extends Piece {
   constructor(black: boolean, position: Position, radius?: number) {

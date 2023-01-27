@@ -1,8 +1,9 @@
-import { observer } from "@legendapp/state/react";
-import { useWindowDimensions } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Board } from "../components/Board";
-import { useStyles } from "../styles";
+import { observer } from '@legendapp/state/react';
+import { useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Board } from '../components/Board';
+import { useStyles } from '../styles';
 
 /*
       <Button title="FOOBAR" onPress={() => {

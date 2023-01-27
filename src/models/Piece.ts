@@ -2,7 +2,6 @@ import { Position } from "./Position";
 import { GameState, getAllPieces } from "../state/index"
 import { getOverlappingPiece } from "./topology";
 
-
 export type CardinalDirection = 'N' | 'S' | 'E' | 'W';
 
 export type Direction = CardinalDirection | 'NE' | 'NW' | 'SE' | 'SW';
@@ -91,19 +90,6 @@ export class Piece {
     const maxMove = this.getMaximumMoveWithCollision(state, direction);
     return Position.interpolate(this.position, maxMove, scale);
   }
-
-  /*
-  limitToCollision(direction: Direction, state: typeof GameState): Piece {
-    const trajectory = this.getMaximumMove(direction, state.size.get());
-    const blackOverlapping = getOverlappingPiece(this, trajectory, state.board.black.get());
-    const whiteOverlapping = getOverlappingPiece(this, trajectory, state.board.black.get());
-    if (this.black) {
-      if (blackOverlapping == undefined) {
-        // (whiteOverlapping == undefined) ? trajectory :
-      }
-    }
-  }
-  */
 
   toString() {
     return `${this.black ? 'Black' : 'White'} ${this.type} ${this.position.toString()}`;

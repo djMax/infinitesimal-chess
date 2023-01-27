@@ -1,5 +1,3 @@
-import { CardinalDirection, Direction } from "./Piece";
-
 function sign(v: number) {
   return v > 0 ? 1 : -1;
 }
@@ -15,9 +13,6 @@ export class Position {
     return `${this.x}, ${this.y}`;
   }
 
-  getEndpoint(direction: Direction, boardSize: number, radius: number) {
-  }
-
   static maxLength(start: Position, end: Position, len: number) {
     // Set the maximum length of the line from start to end to be len
     const height = Math.abs(start.y - end.y);
@@ -29,7 +24,7 @@ export class Position {
       return new Position(start.x + Math.min(len, width) * sign(end.x - start.x), end.y);
     }
 
-    const exLen = height * height + width * width ;
+    const exLen = height * height + width * width;
     if (exLen <= len * len) {
       return end;
     }
@@ -46,4 +41,3 @@ export class Position {
     return new Position(newX, newY);
   }
 }
-

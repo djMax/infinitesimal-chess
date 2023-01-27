@@ -1,8 +1,8 @@
 import * as jsts from 'jsts';
-import { Piece } from '../Piece';
-import { Position } from "../Position";
 
-const { buffer } = jsts.operation;
+import { Piece } from '../Piece';
+import { Position } from '../Position';
+
 const { Coordinate } = jsts.geom;
 const geo = new jsts.geom.GeometryFactory();
 
@@ -42,7 +42,11 @@ function getStartAndEndOfOverlap(attacker: Piece, line: jsts.geom.LineString, ta
  * @param pieces The list of pieces that it might overlap with (excludes itself)
  * @returns
  */
-export function getOverlappingPiece(p: Piece, end: Position, pieces: Piece[]): OverlappingPiece | undefined {
+export function getOverlappingPiece(
+  p: Piece,
+  end: Position,
+  pieces: Piece[],
+): OverlappingPiece | undefined {
   const sortedOthers = pieces
     .filter((p2) => p2 !== p)
     .sort((a, b) => p.position.squareDistance(a.position) - p.position.squareDistance(b.position));
@@ -64,7 +68,9 @@ export function getOverlappingPiece(p: Piece, end: Position, pieces: Piece[]): O
         return {
           piece: overlaps[0].piece,
           min: overlaps[0].min,
-          max: [overlaps[0].max, overlaps[1].min].sort((a, b) => a.squareDistance(p.position) - b.squareDistance(p.position))[0],
+          max: [overlaps[0].max, overlaps[1].min].sort(
+            (a, b) => a.squareDistance(p.position) - b.squareDistance(p.position),
+          )[0],
         };
       }
     }
@@ -72,4 +78,3 @@ export function getOverlappingPiece(p: Piece, end: Position, pieces: Piece[]): O
 
   return overlaps[0];
 }
-

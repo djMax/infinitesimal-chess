@@ -1,6 +1,6 @@
-import { GameState, getAllPieces } from "../../state";
-import { Direction, Piece } from "../Piece";
-import { Position } from "../Position";
+import { GameState, getAllPieces } from '../../state';
+import { Direction, Piece } from '../Piece';
+import { Position } from '../Position';
 import { getOverlappingPiece } from '../topology';
 
 const ROOT2 = Math.sqrt(2);
@@ -16,7 +16,7 @@ export class Pawn extends Piece {
       state.size.get(),
     ).filter((d) => {
       if (d.length === 1) {
-        return true;        
+        return true;
       }
 
       const end = this.getMaximumMove(state, d);

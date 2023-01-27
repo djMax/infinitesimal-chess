@@ -1,15 +1,15 @@
-import { Piece } from "./Piece";
-import { Bishop } from "./pieces/Bishop";
-import { King } from "./pieces/King";
-import { Knight } from "./pieces/Knight";
-import { Pawn } from "./pieces/Pawn";
-import { Queen } from "./pieces/Queen";
-import { Rook } from "./pieces/Rook";
-import { Position } from "./Position";
+import { Piece } from './Piece';
+import { Position } from './Position';
+import { Bishop } from './pieces/Bishop';
+import { King } from './pieces/King';
+import { Knight } from './pieces/Knight';
+import { Pawn } from './pieces/Pawn';
+import { Queen } from './pieces/Queen';
+import { Rook } from './pieces/Rook';
 
 interface Pieces {
-  black: Piece[],
-  white: Piece[],
+  black: Piece[];
+  white: Piece[];
 }
 
 function p(x: number, y: number): Position {
@@ -27,7 +27,9 @@ export function defaultBoard(): Pieces {
       new Knight(true, p(6, 7)),
       new Bishop(true, p(2, 7)),
       new Bishop(true, p(5, 7)),
-      ...Array(8).fill(0).map((_, i) => new Pawn(true, p(i, 6))),
+      ...Array(8)
+        .fill(0)
+        .map((_, i) => new Pawn(true, p(i, 6))),
     ],
     white: [
       new King(false, p(4, 0)),
@@ -38,7 +40,9 @@ export function defaultBoard(): Pieces {
       new Knight(false, p(6, 0)),
       new Bishop(false, p(2, 0)),
       new Bishop(false, p(5, 0)),
-      ...Array(8).fill(0).map((_, i) => new Pawn(false, p(i, 1))),
+      ...Array(8)
+        .fill(0)
+        .map((_, i) => new Pawn(false, p(i, 1))),
     ],
   };
 }
@@ -50,8 +54,12 @@ function move(p: Piece, deltaX: number, deltaY: number) {
 }
 
 export function pawnDevelopment(): Pieces {
-  const wPawns = Array(8).fill(0).map((_, i) => new Pawn(false, p(i, 1)));
-  const bPawns = Array(8).fill(0).map((_, i) => new Pawn(true, p(i, 6)));
+  const wPawns = Array(8)
+    .fill(0)
+    .map((_, i) => new Pawn(false, p(i, 1)));
+  const bPawns = Array(8)
+    .fill(0)
+    .map((_, i) => new Pawn(true, p(i, 6)));
 
   move(wPawns[4], 0, 2);
   move(bPawns[4], 0, 2);

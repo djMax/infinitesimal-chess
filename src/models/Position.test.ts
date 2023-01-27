@@ -15,4 +15,4 @@ describe('Positions', () => {
       expect([newEnd?.x, newEnd?.y]).toEqual(exp);
     });
   });
-}); 
+});

@@ -1,6 +1,6 @@
-import { GameState } from "../../state";
-import { Direction, Piece } from "../Piece";
-import { Position } from "../Position";
+import { GameState } from '../../state';
+import { Direction, Piece } from '../Piece';
+import { Position } from '../Position';
 
 export class Rook extends Piece {
   constructor(black: boolean, position: Position) {

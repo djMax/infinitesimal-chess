@@ -1,7 +1,6 @@
-import { GameState } from "../../state";
-import { Direction, Piece } from "../Piece";
-import { Position } from "../Position";
-import { getOverlappingPiece } from '../topology';
+import { GameState } from '../../state';
+import { Direction, Piece } from '../Piece';
+import { Position } from '../Position';
 
 const ROOT2 = Math.sqrt(2);
 
