@@ -19,6 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
+      "googleServicesFile": "./config/GoogleService-Info.plist",
       "bundleIdentifier": "com.pyralis.infinitesimalchess"
     },
     "android": {
@@ -26,6 +27,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "googleServicesFile": "./config/google-services.json",
       "package": "com.pyralis.infinitesimalchess"
     },
     "web": {
@@ -36,6 +38,19 @@
         "projectId": "8b37099b-03ab-4e54-a622-01fd067ed862"
       }
     },
-    "owner": "djmax"
+    "owner": "djmax",
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/perf",
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
   }
 }
