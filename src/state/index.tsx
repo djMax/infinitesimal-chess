@@ -13,8 +13,13 @@ const persistLocal = Platform.select<ObservablePersistenceConfig['persistLocal']
 // Global configuration
 configureObservablePersistence({ persistLocal });
 
+export interface Pieces {
+  black: Piece[];
+  white: Piece[];
+}
+
 export const GameState = observable({
-  board: defaultBoard(),
+  board: { black: [], white: [] } as Pieces,
   proposed: {
     piece: undefined as Piece | undefined,
     direction: undefined as Direction | undefined,

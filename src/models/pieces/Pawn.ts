@@ -1,4 +1,4 @@
-import { GameState, getAllPieces } from '../../state';
+import type { GameState } from '../../state';
 import { Direction, Piece } from '../Piece';
 import { Position } from '../Position';
 import { getOverlappingPiece } from '../topology';
@@ -30,7 +30,10 @@ export class Pawn extends Piece {
       const isFirst = this.history.length === 0;
       const proposedEnd = super.getMaximumMove(state, direction);
       const finalPos = Position.maxLength(this.position, proposedEnd, isFirst ? 2 : 1);
-      const overlap = getOverlappingPiece(this, finalPos, getAllPieces());
+      const overlap = getOverlappingPiece(this, finalPos, [
+        ...state.board.black,
+        ...state.board.white,
+      ]);
       if (overlap) {
         return overlap.min;
       }

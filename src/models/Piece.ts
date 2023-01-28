@@ -1,6 +1,6 @@
-import { Position } from "./Position";
-import { GameState, getAllPieces } from "../state/index"
-import { getOverlappingPiece } from "./topology";
+import { Position } from './Position';
+import { getOverlappingPiece } from './topology';
+import type { GameState } from '../state/index';
 
 export type CardinalDirection = 'N' | 'S' | 'E' | 'W';
 
@@ -20,7 +20,7 @@ export class Piece {
     public position: Position,
     public radius: number = DEFAULT_RADIUS,
   ) {
-    this.id = `${this.black ? 'B' : 'W'}${this.type}${this.position.x - radius}}`
+    this.id = `${this.black ? 'B' : 'W'}${this.type}${this.position.x - radius}}`;
   }
 
   /**
@@ -32,7 +32,7 @@ export class Piece {
 
   getMaximumMoveWithCollision(state: GameState, direction: Direction): Position {
     const end = this.getMaximumMove(state, direction);
-    const overlap = getOverlappingPiece(this, end, getAllPieces());
+    const overlap = getOverlappingPiece(this, end, [...state.board.black, ...state.board.white]);
     if (overlap == undefined) {
       return end;
     }

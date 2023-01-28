@@ -3,7 +3,7 @@ import * as jsts from 'jsts';
 import { Piece } from '../Piece';
 import { Position } from '../Position';
 
-const { Coordinate } = jsts.geom;
+const { Coordinate, LineSegment } = jsts.geom;
 const geo = new jsts.geom.GeometryFactory();
 
 interface OverlappingPiece {
@@ -77,4 +77,14 @@ export function getOverlappingPiece(
   }
 
   return overlaps[0];
+}
+
+export function nearestPoint(lineStart: Position, lineEnd: Position, point: Position) {
+  const line = new LineSegment(
+    new Coordinate(lineStart.x, lineStart.y),
+    new Coordinate(lineEnd.x, lineEnd.y),
+  );
+  const p = new Coordinate(point.x, point.y);
+  const nearest = line.closestPoint(p);
+  return new Position(nearest.x, nearest.y);
 }

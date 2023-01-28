@@ -7,16 +7,11 @@ import { Pawn } from './pieces/Pawn';
 import { Queen } from './pieces/Queen';
 import { Rook } from './pieces/Rook';
 
-interface Pieces {
-  black: Piece[];
-  white: Piece[];
-}
-
 function p(x: number, y: number): Position {
   return new Position(x + 0.5, y + 0.5);
 }
 
-export function defaultBoard(): Pieces {
+export function defaultBoard() {
   return {
     black: [
       new King(true, p(4, 7)),
@@ -53,7 +48,7 @@ function move(p: Piece, deltaX: number, deltaY: number) {
   p.position = new Position(p.position.x + deltaX, p.position.y + dy);
 }
 
-export function pawnDevelopment(): Pieces {
+export function pawnDevelopment() {
   const wPawns = Array(8)
     .fill(0)
     .map((_, i) => new Pawn(false, p(i, 1)));
@@ -95,14 +90,14 @@ export function pawnDevelopment(): Pieces {
   };
 }
 
-export function testDoubleCaptureBoard(): Pieces {
+export function testDoubleCaptureBoard() {
   return {
     black: [new King(true, p(4, 7)), new Bishop(true, p(4, 4)), new Bishop(true, p(5, 4))],
     white: [new King(false, p(4, 0)), new Rook(false, p(4.5, 2))],
   };
 }
 
-export function testQueenInstamate(): Pieces {
+export function testQueenInstamate() {
   return {
     black: [
       new King(true, p(4, 7)),
@@ -114,7 +109,7 @@ export function testQueenInstamate(): Pieces {
   };
 }
 
-export function testBackrankPosition(): Pieces {
+export function testBackrankPosition() {
   return {
     black: [
       new King(true, p(4, 7)),

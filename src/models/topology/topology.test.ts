@@ -1,4 +1,4 @@
-import { getOverlappingPiece } from '.';
+import { getOverlappingPiece, nearestPoint } from '.';
 import { Position } from '../Position';
 import { Pawn } from '../pieces/Pawn';
 import { Queen } from '../pieces/Queen';
@@ -32,5 +32,10 @@ describe('topology', () => {
     expect(getOverlappingPiece(queen, new Position(8, 8), [pawn2, pawn3, pawn])?.piece).toEqual(
       pawn,
     );
+  });
+
+  it('should find the nearest point', () => {
+    const nearest = nearestPoint(new Position(-10, 0), new Position(10, 0), new Position(0, 5));
+    expect(nearest.toString()).toEqual('0, 0');
   });
 });
