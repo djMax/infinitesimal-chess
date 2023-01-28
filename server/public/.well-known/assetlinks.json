@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.pyralis.infinitesimalchess",
+      "sha256_cert_fingerprints": [
+        "5D:85:86:67:8F:1B:B0:DA:9A:C4:0C:6E:27:B4:83:DF:8A:FD:0D:9C:3A:74:C0:D2:79:88:CB:26:BE:22:6A:38"
+      ]
+    }
+  }
+]

@@ -14,6 +14,8 @@ export class Piece {
   public history: Position[] = [];
   public id: string;
 
+  private scaledCache: Record<string, Position> = {};
+
   constructor(
     public black: boolean,
     public type: PieceType,
@@ -21,6 +23,10 @@ export class Piece {
     public radius: number = DEFAULT_RADIUS,
   ) {
     this.id = `${this.black ? 'B' : 'W'}${this.type}${this.position.x - radius}}`;
+  }
+
+  clearCache() {
+    this.scaledCache = {};
   }
 
   /**
@@ -87,8 +93,14 @@ export class Piece {
   }
 
   getScaledMove(state: GameState, direction: Direction, scale: number): Position {
+    const k = direction + scale;
+    if (this.scaledCache[direction + scale] != undefined) {
+      return this.scaledCache[k];
+    }
     const maxMove = this.getMaximumMoveWithCollision(state, direction);
-    return Position.interpolate(this.position, maxMove, scale);
+    const move = Position.interpolate(this.position, maxMove, scale);
+    this.scaledCache[k] = move;
+    return move;
   }
 
   toString() {

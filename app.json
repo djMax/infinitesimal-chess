@@ -20,7 +20,8 @@
     "ios": {
       "supportsTablet": true,
       "googleServicesFile": "./config/GoogleService-Info.plist",
-      "bundleIdentifier": "com.pyralis.infinitesimalchess"
+      "bundleIdentifier": "com.pyralis.infinitesimalchess",
+      "associatedDomains": ["applinks:chess.pyralis.com"]
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +29,24 @@
         "backgroundColor": "#FFFFFF"
       },
       "googleServicesFile": "./config/google-services.json",
-      "package": "com.pyralis.infinitesimalchess"
+      "package": "com.pyralis.infinitesimalchess",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "chess.pyralis.com",
+              "pathPrefix": "/game"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -67,6 +67,7 @@ export function completeMove(state: GameState) {
     position: newPos,
     history: [...proposed.history, proposed.position],
   });
+  state.proposed.piece.get()?.clearCache();
   state.proposed.assign({
     piece: undefined,
     direction: undefined,
