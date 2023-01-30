@@ -1,7 +1,7 @@
-import type { GameState } from '../../state';
+import type { RawGameState } from '../../state/types';
 import { Direction, Piece } from '../Piece';
 import { Position } from '../Position';
-import { getOverlappingPiece } from '../topology';
+import { getOverlappingPieces } from '../topology';
 
 const ROOT2 = Math.sqrt(2);
 
@@ -10,30 +10,27 @@ export class Pawn extends Piece {
     super(black, 'Pawn', position, radius);
   }
 
-  availableDirections(state: GameState): Direction[] {
+  availableDirections(state: RawGameState): Direction[] {
     return this.filterForBounds(
       this.black ? ['S', 'SW', 'SE'] : ['N', 'NW', 'NE'],
-      state.size.get(),
+      state.size,
     ).filter((d) => {
       if (d.length === 1) {
         return true;
       }
 
       const end = this.getMaximumMove(state, d);
-      const overlap = getOverlappingPiece(this, end, [...state.board.black, ...state.board.white]);
-      return overlap?.piece && overlap.piece.black !== this.black;
+      const overlap = getOverlappingPieces(this, end, state.pieces);
+      return overlap && overlap.pieces[0].black !== this.black;
     });
   }
 
-  getMaximumMove(state: GameState, direction: Direction): Position {
+  getMaximumMove(state: RawGameState, direction: Direction): Position {
     if (['S', 'N'].includes(direction)) {
       const isFirst = this.history.length === 0;
       const proposedEnd = super.getMaximumMove(state, direction);
       const finalPos = Position.maxLength(this.position, proposedEnd, isFirst ? 2 : 1);
-      const overlap = getOverlappingPiece(this, finalPos, [
-        ...state.board.black,
-        ...state.board.white,
-      ]);
+      const overlap = getOverlappingPieces(this, finalPos, state.pieces);
       if (overlap) {
         return overlap.min;
       }

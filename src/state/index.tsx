@@ -2,8 +2,9 @@ import { observable, ObservablePersistenceConfig } from '@legendapp/state';
 import { configureObservablePersistence, persistObservable } from '@legendapp/state/persist';
 import { Platform } from 'react-native';
 
-import { defaultBoard } from '../models';
+import { RawGameState } from './types';
 import { Direction, Piece } from '../models/Piece';
+import { Position } from '../models/Position';
 
 const persistLocal = Platform.select<ObservablePersistenceConfig['persistLocal']>({
   default: require('@legendapp/state/persist-plugins/mmkv').ObservablePersistMMKV,
@@ -13,28 +14,20 @@ const persistLocal = Platform.select<ObservablePersistenceConfig['persistLocal']
 // Global configuration
 configureObservablePersistence({ persistLocal });
 
-export interface Pieces {
-  black: Piece[];
-  white: Piece[];
-}
-
-export const GameState = observable({
-  board: { black: [], white: [] } as Pieces,
+export const GameState = observable<RawGameState>({
+  pieces: [] as Piece[],
   proposed: {
-    piece: undefined as Piece | undefined,
+    pieceId: undefined as string | undefined,
     direction: undefined as Direction | undefined,
-    threatened: undefined as Piece | undefined,
+    availableDirections: [] as Direction[],
     distance: 1,
+    position: undefined as Position | undefined,
   },
   dead: [] as Piece[],
   whiteToMove: true,
   gameOver: false,
   size: 8,
 });
-
-export function getAllPieces() {
-  return [...GameState.board.white, ...GameState.board.black];
-}
 
 export const GameSettings = observable({
   boardSettings: {
@@ -43,56 +36,6 @@ export const GameSettings = observable({
   },
 });
 
-export function resetGame(board = defaultBoard(), whiteToMove: boolean = true) {
-  GameState.assign({
-    board,
-    dead: [],
-    whiteToMove,
-    gameOver: false,
-  });
-}
-
-export type GameState = typeof GameState;
+export type ObservableGameState = typeof GameState;
 
 persistObservable(GameSettings, { local: 'settings' });
-
-// Commit the proposed move and update state
-export function completeMove(state: GameState) {
-  const proposed = state.proposed.piece.get()!;
-  const dir = state.proposed.direction.get()!;
-  const dist = state.proposed.distance.get();
-
-  const newPos = proposed.getScaledMove(state, dir, dist);
-  state.proposed.piece.assign({
-    position: newPos,
-    history: [...proposed.history, proposed.position],
-  });
-  state.proposed.piece.get()?.clearCache();
-  state.proposed.assign({
-    piece: undefined,
-    direction: undefined,
-    threatened: undefined,
-    distance: 1,
-  });
-
-  const candidates = proposed.black ? state.board.white : state.board.black;
-  // I'm not sure why these become pieces and do not remain observables
-  const takes = candidates.filter(
-    (p) =>
-      p.position.get().squareDistance(proposed.position) < (p.radius.get() + proposed.radius) ** 2,
-  ) as unknown as Piece[];
-
-  if (takes?.length) {
-    takes.forEach((taken) => {
-      const target = state.board[proposed.black ? 'white' : 'black'];
-      const piece = target.find((p) => p.id === taken.id)!;
-      state.dead.push(piece);
-      target.splice(target.indexOf(piece), 1);
-      if (taken.type === 'King') {
-        state.gameOver.set(true);
-      }
-    });
-  }
-
-  state.whiteToMove.set(!state.whiteToMove.get());
-}

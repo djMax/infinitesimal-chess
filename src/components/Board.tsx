@@ -9,6 +9,8 @@ import { Status } from './Status';
 import { Piece } from '../models/Piece';
 import { Position } from '../models/Position';
 import { GameSettings, GameState } from '../state';
+import { proposePiece, setMoveScale } from '../state/actions';
+import { nearestPoint } from '../models/topology';
 
 const GRID = Array(8).fill(0);
 
@@ -43,29 +45,29 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
         height: size * r * 2,
       };
 
-  const proposed = GameState.proposed.piece.get();
-  const direction = GameState.proposed.direction.get();
-  const amount = GameState.proposed.distance.get();
+  const proposedId = GameState.proposed.pieceId.get();
 
-  if (proposed?.id === piece.id.get()) {
+  if (piece.threatened.get()) {
     Object.assign(imgStyle, {
       borderRadius: size * r,
-      backgroundColor: piece.black ? '#00FF00B0' : '#00FF000050',
+      backgroundColor: piece.black ? '#FF0000B0' : '#FF0000B0',
+    });
+  } else if (piece.canThreaten.get()) {
+    Object.assign(imgStyle, {
+      borderRadius: size * r,
+      backgroundColor: piece.black ? '#CCCC00B0' : '#CCCC00B0',
+    });
+  }
+
+  if (proposedId === piece.id.get()) {
+    Object.assign(imgStyle, {
+      borderRadius: size * r,
+      backgroundColor: piece.black ? '#00FF00B0' : '#00FF0050',
     });
 
-    if (direction) {
-      const position = piece.getScaledMove(GameState, direction, amount);
-      viewStyle.left = size * position.x - size * r;
-      viewStyle.top = size * boardSize - size * position.y - size * r;
-    }
-  } else if (direction && proposed && proposed.black !== piece.black.get()) {
-    const curCenter = proposed.getScaledMove(GameState, direction, amount);
-    if (curCenter.squareDistance(piece.position.get()) < (r + proposed.radius) ** 2) {
-      Object.assign(imgStyle, {
-        borderRadius: size * r,
-        backgroundColor: piece.black ? '#FF0000B0' : '#FF00000050',
-      });
-    }
+    const position = GameState.proposed.position!.get()!;
+    viewStyle.left = size * position.x - size * r;
+    viewStyle.top = size * boardSize - size * position.y - size * r;
   }
 
   return (
@@ -80,16 +82,24 @@ function getBoardPosition(x: number, y: number, squareSize: number, boardSize: n
 }
 
 function handleBoardPress(x: number, y: number) {
-  const p = GameState.proposed.get();
-  if (!p.piece) {
+  const g = GameState.peek();
+  const p = g.proposed;
+  if (!p.pieceId) {
     return;
   }
-  const dir = p.piece.availableDirections(GameState);
-  const start = p.piece.position;
+  const piece = g.pieces.find((pc) => pc.id === p.pieceId)!;
+  const dir = piece.availableDirections(g);
+  const start = piece.position;
   const end = new Position(x, y);
   const pressedDir = Position.getDirection(start, end);
   if (dir.includes(pressedDir)) {
     GameState.proposed.direction.set(pressedDir);
+    const maxMove = piece.getMaximumMoveWithCollision(g, pressedDir);
+    const move = nearestPoint(piece.position, maxMove, end);
+    const maxD = piece.position.squareDistance(maxMove);
+    const moveD = piece.position.squareDistance(move);
+    const perc = Math.sqrt(moveD) / Math.sqrt(maxD);
+    setMoveScale(Math.max(0, Math.min(1, perc)));
   }
 }
 
@@ -100,19 +110,14 @@ export const Board = observer(
     const useBg = GameSettings.boardSettings.background.get() === 'default';
 
     const onPiecePress = React.useCallback((piece: Observable<Piece>) => {
-      if (GameState.whiteToMove.get() === piece.black.get()) {
+      const game = GameState.peek();
+      if (game.whiteToMove === piece.black.get()) {
         return;
       }
-      GameState.proposed.direction.set(undefined);
-      const p = piece.get();
-      GameState.proposed.piece.set(p);
-      const d = p.availableDirections(GameState);
-      if (d.length === 1) {
-        GameState.proposed.direction.set(d[0]);
-      }
+      proposePiece(piece);
     }, []);
 
-    const selectedPiece = GameState.proposed.piece.get()?.id || '';
+    const selectedPiece = GameState.proposed.pieceId.get();
 
     return (
       <View
@@ -155,18 +160,7 @@ export const Board = observer(
               ))}
             </View>
           ))}
-          <For<Piece, never> each={GameState.board.black}>
-            {(piece) => (
-              <PressablePiece
-                piece={piece}
-                size={size}
-                onPress={onPiecePress}
-                key={piece.id.get()}
-                selected={selectedPiece === piece.id.get()}
-              />
-            )}
-          </For>
-          <For<Piece, never> each={GameState.board.white}>
+          <For<Piece, never> each={GameState.pieces}>
             {(piece) => (
               <PressablePiece
                 piece={piece}

@@ -5,7 +5,8 @@ import { Pressable, View, ViewStyle } from 'react-native';
 
 import { PieceImage } from './PieceImage';
 import { Direction } from '../models/Piece';
-import { completeMove, GameState, resetGame } from '../state';
+import { GameState } from '../state';
+import { completeMove, resetGame, setMoveScale } from '../state/actions';
 
 const DIR_SIZE = { width: 30, height: 30 };
 
@@ -55,7 +56,7 @@ function Arrow({
 export const Status = observer(() => {
   const whiteToMove = GameState.whiteToMove.get();
   const proposed = GameState.proposed.get();
-  const directions = proposed.piece?.availableDirections(GameState) || [];
+  const directions = proposed.availableDirections;
 
   const onPress = React.useCallback((direction: Direction) => {
     GameState.proposed.direction.set(direction);
@@ -79,7 +80,8 @@ export const Status = observer(() => {
     );
   }
 
-  if (proposed.piece) {
+  if (proposed.pieceId) {
+    const piece = GameState.pieces.find((p) => p.id === proposed.pieceId)!;
     return (
       <>
         <View style={{ alignItems: 'center' }}>
@@ -90,7 +92,7 @@ export const Status = observer(() => {
           </View>
           <View style={{ flexDirection: 'row' }}>
             <Arrow direction="W" available={directions} onPress={onPress} />
-            <PieceImage piece={proposed.piece} style={DIR_SIZE} />
+            <PieceImage piece={piece} style={DIR_SIZE} />
             <Arrow direction="E" available={directions} onPress={onPress} />
           </View>
           <View style={{ flexDirection: 'row' }}>
@@ -105,7 +107,7 @@ export const Status = observer(() => {
               maximumValue={1}
               minimumValue={0}
               value={proposed.distance}
-              onValueChange={GameState.proposed.distance.set}
+              onValueChange={setMoveScale}
             />
             {proposed.distance ? (
               <Button
@@ -123,6 +125,7 @@ export const Status = observer(() => {
   return (
     <View style={{ alignItems: 'center' }}>
       <Text h4>{whiteToMove ? 'White to move' : 'Black to move'}</Text>
+      <Text>Tap on a piece to start a move</Text>
     </View>
   );
 });

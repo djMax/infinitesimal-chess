@@ -1,5 +1,5 @@
 import { Pawn } from './Pawn';
-import { GameState, resetGame } from '../../state';
+import { GameState } from '../../state';
 import { Piece } from '../Piece';
 import { Position } from '../Position';
 
@@ -19,18 +19,18 @@ const testCases = [
 describe('Pieces', () => {
   it('Pawns should move properly', () => {
     const bp = new Pawn(true, new Position(0.5, 6.5), 0.5);
-    expect(bp.availableDirections(GameState).sort()).toEqual(['S']);
-    expect(bp.getMaximumMove(GameState, 'SE').toString()).toEqual('1.5, 5.5');
+    expect(bp.availableDirections(GameState.get()).sort()).toEqual(['S']);
+    expect(bp.getMaximumMove(GameState.get(), 'SE').toString()).toEqual('1.5, 5.5');
 
     const wp = new Pawn(false, new Position(0.5, 1.5));
-    expect(wp.availableDirections(GameState).sort()).toEqual(['N']);
+    expect(wp.availableDirections(GameState.get()).sort()).toEqual(['N']);
     // expect(wp.getMaximumMove('SE', 8).toString()).toEqual("1.5, 5.5");
   });
 
   testCases.forEach(({ from, direction, expected }, ix) => {
     it(`Movement test case ${ix}`, () => {
       const p = new Piece(true, 'Queen', new Position(from[0], from[1]), 0.5);
-      const np = p.getMaximumMove(GameState, direction);
+      const np = p.getMaximumMove(GameState.get(), direction);
       expect(np.toString()).toEqual(expected);
     });
   });

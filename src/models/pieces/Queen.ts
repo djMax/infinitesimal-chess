@@ -1,4 +1,4 @@
-import { GameState } from '../../state';
+import type { RawGameState } from '../../state/types';
 import { Direction, Piece } from '../Piece';
 import { Position } from '../Position';
 
@@ -7,7 +7,7 @@ export class Queen extends Piece {
     super(black, 'Queen', position, radius);
   }
 
-  availableDirections(state: GameState): Direction[] {
-    return this.filterForBounds(['N', 'S', 'E', 'W', 'NE', 'SE', 'NW', 'SW'], state.size.get());
+  availableDirections(state: RawGameState): Direction[] {
+    return this.filterForBounds(['N', 'S', 'E', 'W', 'NE', 'SE', 'NW', 'SW'], state.size);
   }
 }

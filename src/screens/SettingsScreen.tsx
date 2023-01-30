@@ -4,8 +4,9 @@ import { ListItem, Switch, Text } from '@rneui/themed';
 import { View } from 'react-native';
 
 import { RootStackParamList } from './RootStackParamList';
-import { pawnDevelopment } from '../models';
-import { GameSettings, resetGame } from '../state';
+import { DemoBoards } from '../models';
+import { GameSettings } from '../state';
+import { resetGame } from '../state/actions';
 import { useStyles } from '../styles';
 
 export const SettingsScreen = observer(
@@ -40,15 +41,18 @@ export const SettingsScreen = observer(
         </ListItem>
 
         <Text style={styles.sectionTitle}>Sample Games</Text>
-        <ListItem
-          onPress={() => {
-            resetGame(pawnDevelopment(), false);
-            navigation.goBack();
-          }}>
-          <ListItem.Content>
-            <ListItem.Title>Simple Pawn Development</ListItem.Title>
-          </ListItem.Content>
-        </ListItem>
+        {Object.keys(DemoBoards).map((key) => (
+          <ListItem
+            key={key}
+            onPress={() => {
+              resetGame(DemoBoards[key as keyof typeof DemoBoards](), true);
+              navigation.goBack();
+            }}>
+            <ListItem.Content>
+              <ListItem.Title>{key.replace(/([A-Z])/g, ' $1')}</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+        ))}
       </View>
     );
   },

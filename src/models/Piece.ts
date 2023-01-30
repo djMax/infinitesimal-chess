@@ -1,6 +1,6 @@
 import { Position } from './Position';
-import { getOverlappingPiece } from './topology';
-import type { GameState } from '../state/index';
+import { getOverlappingPieces } from './topology';
+import type { RawGameState } from '../state/types';
 
 export type CardinalDirection = 'N' | 'S' | 'E' | 'W';
 
@@ -14,7 +14,13 @@ export class Piece {
   public history: Position[] = [];
   public id: string;
 
-  private scaledCache: Record<string, Position> = {};
+  // In order to improve performance, we will store these calculated values
+  // so that all pieces don't have to recompute them (and re-render) whenever
+  // the piece moves. "Threatened" means if the proposed move is made, the
+  // piece will be taken. "Can threaten" means if some move in the proposed
+  // direction is made, the piece can be taken
+  public threatened: boolean = false;
+  public canThreaten: boolean = false;
 
   constructor(
     public black: boolean,
@@ -22,27 +28,23 @@ export class Piece {
     public position: Position,
     public radius: number = DEFAULT_RADIUS,
   ) {
-    this.id = `${this.black ? 'B' : 'W'}${this.type}${this.position.x - radius}}`;
-  }
-
-  clearCache() {
-    this.scaledCache = {};
+    this.id = `${this.black ? 'B' : 'W'}${this.type}${this.position.x - radius}`;
   }
 
   /**
    * Get the available directions this piece can move in.
    */
-  availableDirections(state: GameState): Direction[] {
+  availableDirections(state: RawGameState): Direction[] {
     return [];
   }
 
-  getMaximumMoveWithCollision(state: GameState, direction: Direction): Position {
+  getMaximumMoveWithCollision(state: RawGameState, direction: Direction): Position {
     const end = this.getMaximumMove(state, direction);
-    const overlap = getOverlappingPiece(this, end, [...state.board.black, ...state.board.white]);
-    if (overlap == undefined) {
+    const overlap = getOverlappingPieces(this, end, state.pieces);
+    if (overlap === undefined) {
       return end;
     }
-    if (overlap.piece.black == this.black) {
+    if (overlap.pieces[0].black === this.black) {
       return overlap.min;
     }
     return overlap.max;
@@ -52,8 +54,8 @@ export class Piece {
    * Get the point to which this piece can move in a given direction.
    * @param direction The direction to move.
    */
-  getMaximumMove(state: GameState, direction: Direction): Position {
-    const boardSize = state.size.get();
+  getMaximumMove(state: RawGameState, direction: Direction): Position {
+    const boardSize = state.size;
     const southMoveLimit = this.position.y - this.radius;
     const northMoveLimit = boardSize - this.radius - this.position.y;
     const eastMoveLimit = boardSize - this.radius - this.position.x;
@@ -92,15 +94,9 @@ export class Piece {
     }
   }
 
-  getScaledMove(state: GameState, direction: Direction, scale: number): Position {
-    const k = direction + scale;
-    if (this.scaledCache[direction + scale] != undefined) {
-      return this.scaledCache[k];
-    }
+  getScaledMove(state: RawGameState, direction: Direction, scale: number): Position {
     const maxMove = this.getMaximumMoveWithCollision(state, direction);
-    const move = Position.interpolate(this.position, maxMove, scale);
-    this.scaledCache[k] = move;
-    return move;
+    return Position.interpolate(this.position, maxMove, scale);
   }
 
   toString() {

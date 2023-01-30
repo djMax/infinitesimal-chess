@@ -6,10 +6,10 @@ import { Position } from '../Position';
 const { Coordinate, LineSegment } = jsts.geom;
 const geo = new jsts.geom.GeometryFactory();
 
-interface OverlappingPiece {
+interface OverlappingPieces {
   min: Position;
   max: Position;
-  piece: Piece;
+  pieces: Piece[];
 }
 
 function getStartAndEndOfOverlap(attacker: Piece, line: jsts.geom.LineString, target: Piece) {
@@ -42,11 +42,11 @@ function getStartAndEndOfOverlap(attacker: Piece, line: jsts.geom.LineString, ta
  * @param pieces The list of pieces that it might overlap with (excludes itself)
  * @returns
  */
-export function getOverlappingPiece(
+export function getOverlappingPieces(
   p: Piece,
   end: Position,
   pieces: Piece[],
-): OverlappingPiece | undefined {
+): OverlappingPieces | undefined {
   const sortedOthers = pieces
     .filter((p2) => p2 !== p)
     .sort((a, b) => p.position.squareDistance(a.position) - p.position.squareDistance(b.position));
@@ -54,25 +54,34 @@ export function getOverlappingPiece(
   const eCoord = new Coordinate(end.x, end.y);
   const l = geo.createLineString([sCoord, eCoord]);
 
-  const overlaps: OverlappingPiece[] = [];
+  const overlaps: OverlappingPieces[] = [];
   for (let i = 0; i < sortedOthers.length; i++) {
     const other = sortedOthers[i];
     const intersection = getStartAndEndOfOverlap(p, l, other);
-    if (intersection) {
-      overlaps.push({ piece: other, min: intersection.start, max: intersection.end });
-    }
-    if (overlaps.length === 2) {
+
+    if (intersection && overlaps.length === 1) {
       // If the piece BEHIND the overlapping one is the same color, but the first is not,
       // we have to make sure the min of the second piece is not before the max of the first
-      if (p.black !== overlaps[0].piece.black && p.black === overlaps[1].piece.black) {
+      if (p.black !== overlaps[0].pieces[0].black && p.black === other.black) {
         return {
-          piece: overlaps[0].piece,
+          pieces: overlaps[0].pieces,
           min: overlaps[0].min,
-          max: [overlaps[0].max, overlaps[1].min].sort(
+          max: [overlaps[0].max, intersection.start].sort(
             (a, b) => a.squareDistance(p.position) - b.squareDistance(p.position),
           )[0],
         };
       }
+    }
+    if (intersection && overlaps.length > 0) {
+      // Ok, now this only matters if the second overlap can be taken by ending at the maximum
+      // of the first overlap. The distance from the max of the first overlap to the min of the
+      // current overlap must be less than the radius of the piece.
+      if (intersection && overlaps[0].max.squareDistance(intersection!.end) < p.radius * p.radius) {
+        overlaps[0].pieces.push(other);
+      }
+      // TODO shortcircuit if we are beyond the max of the first overlap
+    } else if (intersection) {
+      overlaps.push({ pieces: [other], min: intersection.start, max: intersection.end });
     }
   }
 

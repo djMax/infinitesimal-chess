@@ -2,9 +2,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Text } from '@rneui/themed';
 import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { resetGame } from '../state/actions';
 
 import { RootStackParamList } from './RootStackParamList';
-import { resetGame } from '../state';
 
 const textStyle = {
   fontSize: 15,

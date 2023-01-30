@@ -12,34 +12,30 @@ function p(x: number, y: number): Position {
 }
 
 export function defaultBoard() {
-  return {
-    black: [
-      new King(true, p(4, 7)),
-      new Queen(true, p(3, 7)),
-      new Rook(true, p(0, 7)),
-      new Rook(true, p(7, 7)),
-      new Knight(true, p(1, 7)),
-      new Knight(true, p(6, 7)),
-      new Bishop(true, p(2, 7)),
-      new Bishop(true, p(5, 7)),
-      ...Array(8)
-        .fill(0)
-        .map((_, i) => new Pawn(true, p(i, 6))),
-    ],
-    white: [
-      new King(false, p(4, 0)),
-      new Queen(false, p(3, 0)),
-      new Rook(false, p(0, 0)),
-      new Rook(false, p(7, 0)),
-      new Knight(false, p(1, 0)),
-      new Knight(false, p(6, 0)),
-      new Bishop(false, p(2, 0)),
-      new Bishop(false, p(5, 0)),
-      ...Array(8)
-        .fill(0)
-        .map((_, i) => new Pawn(false, p(i, 1))),
-    ],
-  };
+  return [
+    new King(true, p(4, 7)),
+    new Queen(true, p(3, 7)),
+    new Rook(true, p(0, 7)),
+    new Rook(true, p(7, 7)),
+    new Knight(true, p(1, 7)),
+    new Knight(true, p(6, 7)),
+    new Bishop(true, p(2, 7)),
+    new Bishop(true, p(5, 7)),
+    ...Array(8)
+      .fill(0)
+      .map((_, i) => new Pawn(true, p(i, 6))),
+    new King(false, p(4, 0)),
+    new Queen(false, p(3, 0)),
+    new Rook(false, p(0, 0)),
+    new Rook(false, p(7, 0)),
+    new Knight(false, p(1, 0)),
+    new Knight(false, p(6, 0)),
+    new Bishop(false, p(2, 0)),
+    new Bishop(false, p(5, 0)),
+    ...Array(8)
+      .fill(0)
+      .map((_, i) => new Pawn(false, p(i, 1))),
+  ];
 }
 
 function move(p: Piece, deltaX: number, deltaY: number) {
@@ -48,24 +44,24 @@ function move(p: Piece, deltaX: number, deltaY: number) {
   p.position = new Position(p.position.x + deltaX, p.position.y + dy);
 }
 
-export function pawnDevelopment() {
-  const wPawns = Array(8)
-    .fill(0)
-    .map((_, i) => new Pawn(false, p(i, 1)));
-  const bPawns = Array(8)
-    .fill(0)
-    .map((_, i) => new Pawn(true, p(i, 6)));
+export const DemoBoards = {
+  SimplePawnDevelopment() {
+    const wPawns = Array(8)
+      .fill(0)
+      .map((_, i) => new Pawn(false, p(i, 1)));
+    const bPawns = Array(8)
+      .fill(0)
+      .map((_, i) => new Pawn(true, p(i, 6)));
 
-  move(wPawns[4], 0, 2);
-  move(bPawns[4], 0, 2);
-  move(wPawns[3], 0, 1);
-  move(bPawns[5], 0, 1);
-  move(wPawns[2], 0, 2);
-  move(bPawns[0], 0, 2);
-  move(wPawns[0], 0, 2);
+    move(wPawns[4], 0, 2);
+    move(bPawns[4], 0, 2);
+    move(wPawns[3], 0, 1);
+    move(bPawns[5], 0, 1);
+    move(wPawns[2], 0, 2);
+    move(bPawns[0], 0, 2);
+    move(wPawns[0], 0, 2);
 
-  return {
-    black: [
+    return [
       new King(true, p(4, 7)),
       new Queen(true, p(3, 7)),
       new Rook(true, p(0, 7)),
@@ -75,8 +71,6 @@ export function pawnDevelopment() {
       new Bishop(true, p(2, 7)),
       new Bishop(true, p(5, 7)),
       ...bPawns,
-    ],
-    white: [
       new King(false, p(4, 0)),
       new Queen(false, p(3, 0)),
       new Rook(false, p(0, 0)),
@@ -86,37 +80,35 @@ export function pawnDevelopment() {
       new Bishop(false, p(2, 0)),
       new Bishop(false, p(5, 0)),
       ...wPawns,
-    ],
-  };
-}
-
-export function testDoubleCaptureBoard() {
-  return {
-    black: [new King(true, p(4, 7)), new Bishop(true, p(4, 4)), new Bishop(true, p(5, 4))],
-    white: [new King(false, p(4, 0)), new Rook(false, p(4.5, 2))],
-  };
-}
-
-export function testQueenInstamate() {
-  return {
-    black: [
+    ];
+  },
+  DoubleCapture() {
+    return [
+      new King(true, p(4, 7)),
+      new Bishop(true, p(4, 4)),
+      new Bishop(true, p(5, 4)),
+      new King(false, p(4, 0)),
+      new Rook(false, p(4.5, 2)),
+    ];
+  },
+  QueenInstamate() {
+    return [
       new King(true, p(4, 7)),
       ...Array(8)
         .fill(0)
         .map((_, i) => new Pawn(true, p(i, 6))),
-    ],
-    white: [new King(false, p(1, 0)), new Queen(false, p(4, 0))],
-  };
-}
-
-export function testBackrankPosition() {
-  return {
-    black: [
+      new King(false, p(1, 0)),
+      new Queen(false, p(4, 0)),
+    ];
+  },
+  BackRank() {
+    return [
       new King(true, p(4, 7)),
       ...Array(8)
         .fill(0)
         .map((_, i) => new Pawn(true, p(i, 6))),
-    ],
-    white: [new King(false, p(4, 0)), new Queen(false, p(7, 7))],
-  };
-}
+      new King(false, p(4, 0)),
+      new Queen(false, p(7, 7)),
+    ];
+  },
+} as const;
