@@ -111,6 +111,7 @@ export const Status = observer(() => {
             />
             {proposed.distance ? (
               <Button
+                disabled={proposed.valid === false}
                 title="Complete Move"
                 style={{ marginTop: 15 }}
                 onPress={() => completeMove(GameState)}

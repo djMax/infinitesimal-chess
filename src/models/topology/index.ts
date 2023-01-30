@@ -88,6 +88,23 @@ export function getOverlappingPieces(
   return overlaps[0];
 }
 
+export function getPiecesOnLine(coords: Position[], radius: number, pieces: Piece[]) {
+  const line = geo.createLineString(coords.map((c) => new Coordinate(c.x, c.y)));
+  return pieces.filter((target) => {
+    const shapes = new (jsts as any).util.GeometricShapeFactory();
+    shapes.setNumPoints(64);
+    shapes.setCentre(new Coordinate(target.position.x, target.position.y));
+    shapes.setSize((target.radius + radius) * 2);
+    const enlargedPiece = shapes.createCircle();
+    // Find out where l and enlargedPiece intersect
+    const intersection = line.intersection(enlargedPiece);
+    if (intersection.getNumPoints() < 2) {
+      return false;
+    }
+    return true;
+  });
+}
+
 export function nearestPoint(lineStart: Position, lineEnd: Position, point: Position) {
   const line = new LineSegment(
     new Coordinate(lineStart.x, lineStart.y),

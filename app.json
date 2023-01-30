@@ -21,7 +21,13 @@
       "supportsTablet": true,
       "googleServicesFile": "./config/GoogleService-Info.plist",
       "bundleIdentifier": "com.pyralis.infinitesimalchess",
-      "associatedDomains": ["applinks:chess.pyralis.com"]
+      "associatedDomains": [
+        "applinks:chess.pyralis.com"
+      ],
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {

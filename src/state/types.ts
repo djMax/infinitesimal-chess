@@ -9,6 +9,8 @@ export interface RawGameState {
     availableDirections: Direction[];
     distance: number;
     position: Position | undefined;
+    valid: boolean;
+    variant: string | undefined;
   };
   dead: Piece[];
   whiteToMove: boolean;

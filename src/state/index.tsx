@@ -22,6 +22,8 @@ export const baseState: RawGameState = {
     availableDirections: [] as Direction[],
     distance: 1,
     position: undefined as Position | undefined,
+    valid: true,
+    variant: undefined,
   },
   dead: [] as Piece[],
   whiteToMove: true,

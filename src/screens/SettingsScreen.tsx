@@ -16,6 +16,18 @@ export const SettingsScreen = observer(
 
     return (
       <View style={styles.settingsContainer}>
+        <Text style={styles.sectionTitle}>Actions</Text>
+        <ListItem
+          bottomDivider
+          onPress={() => {
+            resetGame();
+            navigation.goBack();
+          }}>
+          <ListItem.Content>
+            <ListItem.Title>New Game</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+
         <Text style={styles.sectionTitle}>Appearance</Text>
         <ListItem bottomDivider>
           <ListItem.Content>

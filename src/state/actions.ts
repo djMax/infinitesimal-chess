@@ -3,6 +3,7 @@ import { Observable } from '@legendapp/state';
 import { baseState, GameState, ObservableGameState } from '.';
 import { defaultBoard } from '../models';
 import { Direction, Piece } from '../models/Piece';
+import { Knight } from '../models/pieces/Knight';
 import { getOverlappingPieces } from '../models/topology';
 
 export function resetGame(pieces = defaultBoard(), whiteToMove: boolean = true) {
@@ -15,11 +16,11 @@ export function resetGame(pieces = defaultBoard(), whiteToMove: boolean = true) 
 // Commit the proposed move and update state
 export function completeMove(state: ObservableGameState) {
   const raw = state.peek();
-  const { pieceId, direction, distance } = raw.proposed;
+  const { pieceId, direction, distance, variant } = raw.proposed;
 
   const pieceIndex = raw.pieces.findIndex((p) => p.id === pieceId);
   const rawPiece = raw.pieces[pieceIndex];
-  const newPos = rawPiece.getScaledMove(raw, direction!, distance);
+  const newPos = rawPiece.getScaledMove(raw, direction!, distance, variant);
 
   const observablePiece = state.pieces[pieceIndex];
   observablePiece.assign({
@@ -38,7 +39,7 @@ export function completeMove(state: ObservableGameState) {
   const takes = state.pieces.filter(
     (p) =>
       p.black.get() !== rawPiece.black &&
-      p.position.get().squareDistance(rawPiece.position) < (p.radius.get() + rawPiece.radius) ** 2,
+      p.position.overlaps(rawPiece.position, p.radius.get(), rawPiece.radius),
   ) as unknown as Piece[];
 
   if (takes?.length) {
@@ -76,24 +77,31 @@ export function proposePiece(piece: Observable<Piece>) {
     availableDirections: d,
     distance: 0,
     position: piece.position.get(),
+    variant: piece.moveVariants[0],
   });
-  const allInvolved = new Set();
-  d.forEach((dir) => {
-    // Find the overlapping piece for this direction
-    const end = piece.getMaximumMove(game, dir);
-    const overlap = getOverlappingPieces(piece.peek(), end, game.pieces);
-    if (overlap?.pieces && overlap.pieces[0].black !== piece.black.get()) {
-      overlap.pieces.forEach((p) => allInvolved.add(p.id));
-    }
-  });
-  GameState.pieces.forEach((p) => {
-    const canThreaten = p.canThreaten.peek();
-    const nowCanThreaten = allInvolved.has(p.id.peek());
-    if (canThreaten && !nowCanThreaten) {
-      p.canThreaten.set(false);
-    } else if (!canThreaten && nowCanThreaten) {
-      p.canThreaten.set(true);
-    }
+  requestAnimationFrame(() => {
+    const allInvolved = new Set();
+    const rawPiece = piece.peek();
+    d.forEach((dir) => {
+      // Find the overlapping piece for this direction
+      const end = piece.getMaximumMove(game, dir);
+      const overlap =
+        rawPiece instanceof Knight
+          ? rawPiece.getTargets(dir, game)
+          : getOverlappingPieces(rawPiece, end, game.pieces);
+      if (overlap?.pieces && overlap.pieces[0].black !== piece.black.get()) {
+        overlap.pieces.forEach((p) => allInvolved.add(p.id));
+      }
+    });
+    GameState.pieces.forEach((p) => {
+      const canThreaten = p.canThreaten.peek();
+      const nowCanThreaten = allInvolved.has(p.id.peek());
+      if (canThreaten && !nowCanThreaten) {
+        p.canThreaten.set(false);
+      } else if (!canThreaten && nowCanThreaten) {
+        p.canThreaten.set(true);
+      }
+    });
   });
 }
 
@@ -110,15 +118,18 @@ export function setMoveScale(scale: number) {
   GameState.proposed.assign({
     distance: scale,
     position: newPosition,
+    valid: piece.isValid(game, newPosition),
   });
-  for (let i = 0; i < game.pieces.length; i += 1) {
-    const t = game.pieces[i];
-    if (t.canThreaten) {
-      const distance = t.position.squareDistance(newPosition);
-      const isThreatened = distance < (t.radius + piece.radius) ** 2;
-      if (isThreatened !== t.threatened) {
-        GameState.pieces[i].threatened.set(isThreatened);
+  requestAnimationFrame(() => {
+    for (let i = 0; i < game.pieces.length; i += 1) {
+      const t = game.pieces[i];
+      if (t.canThreaten) {
+        const distance = t.position.squareDistance(newPosition);
+        const isThreatened = distance < (t.radius + piece.radius) ** 2;
+        if (isThreatened !== t.threatened) {
+          GameState.pieces[i].threatened.set(isThreatened);
+        }
       }
     }
-  }
+  });
 }

@@ -23,6 +23,17 @@ export class Position {
     return Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2);
   }
 
+  overlaps(other: Position, r1: number, r2: number) {
+    return this.squareDistance(other) < (r1 + r2) * (r1 + r2);
+  }
+
+  add(other: Position | [number, number]) {
+    if (Array.isArray(other)) {
+      return new Position(this.x + other[0], this.y + other[1]);
+    }
+    return new Position(this.x + other.x, this.y + other.y);
+  }
+
   toString() {
     return `${this.x}, ${this.y}`;
   }

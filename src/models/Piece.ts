@@ -13,6 +13,8 @@ export type PieceType = 'King' | 'Queen' | 'Bishop' | 'Knight' | 'Rook' | 'Pawn'
 export class Piece {
   public history: Position[] = [];
   public id: string;
+  // For the knight - either "1-2" or "2-1" type of thing
+  public moveVariants: string[] = [];
 
   // In order to improve performance, we will store these calculated values
   // so that all pieces don't have to recompute them (and re-render) whenever
@@ -94,7 +96,12 @@ export class Piece {
     }
   }
 
-  getScaledMove(state: RawGameState, direction: Direction, scale: number): Position {
+  getScaledMove(
+    state: RawGameState,
+    direction: Direction,
+    scale: number,
+    variant?: string,
+  ): Position {
     const maxMove = this.getMaximumMoveWithCollision(state, direction);
     return Position.interpolate(this.position, maxMove, scale);
   }
@@ -118,5 +125,12 @@ export class Piece {
         }
       });
     });
+  }
+
+  // Truth is this exists just for the Knight.
+  // The other pieces "stop" before allowing invalid moves,
+  // but the Knight can jump over, so needs this special handling.
+  isValid(state: RawGameState, position: Position): boolean {
+    return true;
   }
 }
