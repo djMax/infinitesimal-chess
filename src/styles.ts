@@ -1,9 +1,8 @@
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
 export const useStyles = makeStyles((theme) => ({
   boardContainer: {
     flex: 1,
-    backgroundColor: theme.colors.background,
     alignItems: 'center',
     justifyContent: 'flex-start',
   },

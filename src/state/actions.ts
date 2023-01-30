@@ -1,16 +1,14 @@
 import { Observable } from '@legendapp/state';
 
-import { GameState, ObservableGameState } from '.';
+import { baseState, GameState, ObservableGameState } from '.';
 import { defaultBoard } from '../models';
 import { Direction, Piece } from '../models/Piece';
 import { getOverlappingPieces } from '../models/topology';
 
 export function resetGame(pieces = defaultBoard(), whiteToMove: boolean = true) {
   GameState.assign({
+    ...baseState,
     pieces,
-    dead: [],
-    whiteToMove,
-    gameOver: false,
   });
 }
 

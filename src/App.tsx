@@ -1,6 +1,7 @@
+import { createTheme, lightColors, darkColors, ThemeProvider, useThemeMode } from '@rneui/themed';
 import * as React from 'react';
-import { createTheme, lightColors, darkColors, ThemeProvider, useThemeMode, useTheme } from '@rneui/themed';
 import { Platform, useColorScheme } from 'react-native';
+
 import { Navigation } from './screens/Nav';
 
 const theme = createTheme({
@@ -18,9 +19,8 @@ const theme = createTheme({
   },
 });
 
-function ColorScheme({ children }: React.PropsWithChildren<{}>) {
+function ColorScheme({ children }: React.PropsWithChildren<object>) {
   const colorMode = useColorScheme();
-  const { theme } = useTheme();
   const { setMode } = useThemeMode();
 
   React.useEffect(() => {

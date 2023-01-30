@@ -12,11 +12,12 @@ import { useStyles } from '../styles';
 export const SettingsScreen = observer(
   ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Settings'>) => {
     const styles = useStyles();
+    const demos = Object.keys(DemoBoards) as (keyof typeof DemoBoards)[];
 
     return (
       <View style={styles.settingsContainer}>
         <Text style={styles.sectionTitle}>Appearance</Text>
-        <ListItem>
+        <ListItem bottomDivider>
           <ListItem.Content>
             <ListItem.Title>Show Board Background</ListItem.Title>
           </ListItem.Content>
@@ -41,8 +42,9 @@ export const SettingsScreen = observer(
         </ListItem>
 
         <Text style={styles.sectionTitle}>Sample Games</Text>
-        {Object.keys(DemoBoards).map((key) => (
+        {demos.map((key, ix) => (
           <ListItem
+            bottomDivider={ix < demos.length - 1}
             key={key}
             onPress={() => {
               resetGame(DemoBoards[key as keyof typeof DemoBoards](), true);

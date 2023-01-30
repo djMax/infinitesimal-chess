@@ -1,6 +1,7 @@
 import analytics from '@react-native-firebase/analytics';
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useTheme } from '@rneui/themed';
 import * as React from 'react';
 
 import { GameScreen } from './GameScreen';
@@ -12,11 +13,23 @@ import { SettingsButton } from '../components/SettingsButton';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const Navigation = () => {
+  const { theme } = useTheme();
   const routeNameRef = React.useRef<string>();
   const navigationRef = useNavigationContainerRef();
 
+  const navTheme = React.useMemo(
+    () => ({
+      dark: theme.mode === 'dark',
+      colors: {
+        ...(theme.mode === 'dark' ? DarkTheme : DefaultTheme).colors,
+      },
+    }),
+    [theme.mode],
+  );
+
   return (
     <NavigationContainer
+      theme={navTheme}
       ref={navigationRef}
       onReady={() => {
         routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
