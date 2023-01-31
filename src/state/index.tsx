@@ -1,22 +1,12 @@
-import { observable, ObservablePersistenceConfig } from '@legendapp/state';
-import { configureObservablePersistence, persistObservable } from '@legendapp/state/persist';
-import { Platform } from 'react-native';
+import { observable } from '@legendapp/state';
+import { persistObservable } from '@legendapp/state/persist';
 
+import { configurePersistenceLayer } from './persist';
 import { RawGameState } from './types';
 import { Direction, Piece } from '../models/Piece';
 import { Position } from '../models/Position';
 
-function getPersistenceLayer(): ObservablePersistenceConfig['persistLocal'] {
-  if (Platform.OS === 'web') {
-    return require('@legendapp/state/persist-plugins/local-storage').ObservablePersistLocalStorage;
-  }
-  return require('@legendapp/state/persist-plugins/mmkv').ObservablePersistMMKV;
-}
-
-const persistLocal = getPersistenceLayer();
-
-// Global configuration
-configureObservablePersistence({ persistLocal });
+configurePersistenceLayer();
 
 export const getBaseState = () =>
   ({

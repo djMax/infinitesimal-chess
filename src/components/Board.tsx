@@ -2,7 +2,7 @@ import { Observable } from '@legendapp/state';
 import { For, observer } from '@legendapp/state/react';
 import { useTheme } from '@rneui/themed';
 import * as React from 'react';
-import { Pressable, View, ViewStyle } from 'react-native';
+import { Platform, Pressable, View, ViewStyle } from 'react-native';
 
 import { PieceImage } from './PieceImage';
 import { Status } from './Status';
@@ -121,6 +121,33 @@ export const Board = observer(
 
     const selectedPiece = GameState.proposed.pieceId.get();
 
+    const boardProps = React.useMemo(() => {
+      const pressHandler = (event: any) => {
+        console.log('PRESS', GameState.peek().proposed.pieceId);
+        if (GameState.peek().proposed.pieceId) {
+          console.log('PROCESSING PRESS', offset, event.nativeEvent.pageX, event.nativeEvent.pageY);
+          const [x, y] = getBoardPosition(
+            event.nativeEvent.pageX - offset.x,
+            event.nativeEvent.pageY - offset.y,
+            size,
+            GameState.size.peek(),
+          );
+          console.log('HANDLE', x, y);
+          handleBoardPress(x, y);
+        }
+      };
+
+      if (Platform.OS === 'web') {
+        return {
+          onPress: pressHandler,
+        };
+      }
+
+      return {
+        onTouchStart: pressHandler,
+      };
+    }, [offset]);
+
     return (
       <View
         ref={(view) => {
@@ -132,17 +159,7 @@ export const Board = observer(
           });
         }}>
         <Pressable
-          onTouchStart={(event) => {
-            if (selectedPiece) {
-              const [x, y] = getBoardPosition(
-                event.nativeEvent.pageX - offset.x,
-                event.nativeEvent.pageY - offset.y,
-                size,
-                GameState.size.get(),
-              );
-              handleBoardPress(x, y);
-            }
-          }}
+          {...boardProps}
           style={{
             borderWidth: 2,
             borderColor: theme.colors.black,
