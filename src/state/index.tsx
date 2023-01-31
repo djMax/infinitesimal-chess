@@ -10,7 +10,7 @@ function getPersistenceLayer(): ObservablePersistenceConfig['persistLocal'] {
   if (Platform.OS === 'web') {
     return require('@legendapp/state/persist-plugins/local-storage').ObservablePersistLocalStorage;
   }
-  // return require('@legendapp/state/persist-plugins/mmkv').ObservablePersistMMKV;
+  return require('@legendapp/state/persist-plugins/mmkv').ObservablePersistMMKV;
 }
 
 const persistLocal = getPersistenceLayer();
