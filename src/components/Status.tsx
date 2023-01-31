@@ -1,13 +1,13 @@
 import { observer } from '@legendapp/state/react';
 import { Button, Slider, Text, useTheme } from '@rneui/themed';
 import * as React from 'react';
-import { Pressable, View, ViewStyle } from 'react-native';
+import { ImageStyle, Platform, Pressable, View, ViewStyle } from 'react-native';
 
 import { ArrowUp } from './ArrowUp';
 import { PieceImage } from './PieceImage';
 import { Direction } from '../models/Piece';
 import { GameState } from '../state';
-import { completeMove, resetGame, setMoveScale } from '../state/actions';
+import { completeMove, proposeDirection, resetGame, setMoveScale } from '../state/actions';
 
 const DIR_SIZE = { width: 30, height: 30 };
 
@@ -25,16 +25,17 @@ const Rotations = {
 function Arrow({
   direction,
   available,
+  proposed,
   onPress,
 }: {
   direction: Direction;
   available: Direction[];
+  proposed?: string;
   onPress: (d: Direction) => void;
 }) {
   const { theme } = useTheme();
-  const proposedDir = GameState.proposed.direction.get();
-  const isProposed = proposedDir === direction;
-  const anyProposed = proposedDir !== undefined;
+  const isProposed = proposed === direction;
+  const anyProposed = proposed !== undefined;
 
   if (!available.includes(direction)) {
     return <View style={DIR_SIZE} />;
@@ -42,7 +43,6 @@ function Arrow({
 
   const style: ViewStyle = {
     ...DIR_SIZE,
-    marginLeft: 2.5,
     transform: [{ rotate: `${Rotations[direction]}deg` }],
   };
 
@@ -61,10 +61,6 @@ export const Status = observer(() => {
   const whiteToMove = GameState.whiteToMove.get();
   const proposed = GameState.proposed.get();
   const directions = proposed.availableDirections;
-
-  const onPress = React.useCallback((direction: Direction) => {
-    GameState.proposed.direction.set(direction);
-  }, []);
 
   if (GameState.gameOver.get()) {
     const king = GameState.dead.find((p) => p.type === 'King');
@@ -90,19 +86,60 @@ export const Status = observer(() => {
       <>
         <View style={{ alignItems: 'center' }}>
           <View style={{ flexDirection: 'row' }}>
-            <Arrow direction="NW" available={directions} onPress={onPress} />
-            <Arrow direction="N" available={directions} onPress={onPress} />
-            <Arrow direction="NE" available={directions} onPress={onPress} />
+            <Arrow
+              proposed={proposed.direction}
+              direction="NW"
+              available={directions}
+              onPress={proposeDirection}
+            />
+            <Arrow
+              proposed={proposed.direction}
+              direction="N"
+              available={directions}
+              onPress={proposeDirection}
+            />
+            <Arrow
+              proposed={proposed.direction}
+              direction="NE"
+              available={directions}
+              onPress={proposeDirection}
+            />
           </View>
           <View style={{ flexDirection: 'row' }}>
-            <Arrow direction="W" available={directions} onPress={onPress} />
-            <PieceImage piece={piece} style={DIR_SIZE} />
-            <Arrow direction="E" available={directions} onPress={onPress} />
+            <Arrow
+              proposed={proposed.direction}
+              direction="W"
+              available={directions}
+              onPress={proposeDirection}
+            />
+            <PieceImage
+              piece={piece}
+              style={Platform.select<ImageStyle>({
+                web: DIR_SIZE,
+                default: { ...DIR_SIZE, marginRight: 6 },
+              })}
+            />
+            <Arrow direction="E" available={directions} onPress={proposeDirection} />
           </View>
           <View style={{ flexDirection: 'row', marginTop: 4 }}>
-            <Arrow direction="SW" available={directions} onPress={onPress} />
-            <Arrow direction="S" available={directions} onPress={onPress} />
-            <Arrow direction="SE" available={directions} onPress={onPress} />
+            <Arrow
+              proposed={proposed.direction}
+              direction="SW"
+              available={directions}
+              onPress={proposeDirection}
+            />
+            <Arrow
+              proposed={proposed.direction}
+              direction="S"
+              available={directions}
+              onPress={proposeDirection}
+            />
+            <Arrow
+              proposed={proposed.direction}
+              direction="SE"
+              available={directions}
+              onPress={proposeDirection}
+            />
           </View>
         </View>
         {proposed.direction && (
@@ -134,3 +171,5 @@ export const Status = observer(() => {
     </View>
   );
 });
+
+Status.whyDidYouRender = true;

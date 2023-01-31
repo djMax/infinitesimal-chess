@@ -1,3 +1,5 @@
+import './src/wdyr';
+
 import { registerRootComponent } from 'expo';
 import { LogBox } from 'react-native';
 

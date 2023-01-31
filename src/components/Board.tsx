@@ -79,6 +79,8 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
   );
 });
 
+PressablePiece.whyDidYouRender = true;
+
 function getBoardPosition(x: number, y: number, squareSize: number, boardSize: number) {
   return [x / squareSize, boardSize - y / squareSize];
 }
@@ -152,7 +154,9 @@ export const Board = observer(
             return;
           }
           view.measureInWindow((x, y) => {
-            setOffset({ x, y });
+            if (x !== offset.x || y !== offset.y) {
+              setOffset({ x, y });
+            }
           });
         }}>
         <Pressable
@@ -193,3 +197,5 @@ export const Board = observer(
     );
   },
 );
+
+Board.whyDidYouRender = true;

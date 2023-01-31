@@ -105,12 +105,6 @@ export function proposePiece(piece: Observable<Piece>) {
   });
 }
 
-export function proposeDirection(direction: Direction) {
-  GameState.proposed.assign({
-    direction,
-  });
-}
-
 export function setMoveScale(scale: number) {
   const game = GameState.peek();
   const piece = game.pieces.find((p) => p.id === game.proposed.pieceId)!;
@@ -132,4 +126,11 @@ export function setMoveScale(scale: number) {
       }
     }
   });
+}
+
+export function proposeDirection(direction: Direction) {
+  GameState.proposed.assign({
+    direction,
+  });
+  setMoveScale(GameState.proposed.distance.peek());
 }
