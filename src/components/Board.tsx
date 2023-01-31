@@ -123,16 +123,13 @@ export const Board = observer(
 
     const boardProps = React.useMemo(() => {
       const pressHandler = (event: any) => {
-        console.log('PRESS', GameState.peek().proposed.pieceId);
         if (GameState.peek().proposed.pieceId) {
-          console.log('PROCESSING PRESS', offset, event.nativeEvent.pageX, event.nativeEvent.pageY);
           const [x, y] = getBoardPosition(
             event.nativeEvent.pageX - offset.x,
             event.nativeEvent.pageY - offset.y,
             size,
             GameState.size.peek(),
           );
-          console.log('HANDLE', x, y);
           handleBoardPress(x, y);
         }
       };
