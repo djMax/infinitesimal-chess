@@ -1,8 +1,9 @@
 import { observer } from '@legendapp/state/react';
-import { Button, Icon, Slider, Text } from '@rneui/themed';
+import { Button, Slider, Text, useTheme } from '@rneui/themed';
 import * as React from 'react';
 import { Pressable, View, ViewStyle } from 'react-native';
 
+import { ArrowUp } from './ArrowUp';
 import { PieceImage } from './PieceImage';
 import { Direction } from '../models/Piece';
 import { GameState } from '../state';
@@ -30,6 +31,7 @@ function Arrow({
   available: Direction[];
   onPress: (d: Direction) => void;
 }) {
+  const { theme } = useTheme();
   const proposedDir = GameState.proposed.direction.get();
   const isProposed = proposedDir === direction;
   const anyProposed = proposedDir !== undefined;
@@ -39,6 +41,8 @@ function Arrow({
   }
 
   const style: ViewStyle = {
+    ...DIR_SIZE,
+    marginLeft: 2.5,
     transform: [{ rotate: `${Rotations[direction]}deg` }],
   };
 
@@ -48,7 +52,7 @@ function Arrow({
 
   return (
     <Pressable style={DIR_SIZE} onPress={() => onPress(direction)}>
-      <Icon name="arrow-up" type="feather" style={style} size={DIR_SIZE.height} />
+      <ArrowUp style={style} stroke={theme.colors.black} />
     </Pressable>
   );
 }
@@ -95,7 +99,7 @@ export const Status = observer(() => {
             <PieceImage piece={piece} style={DIR_SIZE} />
             <Arrow direction="E" available={directions} onPress={onPress} />
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row', marginTop: 4 }}>
             <Arrow direction="SW" available={directions} onPress={onPress} />
             <Arrow direction="S" available={directions} onPress={onPress} />
             <Arrow direction="SE" available={directions} onPress={onPress} />

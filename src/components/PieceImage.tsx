@@ -1,5 +1,6 @@
-import { Image, ImageStyle } from "react-native";
-import { Piece, PieceType } from "../models/Piece";
+import { Image, ImageStyle } from 'react-native';
+
+import { Piece, PieceType } from '../models/Piece';
 
 const BlackPieces: Record<PieceType, any> = {
   Pawn: require('../../assets/bp.png'),
@@ -17,10 +18,8 @@ const WhitePieces: Record<PieceType, any> = {
   Knight: require('../../assets/wn.png'),
   Queen: require('../../assets/wq.png'),
   Rook: require('../../assets/wr.png'),
-}
+};
 
-export function PieceImage({ piece, style }: { piece: Piece, style: ImageStyle }) {
-  return (
-    <Image source={(piece.black ? BlackPieces : WhitePieces)[piece.type]} style={style} />
-  )
+export function PieceImage({ piece, style }: { piece: Piece; style: ImageStyle }) {
+  return <Image source={(piece.black ? BlackPieces : WhitePieces)[piece.type]} style={style} />;
 }

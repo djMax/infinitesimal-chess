@@ -1,5 +1,9 @@
-import analytics from '@react-native-firebase/analytics';
-import { DarkTheme, DefaultTheme, NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from '@rneui/themed';
 import * as React from 'react';
@@ -8,6 +12,7 @@ import { GameScreen } from './GameScreen';
 import { IntroScreen } from './IntroScreen';
 import { RootStackParamList } from './RootStackParamList';
 import { SettingsScreen } from './SettingsScreen';
+import { trackScreen } from '../adapters/firebase';
 import { SettingsButton } from '../components/SettingsButton';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -39,10 +44,7 @@ export const Navigation = () => {
         const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
 
         if (previousRouteName !== currentRouteName) {
-          await analytics().logScreenView({
-            screen_name: currentRouteName,
-            screen_class: currentRouteName,
-          });
+          await trackScreen(currentRouteName);
         }
         routeNameRef.current = currentRouteName;
       }}>

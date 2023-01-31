@@ -1,14 +1,17 @@
-import { useNavigation } from "@react-navigation/native";
-import { Icon } from "@rneui/themed";
-import { Pressable } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from "../screens/RootStackParamList";
+import { useTheme } from '@rneui/themed';
+import { Pressable } from 'react-native';
+
+import { Settings } from './Settings';
+import { RootStackParamList } from '../screens/RootStackParamList';
 
 export function SettingsButton() {
+  const { theme } = useTheme();
   const nav = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   return (
-    <Pressable onPress={() => nav.navigate("Settings")}>
-      <Icon name="settings" type="feather" />
+    <Pressable onPress={() => nav.navigate('Settings')}>
+      <Settings stroke={theme.colors.black} />
     </Pressable>
   );
 }

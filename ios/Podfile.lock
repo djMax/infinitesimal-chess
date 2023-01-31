@@ -531,6 +531,8 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
+  - RNSVG (13.4.0):
+    - React-Core
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -589,6 +591,7 @@ DEPENDENCIES:
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBPerf (from `../node_modules/@react-native-firebase/perf`)"
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -721,6 +724,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/perf"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -797,6 +802,7 @@ SPEC CHECKSUMS:
   RNFBCrashlytics: 6bc136bcbcc9282b026795395d4cfcf3098ee965
   RNFBPerf: ec2598b0bd01f6e8ccf4f626fa4f9cdb262fcfbe
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
+  RNSVG: 07dbd870b0dcdecc99b3a202fa37c8ca163caec2
   Yoga: eca980a5771bf114c41a754098cd85e6e0d90ed7
 
 PODFILE CHECKSUM: 0be415b1b4b506ecb6e397a88c55022d7d56bafd

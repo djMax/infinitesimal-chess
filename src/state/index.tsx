@@ -6,10 +6,14 @@ import { RawGameState } from './types';
 import { Direction, Piece } from '../models/Piece';
 import { Position } from '../models/Position';
 
-const persistLocal = Platform.select<ObservablePersistenceConfig['persistLocal']>({
-  default: require('@legendapp/state/persist-plugins/mmkv').ObservablePersistMMKV,
-  web: require('@legendapp/state/persist-plugins/local-storage').ObservablePersistLocalStorage,
-});
+function getPersistenceLayer(): ObservablePersistenceConfig['persistLocal'] {
+  if (Platform.OS === 'web') {
+    return require('@legendapp/state/persist-plugins/local-storage').ObservablePersistLocalStorage;
+  }
+  // return require('@legendapp/state/persist-plugins/mmkv').ObservablePersistMMKV;
+}
+
+const persistLocal = getPersistenceLayer();
 
 // Global configuration
 configureObservablePersistence({ persistLocal });
