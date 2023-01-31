@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "732200193213",
+    "firebase_url": "https://infinitechess-67dbe-default-rtdb.firebaseio.com",
     "project_id": "infinitechess-67dbe",
     "storage_bucket": "infinitechess-67dbe.appspot.com"
   },

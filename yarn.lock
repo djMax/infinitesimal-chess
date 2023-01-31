@@ -3122,6 +3122,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-clipboard/clipboard@npm:^1.11.1":
+  version: 1.11.1
+  resolution: "@react-native-clipboard/clipboard@npm:1.11.1"
+  peerDependencies:
+    react: ">=16.0"
+    react-native: ">=0.57.0"
+  checksum: 954f21b9cddc1dc4f1291fcfc2101c60ef1d21eba4140e3a97314022b9c2d846c2d562176cfef495a00230c2c6c6677c758e806e0dbcf81dc8f9b64b88c9162b
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-clean@npm:^9.2.1":
   version: 9.2.1
   resolution: "@react-native-community/cli-clean@npm:9.2.1"
@@ -3338,17 +3348,17 @@ __metadata:
   linkType: hard
 
 "@react-native-firebase/analytics@npm:^16.6.0":
-  version: 16.6.0
-  resolution: "@react-native-firebase/analytics@npm:16.6.0"
+  version: 16.7.0
+  resolution: "@react-native-firebase/analytics@npm:16.7.0"
   peerDependencies:
-    "@react-native-firebase/app": 16.6.0
-  checksum: da31448179c27eec0044a3f86348beecbe7a6651f073cbaca9662116124c311cfa6b88ca941092aee0c8303b7ee975b0cd354fe79f6d181d1f13372c8d632f4e
+    "@react-native-firebase/app": 16.7.0
+  checksum: 20c69cdfda6b92beabcfbf612d65d9cdbc95155d6f70c7fd886358b4215934781fd16b950314ac5183756ca79c5e37b4f4e6a2ba68c102af8e60a09550f74b8e
   languageName: node
   linkType: hard
 
 "@react-native-firebase/app@npm:^16.6.0":
-  version: 16.6.0
-  resolution: "@react-native-firebase/app@npm:16.6.0"
+  version: 16.7.0
+  resolution: "@react-native-firebase/app@npm:16.7.0"
   dependencies:
     "@expo/config-plugins": ^5.0.4
     opencollective-postinstall: ^2.0.1
@@ -3356,30 +3366,39 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 4b673fcc62401a0b66b6afdb8de12c5d3326f44a8c7a46079131004d05bf3ee3b5ef63c8da6620f7194fab7ca2eef1f064993e61325d32c1957e262b6c3d9570
+  checksum: d3274ac0461e7524849c544bd00bd628b7a305f1798c33c28367dff4a8c3e55ae2d8428f8ae2d2cb3ed99760054a7cf6cceaca43052015497cd7ae162272b3e7
   languageName: node
   linkType: hard
 
 "@react-native-firebase/crashlytics@npm:^16.6.0":
-  version: 16.6.0
-  resolution: "@react-native-firebase/crashlytics@npm:16.6.0"
+  version: 16.7.0
+  resolution: "@react-native-firebase/crashlytics@npm:16.7.0"
   dependencies:
     "@expo/config-plugins": ^5.0.4
     stacktrace-js: ^2.0.0
   peerDependencies:
-    "@react-native-firebase/app": 16.6.0
-  checksum: 2c14af131facc832e0abd41ee4e31eb6dc88cb24fc728a97beaac8b03352bbe2fc9878ba19046ee6657e8081389dfc19698543f926f8b6ecc6d99491521d7ba8
+    "@react-native-firebase/app": 16.7.0
+  checksum: d40227a2e381c4b472baa105162a64acac9c47200cec7429ebcde8b5c67d1ee320101dccbef9a38d130029e97c9743d87a074c500c032aadc0e0ae237d30adda
+  languageName: node
+  linkType: hard
+
+"@react-native-firebase/database@npm:^16.6.0":
+  version: 16.7.0
+  resolution: "@react-native-firebase/database@npm:16.7.0"
+  peerDependencies:
+    "@react-native-firebase/app": 16.7.0
+  checksum: 0c49a93b6330c09e84fd44b8a02ab930c316bc2f100e00ef0cfc1d1779997e5315b810977bb328e67bea45b8ac464e99562ec9cadb2897b7738c6b1a1a111f01
   languageName: node
   linkType: hard
 
 "@react-native-firebase/perf@npm:^16.6.0":
-  version: 16.6.0
-  resolution: "@react-native-firebase/perf@npm:16.6.0"
+  version: 16.7.0
+  resolution: "@react-native-firebase/perf@npm:16.7.0"
   dependencies:
     "@expo/config-plugins": ^5.0.4
   peerDependencies:
-    "@react-native-firebase/app": 16.6.0
-  checksum: 2726b41ecc84dd1caa6b88e3338c56e77521b24062dd4be4812081863d790b019bf202a7f10329e82a2321d0e22b338eb205a5a9a2a7dd63d0d8c7ce329d17cd
+    "@react-native-firebase/app": 16.7.0
+  checksum: b579d090b4736ed540eaef9ca27ef24531ffa8bfac03afee58d8652327f71ff64a4db992b6f30b78c95c268a85629b431d702e66b749be0dc358665f875c5ddc
   languageName: node
   linkType: hard
 
@@ -3427,23 +3446,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/elements@npm:^1.3.13":
-  version: 1.3.13
-  resolution: "@react-navigation/elements@npm:1.3.13"
+"@react-navigation/elements@npm:^1.3.14":
+  version: 1.3.14
+  resolution: "@react-navigation/elements@npm:1.3.14"
   peerDependencies:
     "@react-navigation/native": ^6.0.0
     react: "*"
     react-native: "*"
     react-native-safe-area-context: ">= 3.0.0"
-  checksum: 341d8d44ecda16bbed990d40f10bedd368d579ffe1fd4568f0293f97299768167a110763170da92ff14ccff3916704dbc133465776ecdc9ac65cc8bf3caa1e31
+  checksum: bf0856fb4dda63dcd21f3e6c9136fdf749e35a02e97741915d225f770348eea0ba8aea9875f653c984b12420cfb2a4a55cd5c0e4e033976d9e51be7ae27cf1a7
   languageName: node
   linkType: hard
 
-"@react-navigation/native-stack@npm:^6.9.8":
-  version: 6.9.8
-  resolution: "@react-navigation/native-stack@npm:6.9.8"
+"@react-navigation/native-stack@npm:^6.9.9":
+  version: 6.9.9
+  resolution: "@react-navigation/native-stack@npm:6.9.9"
   dependencies:
-    "@react-navigation/elements": ^1.3.13
+    "@react-navigation/elements": ^1.3.14
     warn-once: ^0.1.0
   peerDependencies:
     "@react-navigation/native": ^6.0.0
@@ -3451,13 +3470,13 @@ __metadata:
     react-native: "*"
     react-native-safe-area-context: ">= 3.0.0"
     react-native-screens: ">= 3.0.0"
-  checksum: 37413ffc79f442860cc1cbd51d4f9c8160e5a01826ca7e1b815e88f2a24b5df53dc6c604a76e099aa6a2ad809c093b253924095e975ad76325fdc443e6457b02
+  checksum: 03bdb6e990fbc5146642b2a2007a3ef73793bc9151a89bc64b86ca5ecf16c509eec865d2443eb87a72ada146e7c54441c552c69e7971a13d81c7117e97f8eeb7
   languageName: node
   linkType: hard
 
-"@react-navigation/native@npm:^6.1.2":
-  version: 6.1.2
-  resolution: "@react-navigation/native@npm:6.1.2"
+"@react-navigation/native@npm:^6.1.3":
+  version: 6.1.3
+  resolution: "@react-navigation/native@npm:6.1.3"
   dependencies:
     "@react-navigation/core": ^6.4.6
     escape-string-regexp: ^4.0.0
@@ -3466,7 +3485,7 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 1bdf5339cccc1c40f780929738790f6d7d80533c80c3db80c598870f124782d83f4842b63a2bced55e040d120fc0de419d780fd906108c5358a83cde540b595e
+  checksum: 8aa9d60d0c135381691363ec438db90d2584cb48fb99dbf6707a61b81bce709e5407cde3c1d93c4966245069bc5149d8925a4ef512906619cfac057cacdc43d9
   languageName: node
   linkType: hard
 
@@ -10025,12 +10044,14 @@ __metadata:
     "@babel/core": ^7.12.9
     "@expo/webpack-config": ^0.17.2
     "@legendapp/state": ^0.23.2
+    "@react-native-clipboard/clipboard": ^1.11.1
     "@react-native-firebase/analytics": ^16.6.0
     "@react-native-firebase/app": ^16.6.0
     "@react-native-firebase/crashlytics": ^16.6.0
+    "@react-native-firebase/database": ^16.6.0
     "@react-native-firebase/perf": ^16.6.0
-    "@react-navigation/native": ^6.1.2
-    "@react-navigation/native-stack": ^6.9.8
+    "@react-navigation/native": ^6.1.3
+    "@react-navigation/native-stack": ^6.9.9
     "@rneui/base": ^4.0.0-rc.7
     "@rneui/themed": ^4.0.0-rc.7
     "@types/jest": ^29.2.5
@@ -10053,11 +10074,12 @@ __metadata:
     react: 18.1.0
     react-dom: 18.1.0
     react-native: 0.70.5
-    react-native-mmkv: ^2.5.1
+    react-native-mmkv: ^2.6.1
     react-native-safe-area-context: 4.4.1
     react-native-screens: ~3.18.0
     react-native-svg: 13.4.0
     react-native-svg-web: ^1.0.9
+    react-native-uuid: ^2.0.1
     react-native-vector-icons: ^9.2.0
     react-native-web: ~0.18.9
     typescript: ^4.6.3
@@ -15076,13 +15098,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-mmkv@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "react-native-mmkv@npm:2.5.1"
+"react-native-mmkv@npm:^2.6.1":
+  version: 2.6.1
+  resolution: "react-native-mmkv@npm:2.6.1"
   peerDependencies:
     react: "*"
-    react-native: "*"
-  checksum: 6f0cf484e71d8069c9b3cdb57b76eafaca40aa75f359beb6959c77d0ef66d0481d4459b1ffa94640170ce4744e337fefb38b8ccf6e1a3c3663561ede5f7a2c20
+    react-native: ">=0.71.0"
+  checksum: c73959d10e102a08bbde6a8dd041840a680faa8ef411125431afe63fdce38bf5f58cbd3985f8ef63832b8f5c0279ca39d7cd4a2ca1bde172a23eb74e644af5e0
   languageName: node
   linkType: hard
 
@@ -15151,6 +15173,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: e630c057d6a0947c4d729538f643585a1fd9380975c1cf9adffad7647822b35219a9e1e60407f422b2b70592ed7f7e8766fab15df74f9cfce0b1c8a1c3544676
+  languageName: node
+  linkType: hard
+
+"react-native-uuid@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "react-native-uuid@npm:2.0.1"
+  checksum: 2fae6e2ee6cef108a31ae9d5be661a1947a86f4c6a812c7386b57d970861b364dc887bc4fe3225227aeea7925ccdc24d4478ff30193305abc283eb4a30ee2138
   languageName: node
   linkType: hard
 

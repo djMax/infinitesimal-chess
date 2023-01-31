@@ -1,10 +1,13 @@
+import Clipboard from '@react-native-clipboard/clipboard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Text } from '@rneui/themed';
 import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { resetGame } from '../state/actions';
 
 import { RootStackParamList } from './RootStackParamList';
+import { createGame } from '../adapters/firebase';
+import { GameState } from '../state';
+import { resetGame } from '../state/actions';
 
 const textStyle = {
   fontSize: 15,
@@ -34,10 +37,26 @@ export function IntroScreen({ navigation }: NativeStackScreenProps<RootStackPara
         </Text>
       </ScrollView>
       <Button
-        title="Play"
+        style={{ marginBottom: 20 }}
+        title="Create New Game"
+        onPress={() => {
+          const isWhite = true;
+          createGame(isWhite).then((gameId) => {
+            Clipboard.setString(`https://chess.pyralis.com/play/game?id=${gameId}`);
+            resetGame();
+            GameState.multiplayer.assign({
+              gameId,
+              isWhite,
+            });
+            navigation.replace('Game');
+          });
+        }}
+      />
+      <Button
+        title="Local Multiplayer"
         onPress={() => {
           resetGame();
-          navigation.navigate('Game');
+          navigation.replace('Game');
         }}
       />
     </SafeAreaView>

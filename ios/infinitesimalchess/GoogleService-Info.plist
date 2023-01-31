@@ -30,5 +30,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:732200193213:ios:590db9d17818a0ec7ebbd4</string>
+	<key>DATABASE_URL</key>
+	<string>https://infinitechess-67dbe-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

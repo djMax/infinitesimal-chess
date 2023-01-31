@@ -12,6 +12,10 @@ export interface RawGameState {
     valid: boolean;
     variant: string | undefined;
   };
+  multiplayer: {
+    gameId: string | undefined;
+    isWhite: boolean;
+  }
   dead: Piece[];
   whiteToMove: boolean;
   gameOver: boolean;

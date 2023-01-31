@@ -1,5 +1,9 @@
 import { getAnalytics, logEvent } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
+import { ref, set, getDatabase } from 'firebase/database';
+import uuid from 'react-native-uuid';
+
+import { GameSettings } from '../state';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDnc_5Do7-GgRc1iZSfNwO4wIE0Jk533wA',
@@ -19,4 +23,16 @@ export async function trackScreen(screenName?: string) {
   if (screenName) {
     logEvent(analytics, screenName, { screen_name: screenName });
   }
+}
+
+export async function createGame(isWhite: boolean): Promise<string> {
+  const gameId = String(uuid.v4());
+  const db = getDatabase(app);
+  const gameRef = ref(db, `games/${gameId}`);
+  set(gameRef, {
+    start: Date.now(),
+    [isWhite ? 'white' : 'black']: GameSettings.playerId,
+    moves: [],
+  });
+  return gameId;
 }
