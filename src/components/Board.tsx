@@ -8,9 +8,9 @@ import { PieceImage } from './PieceImage';
 import { Status } from './Status';
 import { Piece } from '../models/Piece';
 import { Position } from '../models/Position';
+import { nearestPoint } from '../models/topology';
 import { GameSettings, GameState } from '../state';
 import { proposePiece, setMoveScale } from '../state/actions';
-import { nearestPoint } from '../models/topology';
 
 const GRID = Array(8).fill(0);
 
@@ -47,12 +47,14 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
 
   const proposedId = GameState.proposed.pieceId.get();
 
-  if (piece.threatened.get()) {
+  const threatened = piece.threatened.get();
+  const canThreaten = piece.canThreaten.get();
+  if (threatened) {
     Object.assign(imgStyle, {
       borderRadius: size * r,
       backgroundColor: piece.black ? '#FF0000B0' : '#FF0000B0',
     });
-  } else if (piece.canThreaten.get()) {
+  } else if (canThreaten) {
     Object.assign(imgStyle, {
       borderRadius: size * r,
       backgroundColor: piece.black ? '#CCCC00B0' : '#CCCC00B0',

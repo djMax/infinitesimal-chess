@@ -14,24 +14,25 @@ const persistLocal = Platform.select<ObservablePersistenceConfig['persistLocal']
 // Global configuration
 configureObservablePersistence({ persistLocal });
 
-export const baseState: RawGameState = {
-  pieces: [] as Piece[],
-  proposed: {
-    pieceId: undefined as string | undefined,
-    direction: undefined as Direction | undefined,
-    availableDirections: [] as Direction[],
-    distance: 1,
-    position: undefined as Position | undefined,
-    valid: true,
-    variant: undefined,
-  },
-  dead: [] as Piece[],
-  whiteToMove: true,
-  gameOver: false,
-  size: 8,
-};
+export const getBaseState = () =>
+  ({
+    pieces: [] as Piece[],
+    proposed: {
+      pieceId: undefined as string | undefined,
+      direction: undefined as Direction | undefined,
+      availableDirections: [] as Direction[],
+      distance: 1,
+      position: undefined as Position | undefined,
+      valid: true,
+      variant: undefined,
+    },
+    dead: [] as Piece[],
+    whiteToMove: true,
+    gameOver: false,
+    size: 8,
+  } as RawGameState);
 
-export const GameState = observable<RawGameState>({ ...baseState });
+export const GameState = observable<RawGameState>({ ...getBaseState() });
 
 export const GameSettings = observable({
   boardSettings: {
