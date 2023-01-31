@@ -89,7 +89,7 @@ export class Knight extends Piece {
     }
   }
 
-  isValid(state: RawGameState, position: Position) {
+  isValid(state: RawGameState, position: Position): boolean {
     // Is our piece within range?
     return !state.pieces.find(
       (other) =>

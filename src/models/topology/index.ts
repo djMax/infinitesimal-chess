@@ -33,9 +33,10 @@ function getStartAndEndOfOverlap(attacker: Piece, line: jsts.geom.LineString, ta
     .sort((a, b) => a.dist - b.dist);
   if (attacker.black !== target.black) {
     // Set the max to the point on the line nearest the center of the target
-    const str = new LineSegment(...line.getCoordinates());
-    const end = str.closestPoint(new Coordinate(target.position.x, target.position.y));
-    return { start: mapped[0].at, end: new Position(end.x, end.y) };
+    const pt = geo.createPoint(new Coordinate(target.position.x, target.position.y));
+    const dOp = new jsts.operation.distance.DistanceOp(line, pt);
+    const end = dOp.nearestPoints();
+    return { start: mapped[0].at, end: new Position(end[0].x, end[0].y) };
   }
   return { start: mapped[0].at, end: mapped[1].at };
 }
