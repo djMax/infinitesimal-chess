@@ -20,4 +20,5 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_INFINITESIMAL_CHESS }}'
           channelId: live
-          projectId: infinitesimal-chess
+          projectId: infinitechess-67dbe
+
