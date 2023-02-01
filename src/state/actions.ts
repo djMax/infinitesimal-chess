@@ -108,7 +108,12 @@ export function proposePiece(piece: Observable<Piece>) {
 export function setMoveScale(scale: number) {
   const game = GameState.peek();
   const piece = game.pieces.find((p) => p.id === game.proposed.pieceId)!;
-  const newPosition = piece.getScaledMove(GameState.peek(), game.proposed.direction!, scale);
+  const newPosition = piece.getScaledMove(
+    GameState.peek(),
+    game.proposed.direction!,
+    scale,
+    game.proposed.variant,
+  );
   GameState.proposed.assign({
     distance: scale,
     position: newPosition,

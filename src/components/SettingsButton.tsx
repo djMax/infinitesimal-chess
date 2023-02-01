@@ -3,7 +3,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from '@rneui/themed';
 import { Pressable } from 'react-native';
 
-import { Settings } from './Settings';
+import { Settings } from './svg/Settings';
 import { RootStackParamList } from '../screens/RootStackParamList';
 
 export function SettingsButton() {

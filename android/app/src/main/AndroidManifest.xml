@@ -28,6 +28,13 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.pyralis.infinitesimalchess"/>
         <data android:scheme="exp+infinitesimal-chess"/>
+        <data android:scheme="infinitesimalchess"/>
+      </intent-filter>
+      <intent-filter android:autoVerify="true" data-generated="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <data android:scheme="https" android:host="chess.pyralis.com" android:pathPrefix="/game"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

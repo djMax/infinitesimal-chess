@@ -3,7 +3,7 @@ import { Direction, Piece } from '../Piece';
 import { Position } from '../Position';
 import { getPiecesOnLine } from '../topology';
 
-const DELTAS: Record<Direction, [number, number]> = {
+export const DELTAS: Record<Direction, [number, number]> = {
   N: [1, 2],
   NE: [2, 1],
   E: [2, -1],
@@ -51,8 +51,6 @@ export class Knight extends Piece {
     scale: number,
     variant: string,
   ): Position {
-    // TODO this needs a "variant" to decide whether to move X first or Y first.
-    // For now, we'll just move X first.
     const delta = DELTAS[direction];
     const xIsFirst = variant !== 'VH';
     const threshold = xIsFirst
@@ -80,10 +78,7 @@ export class Knight extends Piece {
       );
       return Position.interpolate(
         newPos,
-        new Position(
-          newPos.x + (xIsFirst ? 0 : delta[0]),
-          this.position.y + (xIsFirst ? delta[1] : 0),
-        ),
+        this.position.add(delta),
         (scale - threshold) / (1 - threshold),
       );
     }

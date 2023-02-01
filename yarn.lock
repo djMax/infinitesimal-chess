@@ -3391,6 +3391,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/dynamic-links@npm:^16.7.0":
+  version: 16.7.0
+  resolution: "@react-native-firebase/dynamic-links@npm:16.7.0"
+  dependencies:
+    "@expo/config-plugins": ^5.0.4
+  peerDependencies:
+    "@react-native-firebase/app": 16.7.0
+  checksum: 9f11291b784e580428f1bf153dbb6f87578a3e3df90c5cee3db3acd60ff8e942ecd5a37cbe7bad2e3a4e09d12991170275f03af6652a92878403e28423f145fa
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/perf@npm:^16.6.0":
   version: 16.7.0
   resolution: "@react-native-firebase/perf@npm:16.7.0"
@@ -10049,6 +10060,7 @@ __metadata:
     "@react-native-firebase/app": ^16.6.0
     "@react-native-firebase/crashlytics": ^16.6.0
     "@react-native-firebase/database": ^16.6.0
+    "@react-native-firebase/dynamic-links": ^16.7.0
     "@react-native-firebase/perf": ^16.6.0
     "@react-navigation/native": ^6.1.3
     "@react-navigation/native-stack": ^6.9.9

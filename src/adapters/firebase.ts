@@ -1,5 +1,6 @@
 import analytics from '@react-native-firebase/analytics';
 import database from '@react-native-firebase/database';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 import uuid from 'react-native-uuid';
 
 import { GameSettings, GameState } from '../state';
@@ -47,4 +48,11 @@ export async function joinGame(gameId: string): Promise<boolean> {
     isWhite,
   });
   return true;
+}
+
+export function setupDynamicLinks() {
+  const unsub = dynamicLinks().onLink((link) => {
+    console.log('GOT LINK', link);
+  });
+  return unsub;
 }

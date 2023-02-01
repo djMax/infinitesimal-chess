@@ -118,6 +118,9 @@ PODS:
   - Firebase/Database (10.3.0):
     - Firebase/CoreOnly
     - FirebaseDatabase (~> 10.3.0)
+  - Firebase/DynamicLinks (10.3.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 10.3.0)
   - Firebase/Performance (10.3.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 10.3.0)
@@ -159,6 +162,8 @@ PODS:
   - FirebaseDatabase (10.3.0):
     - FirebaseCore (~> 10.0)
     - leveldb-library (~> 1.22)
+  - FirebaseDynamicLinks (10.3.0):
+    - FirebaseCore (~> 10.0)
   - FirebaseInstallations (10.4.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
@@ -537,6 +542,11 @@ PODS:
     - Firebase/Database (= 10.3.0)
     - React-Core
     - RNFBApp
+  - RNFBDynamicLinks (16.7.0):
+    - Firebase/DynamicLinks (= 10.3.0)
+    - GoogleUtilities/AppDelegateSwizzler
+    - React-Core
+    - RNFBApp
   - RNFBPerf (16.7.0):
     - Firebase/Performance (= 10.3.0)
     - React-Core
@@ -606,6 +616,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
+  - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
   - "RNFBPerf (from `../node_modules/@react-native-firebase/perf`)"
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -622,6 +633,7 @@ SPEC REPOS:
     - FirebaseCoreInternal
     - FirebaseCrashlytics
     - FirebaseDatabase
+    - FirebaseDynamicLinks
     - FirebaseInstallations
     - FirebasePerformance
     - FirebaseRemoteConfig
@@ -744,6 +756,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/crashlytics"
   RNFBDatabase:
     :path: "../node_modules/@react-native-firebase/database"
+  RNFBDynamicLinks:
+    :path: "../node_modules/@react-native-firebase/dynamic-links"
   RNFBPerf:
     :path: "../node_modules/@react-native-firebase/perf"
   RNScreens:
@@ -784,6 +798,7 @@ SPEC CHECKSUMS:
   FirebaseCoreInternal: e301297f4c15a17489e48ed722d733b1578e0c02
   FirebaseCrashlytics: f20d956f8229010b645e534693c39e0b7843c268
   FirebaseDatabase: d0732ba8aece0eccfa0cfb3ef540e7ba6fa1c6a6
+  FirebaseDynamicLinks: 51c81d07bd63155bb56d76b0abdda79c8a3d8d02
   FirebaseInstallations: 36b38c733fd37e50857e5e8d74138648f466f18c
   FirebasePerformance: 8f1c8e5a4fcc5a68400835518ee63a6d63dbff0c
   FirebaseRemoteConfig: bf23f54161ebad4fb4acb1ac44ad7783a784f3ab
@@ -830,6 +845,7 @@ SPEC CHECKSUMS:
   RNFBApp: aecfcdc0964d9bc0c5f7ba05efb50be724d8e8b3
   RNFBCrashlytics: d57e884467505ae23b91af106b6b46a6b25096b6
   RNFBDatabase: efc47c8098c2f54ddd4bf65cfc99773868619770
+  RNFBDynamicLinks: 1635b3b4179b0850b45dc5093b1bc949f8e4067d
   RNFBPerf: 6fbd022fd0200d2bc48c443718a8bf6438a9a004
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 07dbd870b0dcdecc99b3a202fa37c8ca163caec2

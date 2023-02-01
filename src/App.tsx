@@ -1,6 +1,7 @@
 import { createTheme, lightColors, darkColors, ThemeProvider, useThemeMode } from '@rneui/themed';
 import * as React from 'react';
 import { Platform, useColorScheme } from 'react-native';
+import { setupDynamicLinks } from './adapters/firebase';
 
 import { Navigation } from './screens/Nav';
 
@@ -31,6 +32,7 @@ function ColorScheme({ children }: React.PropsWithChildren<object>) {
 }
 
 const App = () => {
+  React.useEffect(setupDynamicLinks, []);
   return (
     <ThemeProvider theme={theme}>
       <ColorScheme>

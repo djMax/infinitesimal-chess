@@ -36,3 +36,7 @@ export async function createGame(isWhite: boolean): Promise<string> {
   });
   return gameId;
 }
+
+export function setupDynamicLinks() {
+  return () => {};
+}

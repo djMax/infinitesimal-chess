@@ -35,10 +35,22 @@ export function IntroScreen({ navigation }: NativeStackScreenProps<RootStackPara
           piece at all - even by a tiny fraction - you capture it. This means that it is possible to
           capture more than one piece with a single move.
         </Text>
+        <Text style={textStyle}>
+          Move mechanics are a work in progress - especially for the knight. Generally, tap on a
+          piece to select it and then tap on the board where you want to go. You can fine tune this
+          with the directional arrows and the slider.
+        </Text>
+        <Text style={textStyle}>
+          For the knight, there will be three sets of arrows, one for each step of the move. Select
+          each one in succession, and then set the amount of the move with the slider or by pressing
+          the board.
+        </Text>
       </ScrollView>
+
       <Button
         style={{ marginBottom: 20 }}
-        title="Create New Game"
+        disabled
+        title="Invite Opponent"
         onPress={() => {
           const isWhite = true;
           createGame(isWhite).then((gameId) => {
@@ -52,6 +64,7 @@ export function IntroScreen({ navigation }: NativeStackScreenProps<RootStackPara
           });
         }}
       />
+
       <Button
         title="Local Multiplayer"
         onPress={() => {

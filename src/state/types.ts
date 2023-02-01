@@ -21,3 +21,16 @@ export interface RawGameState {
   gameOver: boolean;
   size: number;
 }
+
+export interface GameHistory {
+  gameId?: string;
+  name: string;
+  white: string;
+  black: string;
+  moves: {
+    pieceId: string;
+    direction: Direction;
+    position: Position;
+    time: number;
+  }[];
+}

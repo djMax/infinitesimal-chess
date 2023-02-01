@@ -92,6 +92,10 @@ function handleBoardPress(x: number, y: number) {
     return;
   }
   const piece = g.pieces.find((pc) => pc.id === p.pieceId)!;
+  if (piece.type === 'Knight') {
+    return;
+  }
+
   const dir = piece.availableDirections(g);
   const start = piece.position;
   const end = new Position(x, y);

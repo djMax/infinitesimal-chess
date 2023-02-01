@@ -3,7 +3,7 @@ import { persistObservable } from '@legendapp/state/persist';
 import uuid from 'react-native-uuid';
 
 import { configurePersistenceLayer } from './persist';
-import { RawGameState } from './types';
+import { GameHistory, RawGameState } from './types';
 import { Direction, Piece } from '../models/Piece';
 import { Position } from '../models/Position';
 
@@ -48,3 +48,9 @@ persistObservable(GameSettings, { local: 'settings' });
 if (!GameSettings.playerId.get()) {
   GameSettings.playerId.set(String(uuid.v4()));
 }
+
+export const GameList = observable({
+  games: [] as GameHistory[],
+});
+
+persistObservable(GameList, { local: 'games' });
