@@ -1,7 +1,7 @@
 import { RawGameState } from '../../state/types';
 import { Direction, Piece } from '../Piece';
 import { Position } from '../Position';
-import { getPiecesOnLine } from '../topology';
+import { getPiecesOnLine, nearestPoint } from '../topology';
 
 export const DELTAS: Record<Direction, [number, number]> = {
   N: [1, 2],
@@ -108,5 +108,34 @@ export class Knight extends Piece {
     );
     const union = [...new Set([...l1, ...l2])];
     return { pieces: union };
+  }
+
+  getScaleToNearestPoint(dir: Direction, variant: string, point: Position) {
+    const p1 = this.position;
+    const xIsFirst = variant !== 'VH';
+    const p2 = this.position.add([xIsFirst ? DELTAS[dir][0] : 0, xIsFirst ? 0 : DELTAS[dir][1]]);
+    const p3 = this.position.add(DELTAS[dir]);
+
+    console.log('LINE', p1.toString(), p2.toString(), p3.toString());
+    const toL1 = nearestPoint(p1, p2, point);
+    const toL2 = nearestPoint(p2, p3, point);
+    console.log('L1', toL1.toString());
+    console.log('L2', toL2.toString());
+
+    let scale: number;
+    const firstIs2 = xIsFirst ? Math.abs(DELTAS[dir][0]) === 2 : Math.abs(DELTAS[dir][1]) === 2;
+    if (point.squareDistance(toL1) < point.squareDistance(toL2)) {
+      const maxD = p1.squareDistance(p2);
+      const moveD = p1.squareDistance(toL1);
+      console.log('Along l1', Math.sqrt(moveD) / Math.sqrt(maxD), firstIs2);
+      scale = Math.sqrt(moveD) / Math.sqrt(maxD) / (firstIs2 ? 2 : 3);
+    } else {
+      const maxD = p2.squareDistance(p3);
+      const moveD = p2.squareDistance(toL2);
+      console.log('Along l2', Math.sqrt(moveD) / Math.sqrt(maxD), firstIs2);
+      scale = Math.sqrt(moveD) / Math.sqrt(maxD) / (firstIs2 ? 3 : 2) + (firstIs2 ? 0.66 : 0.33);
+    }
+    console.log('SCALE', scale);
+    return Math.max(0, Math.min(1, scale));
   }
 }

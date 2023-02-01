@@ -8,6 +8,7 @@ import { PieceImage } from './PieceImage';
 import { Status } from './Status';
 import { Piece } from '../models/Piece';
 import { Position } from '../models/Position';
+import { Knight } from '../models/pieces/Knight';
 import { nearestPoint } from '../models/topology';
 import { GameSettings, GameState } from '../state';
 import { proposePiece, setMoveScale } from '../state/actions';
@@ -92,7 +93,17 @@ function handleBoardPress(x: number, y: number) {
     return;
   }
   const piece = g.pieces.find((pc) => pc.id === p.pieceId)!;
+  if (piece instanceof Knight) {
+    if (p.direction && p.variant) {
+      const scale = piece.getScaleToNearestPoint(p.direction, p.variant, new Position(x, y));
+      setMoveScale(scale);
+    }
+    return;
+  }
+
   if (piece.type === 'Knight') {
+    // This is actually jsut a dev time concern. On hot-reload, it is no longer
+    // an instanceof Knight. This just saves confusion.
     return;
   }
 

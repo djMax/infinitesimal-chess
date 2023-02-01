@@ -4,10 +4,10 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import { DirectionSelection } from './DirectionSelection';
+import { KnightDirectionSelection } from './KnightDirectionSelection';
 import { ScaleAdjust } from './ScaleAdjust';
 import { GameState } from '../state';
 import { resetGame } from '../state/actions';
-import { KnightDirectionSelection } from './KnightDirectionSelection';
 
 export const Status = observer(() => {
   const whiteToMove = GameState.whiteToMove.get();

@@ -4,8 +4,11 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import { Arrow, DIR_SIZE } from './Arrow';
+import { PieceImage } from './PieceImage';
 import { Direction, Piece } from '../models/Piece';
+import { Knight } from '../models/pieces/Knight';
 import { GameState } from '../state';
+import { setMoveScale } from '../state/actions';
 
 const MOVE_MAP: Record<Direction, string[]> = {
   N: ['ENN', 'NNE'],
@@ -19,15 +22,15 @@ const MOVE_MAP: Record<Direction, string[]> = {
 };
 
 function Rosette({
+  piece,
   proposed,
   available,
   onPress,
-  moveNumber,
 }: {
+  piece?: Knight;
   proposed?: Direction;
   available: Direction[];
   onPress: (d: Direction) => void;
-  moveNumber: number;
 }) {
   return (
     <View>
@@ -42,8 +45,13 @@ function Rosette({
         <View>
           <Arrow proposed={proposed} direction="W" available={available} onPress={onPress} />
         </View>
-        <View style={{ ...DIR_SIZE, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 16, paddingRight: 5 }}>{moveNumber}</Text>
+        <View style={{ ...DIR_SIZE }}>
+          {piece && (
+            <PieceImage
+              piece={piece}
+              style={{ width: DIR_SIZE.width - 5, height: DIR_SIZE.height - 5 }}
+            />
+          )}
         </View>
         <View>
           <Arrow proposed={proposed} direction="E" available={available} onPress={onPress} />
@@ -67,6 +75,7 @@ function setKnightMove(move1: Direction, move2: Direction, move3: Direction) {
     direction,
     variant: ['N', 'S'].includes(move1) ? 'VH' : 'HV',
   });
+  setMoveScale(GameState.proposed.distance.peek());
 }
 
 export const KnightDirectionSelection = observer(({ piece }: { piece: Piece }) => {
@@ -106,17 +115,6 @@ export const KnightDirectionSelection = observer(({ piece }: { piece: Piece }) =
     return ['N', 'S', 'E', 'W'];
   }, [move1, move2]);
 
-  const onMove1Selection = React.useCallback(
-    (d: Direction) => {
-      if (d !== move1) {
-        setMove1(d);
-        setMove2(undefined);
-        setMove3(undefined);
-      }
-    },
-    [move1],
-  );
-
   const onMove2Selection = React.useCallback(
     (d: Direction) => {
       if (move1) {
@@ -134,33 +132,60 @@ export const KnightDirectionSelection = observer(({ piece }: { piece: Piece }) =
     [move1, move3],
   );
 
+  const onMove1Selection = React.useCallback(
+    (d: Direction) => {
+      if (d !== move1) {
+        setMove1(d);
+        const left = moves.filter((m) => m[0] === d);
+        if (left.every((d) => d[1] === left[0][1])) {
+          onMove2Selection(left[0][1] as Direction);
+        } else {
+          setMove2(undefined);
+          setMove3(undefined);
+          GameState.proposed.assign({
+            direction: undefined,
+          });
+        }
+      }
+    },
+    [move1],
+  );
+
   React.useEffect(() => {
     if (move1 && move2 && move3) {
       setKnightMove(move1, move2, move3);
     }
   }, [move1, move2, move3]);
 
+  const knight = piece as Knight;
   // The "fake" NW value in here is to get the arrows to be grayed out
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-      <Rosette
-        moveNumber={1}
-        proposed={move1}
-        available={availableFirstMoves}
-        onPress={onMove1Selection}
-      />
-      <Rosette
-        moveNumber={2}
-        proposed={move2 || 'NW'}
-        available={availableSecondMoves}
-        onPress={onMove2Selection}
-      />
-      <Rosette
-        moveNumber={3}
-        proposed={move3 || 'NW'}
-        available={availableThirdMoves}
-        onPress={(d) => move1 && move2 && setMove3(d)}
-      />
-    </View>
+    <>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        <Rosette
+          piece={!move1 ? knight : undefined}
+          proposed={move1}
+          available={availableFirstMoves}
+          onPress={onMove1Selection}
+        />
+        <Rosette
+          piece={move1 && !move2 ? knight : undefined}
+          proposed={move2 || 'NW'}
+          available={availableSecondMoves}
+          onPress={onMove2Selection}
+        />
+        <Rosette
+          piece={move2 ? knight : undefined}
+          proposed={move3 || 'NW'}
+          available={availableThirdMoves}
+          onPress={(d) => move1 && move2 && setMove3(d)}
+        />
+      </View>
+      {!move2 && (
+        <View style={{ alignItems: 'center' }}>
+          <Text>Select the {move1 ? 'second' : 'first'} direction the knight should move.</Text>
+        </View>
+      )}
+    </>
   );
 });
