@@ -75,7 +75,9 @@ function setKnightMove(move1: Direction, move2: Direction, move3: Direction) {
     direction,
     variant: ['N', 'S'].includes(move1) ? 'VH' : 'HV',
   });
-  setMoveScale(GameState.proposed.distance.peek());
+  const exDist = GameState.proposed.distance.peek();
+  // Default to full move if no distance has been selected
+  setMoveScale(exDist || 1);
 }
 
 export const KnightDirectionSelection = observer(({ piece }: { piece: Piece }) => {

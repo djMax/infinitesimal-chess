@@ -43,6 +43,7 @@ const App = () => {
         console.error(e);
       })
       .then(() => {
+        SplashScreen.hideAsync();
         setAppReady(true);
       });
   }, []);

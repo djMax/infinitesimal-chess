@@ -1,7 +1,7 @@
 import { observer } from '@legendapp/state/react';
 import { Button, Text } from '@rneui/themed';
 import * as React from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import { DirectionSelection } from './DirectionSelection';
 import { KnightDirectionSelection } from './KnightDirectionSelection';
@@ -48,10 +48,17 @@ export const Status = observer(() => {
   }
 
   if (isMultiplayer) {
+    const myMove = whiteToMove === iAmWhite;
+
     return (
       <View style={{ alignItems: 'center' }}>
-        <Text h4>{whiteToMove === iAmWhite ? 'Your move' : 'Waiting for their move...'}</Text>
+        <Text h4 style={{ marginBottom: 5 }}>
+          {myMove
+            ? `It's your move, playing ${iAmWhite ? 'white' : 'black'}`
+            : `It's their move, playing ${iAmWhite ? 'black' : 'white'}`}
+        </Text>
         {whiteToMove === iAmWhite && <Text>Tap on a piece to start a move</Text>}
+        {!myMove && <ActivityIndicator />}
       </View>
     );
   }

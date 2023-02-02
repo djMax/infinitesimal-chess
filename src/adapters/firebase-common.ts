@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import uuid from 'react-native-uuid';
 
 import { RemoteConfigs } from './default-config';
@@ -27,6 +28,9 @@ export async function createGame(isWhite: boolean) {
     start: Date.now(),
     [isWhite ? 'white' : 'black']: GameSettings.playerId.get(),
   });
+  if (Platform.OS === 'web') {
+    window.history.replaceState(null, 'Multiplayer Game', `/?id=${gameId}`);
+  }
   return gameId;
 }
 
@@ -53,7 +57,6 @@ function toArray(r: FirebaseGameDocument['moves']) {
 
 export async function joinGame(gameId: string): Promise<() => void> {
   let gotEvent = false;
-  let nextMove = 0;
 
   const ref = `games/${gameId}`;
   return getDbAndNotify(ref, (game: FirebaseGameDocument) => {
@@ -88,12 +91,17 @@ export async function joinGame(gameId: string): Promise<() => void> {
       });
       if (moveArray.length) {
         applyMoves(moveArray);
-        nextMove = moveArray.length;
       }
     }
-    while (game.moves?.[nextMove]) {
-      applyMoves([{ ...game.moves[nextMove], id: String(nextMove) }]);
-      nextMove += 1;
+    const expectedMove = GameState.multiplayer.moveCount.peek();
+    if (game.moves?.[expectedMove]) {
+      const m = game.moves[expectedMove];
+      const p = GameState.pieces.peek().find((p) => p.id === m.pieceId);
+      // Only process opponent move updates
+      if (p!.black === GameState.multiplayer.isWhite.peek()) {
+        applyMoves([{ ...game.moves[expectedMove], id: String(expectedMove) }]);
+        GameState.multiplayer.moveCount.set(expectedMove + 1);
+      }
     }
     return true;
   });

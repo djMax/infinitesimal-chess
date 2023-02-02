@@ -1,7 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Text } from '@rneui/themed';
-import { ScrollView } from 'react-native';
+import { Platform, ScrollView, Share } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RootStackParamList } from './RootStackParamList';
@@ -55,13 +55,24 @@ export function IntroScreen({ navigation }: NativeStackScreenProps<RootStackPara
             onPress={() => {
               const isWhite = true;
               createGame(isWhite).then((gameId) => {
-                Clipboard.setString(`https://chess.pyralis.com/play/game?id=${gameId}`);
+                const url = `https://chess.pyralis.com/play/game?id=${gameId}`;
+                Clipboard.setString(url);
                 resetGame();
                 GameState.multiplayer.assign({
                   gameId,
                   isWhite,
+                  moveCount: 0,
                 });
                 navigation.replace('Game');
+                if (Platform.OS === 'web') {
+                  alert("A game link copied to clipboard. Send it however you'd like");
+                } else {
+                  Share.share({
+                    message: 'Play ε Chess with me!',
+                    url,
+                    title: 'ε Chess',
+                  });
+                }
               });
             }}
           />

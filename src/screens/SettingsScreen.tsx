@@ -1,7 +1,7 @@
 import { observer } from '@legendapp/state/react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ListItem, Switch, Text } from '@rneui/themed';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 
 import { RootStackParamList } from './RootStackParamList';
 import { DemoBoards } from '../models';
@@ -22,6 +22,9 @@ export const SettingsScreen = observer(
           onPress={() => {
             resetGame();
             navigation.goBack();
+            if (Platform.OS === 'web') {
+              window.history.replaceState(null, 'Multiplayer Game', '/');
+            }
           }}>
           <ListItem.Content>
             <ListItem.Title>New Game</ListItem.Title>

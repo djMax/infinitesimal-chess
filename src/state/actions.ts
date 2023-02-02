@@ -26,8 +26,9 @@ export function completeMove(state: ObservableGameState) {
   const newPos = rawPiece.getScaledMove(raw, direction!, distance, variant);
 
   if (raw.multiplayer.gameId) {
+    const moveId = raw.multiplayer.moveCount;
     const move: GameMove = {
-      id: String(raw.multiplayer.moveCount),
+      id: String(moveId),
       pieceId: pieceId!,
       direction: direction!,
       position: [newPos.x, newPos.y],
@@ -35,6 +36,8 @@ export function completeMove(state: ObservableGameState) {
     };
     // TODO handle errors.
     assignRemoteDb(`games/${raw.multiplayer.gameId}/moves/${move.id}`, move);
+    console.log('Set move count', raw.multiplayer.moveCount + 1);
+    state.multiplayer.moveCount.set(moveId + 1);
   }
 
   state.proposed.assign({
@@ -160,7 +163,7 @@ function applyMove(pieceId: string, position: Position) {
       }
     });
   }
-  GameState.whiteToMove.set(!GameState.whiteToMove.peek());
+  GameState.whiteToMove.set(rawPiece.black);
 }
 
 export function applyMoves(moves: GameMove[]) {
