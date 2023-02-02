@@ -1,10 +1,9 @@
 import analytics from '@react-native-firebase/analytics';
 import database from '@react-native-firebase/database';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import uuid from 'react-native-uuid';
+import remoteConfig from '@react-native-firebase/remote-config';
 
-import { GameSettings, GameState } from '../state';
-import { resetGame } from '../state/actions';
+import { RemoteConfigDefaults, RemoteConfigs } from './default-config';
 
 export async function trackScreen(screenName?: string) {
   if (!screenName) {
@@ -15,44 +14,47 @@ export async function trackScreen(screenName?: string) {
   }
 }
 
-export async function createGame(isWhite: boolean): Promise<string> {
-  const gameId = String(uuid.v4());
-  const gameRef = database().ref(`games/${gameId}`);
-  await gameRef.set({
-    start: Date.now(),
-    [isWhite ? 'white' : 'black']: GameSettings.playerId.get(),
-  });
-  return gameId;
+export async function setRemoteDb(ref: string, doc: any) {
+  const gameRef = database().ref(ref);
+  await gameRef.set(doc);
 }
 
-export async function joinGame(gameId: string): Promise<boolean> {
-  const gameRef = database().ref(`games/${gameId}`);
-  const snapshot = await gameRef.once('value');
-  const game = snapshot.val();
-  let isWhite = false;
-  if (game && !game.black) {
-    await gameRef.update({
-      black: GameSettings.playerId.get(),
-    });
-  } else if (game && !game.white) {
-    await gameRef.update({
-      white: GameSettings.playerId.get(),
-    });
-    isWhite = true;
-  } else {
-    return false;
-  }
-  resetGame();
-  GameState.multiplayer.assign({
-    gameId,
-    isWhite,
-  });
-  return true;
+export async function assignRemoteDb(ref: string, doc: any) {
+  const gameRef = database().ref(ref);
+  await gameRef.update(doc);
 }
 
-export function setupDynamicLinks() {
+export async function getDbAndNotify(docRef: string, fn: (v: any) => boolean) {
+  const gameRef = database().ref(docRef);
+  const handler = gameRef.on('value', (snapshot) => {
+    console.log('Got new snapshot', docRef);
+    fn(snapshot.val());
+  });
+  return () => gameRef.off('value', handler);
+}
+
+export function onLink(handler: (link: string) => void): () => void {
   const unsub = dynamicLinks().onLink((link) => {
-    console.log('GOT LINK', link);
+    handler(link.url);
   });
+  dynamicLinks()
+    .getInitialLink()
+    .then((link) => {
+      if (link?.url) {
+        handler(link.url);
+      }
+    });
   return unsub;
+}
+
+export async function activateRemoteConfig() {
+  return remoteConfig()
+    .setDefaults(RemoteConfigDefaults)
+    .then(() => {
+      return remoteConfig().fetchAndActivate();
+    });
+}
+
+export function internalGetRemoteConfig(key: keyof RemoteConfigs) {
+  return remoteConfig().getValue(key);
 }

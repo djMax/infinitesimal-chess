@@ -30,7 +30,11 @@ export class Piece {
     public position: Position,
     public radius: number = DEFAULT_RADIUS,
   ) {
-    this.id = `${this.black ? 'B' : 'W'}${this.type}${this.position.x - radius}`;
+    if (['Bishop', 'Rook', 'Knight', 'Pawn'].includes(type)) {
+      this.id = `${this.black ? 'B' : 'W'}${this.type}${Math.round(this.position.x + 0.5)}`;
+    } else {
+      this.id = `${this.black ? 'B' : 'W'}${this.type}`;
+    }
   }
 
   /**

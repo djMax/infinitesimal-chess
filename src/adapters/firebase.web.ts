@@ -1,9 +1,9 @@
 import { getAnalytics, logEvent } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
-import { ref, set, getDatabase } from 'firebase/database';
-import uuid from 'react-native-uuid';
+import { ref, set, update, onValue, getDatabase } from 'firebase/database';
+import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-config';
 
-import { GameSettings } from '../state';
+import { RemoteConfigDefaults, RemoteConfigs } from './default-config';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDnc_5Do7-GgRc1iZSfNwO4wIE0Jk533wA',
@@ -25,18 +25,39 @@ export async function trackScreen(screenName?: string) {
   }
 }
 
-export async function createGame(isWhite: boolean): Promise<string> {
-  const gameId = String(uuid.v4());
+export async function setRemoteDb(docRef: string, doc: any) {
   const db = getDatabase(app);
-  const gameRef = ref(db, `games/${gameId}`);
-  set(gameRef, {
-    start: Date.now(),
-    [isWhite ? 'white' : 'black']: GameSettings.playerId,
-    moves: [],
-  });
-  return gameId;
+  const gameRef = ref(db, docRef);
+  return set(gameRef, doc);
 }
 
-export function setupDynamicLinks() {
+export async function assignRemoteDb(docRef: string, doc: any) {
+  const db = getDatabase(app);
+  const gameRef = ref(db, docRef);
+  return update(gameRef, doc);
+}
+
+export async function getDbAndNotify(docRef: string, fn: (v: any) => boolean) {
+  const db = getDatabase(app);
+  const gameRef = ref(db, docRef);
+  const sub = onValue(gameRef, (snapshot) => {
+    console.log(snapshot);
+    fn(snapshot.val());
+  });
+  return sub;
+}
+
+export function onLink() {
   return () => {};
+}
+
+const rConfig = getRemoteConfig(app);
+
+export async function activateRemoteConfig() {
+  rConfig.defaultConfig = RemoteConfigDefaults;
+  return fetchAndActivate(rConfig);
+}
+
+export function internalGetRemoteConfig(key: keyof RemoteConfigs) {
+  return getValue(rConfig, key);
 }

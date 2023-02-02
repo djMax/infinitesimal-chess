@@ -3391,7 +3391,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-firebase/dynamic-links@npm:^16.7.0":
+"@react-native-firebase/dynamic-links@npm:^16.6.0":
   version: 16.7.0
   resolution: "@react-native-firebase/dynamic-links@npm:16.7.0"
   dependencies:
@@ -3410,6 +3410,16 @@ __metadata:
   peerDependencies:
     "@react-native-firebase/app": 16.7.0
   checksum: b579d090b4736ed540eaef9ca27ef24531ffa8bfac03afee58d8652327f71ff64a4db992b6f30b78c95c268a85629b431d702e66b749be0dc358665f875c5ddc
+  languageName: node
+  linkType: hard
+
+"@react-native-firebase/remote-config@npm:^16.6.0":
+  version: 16.7.0
+  resolution: "@react-native-firebase/remote-config@npm:16.7.0"
+  peerDependencies:
+    "@react-native-firebase/analytics": 16.7.0
+    "@react-native-firebase/app": 16.7.0
+  checksum: c5b064a675342b705f8e7bfe2559d3de314e1ad8915dad0a254b1783a63855cdb632f9ed7dbfa013aad0549706729dc703213239fb9f3a4eb29ea92ce05c229a
   languageName: node
   linkType: hard
 
@@ -3785,6 +3795,13 @@ __metadata:
   version: 1.5.5
   resolution: "@types/q@npm:1.5.5"
   checksum: 3bd386fb97a0e5f1ce1ed7a14e39b60e469b5ca9d920a7f69e0cdb58d22c0f5bdd16637d8c3a5bfeda76663c023564dd47a65389ee9aaabd65aee54803d5ba45
+  languageName: node
+  linkType: hard
+
+"@types/qs@npm:^6.5.3":
+  version: 6.9.7
+  resolution: "@types/qs@npm:6.9.7"
+  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
   languageName: node
   linkType: hard
 
@@ -5739,17 +5756,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001125":
+"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001125, caniuse-lite@npm:^1.0.30001400":
   version: 1.0.30001445
   resolution: "caniuse-lite@npm:1.0.30001445"
   checksum: f98ca67829c3c52af5af0a62b8510432b2ad9594437d24ad460a6eb1a23d93e7a31631b1f550fbbe482ad05c467aa00da710a41699eb13d1f246d7db4147ab79
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001400":
-  version: 1.0.30001444
-  resolution: "caniuse-lite@npm:1.0.30001444"
-  checksum: 3d6436e2eea8ee77fdca906f481fd5513eec836d3c5ef395da96872f8e67e0db4b898430a588745752e43fabf0503dc351ff1ab710717c33451bdc8f09a7b5cf
   languageName: node
   linkType: hard
 
@@ -8282,6 +8292,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-linking@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "expo-linking@npm:3.3.0"
+  dependencies:
+    "@types/qs": ^6.5.3
+    expo-constants: ~14.0.0
+    invariant: ^2.2.4
+    qs: ^6.9.1
+    url-parse: ^1.5.9
+  checksum: ff4beff24a971fce24baa5423bab7ef0caabda64f87c9c55d32c409cd8f0e48ea46cc08ab1e54978e51476d7a6dadca05a5ba4ab74e982063d64ddfc8230cb5e
+  languageName: node
+  linkType: hard
+
 "expo-manifests@npm:~0.4.0":
   version: 0.4.0
   resolution: "expo-manifests@npm:0.4.0"
@@ -10060,8 +10083,9 @@ __metadata:
     "@react-native-firebase/app": ^16.6.0
     "@react-native-firebase/crashlytics": ^16.6.0
     "@react-native-firebase/database": ^16.6.0
-    "@react-native-firebase/dynamic-links": ^16.7.0
+    "@react-native-firebase/dynamic-links": ^16.6.0
     "@react-native-firebase/perf": ^16.6.0
+    "@react-native-firebase/remote-config": ^16.6.0
     "@react-navigation/native": ^6.1.3
     "@react-navigation/native-stack": ^6.9.9
     "@rneui/base": ^4.0.0-rc.7
@@ -10076,6 +10100,7 @@ __metadata:
     expo: ~47.0.12
     expo-build-properties: ~0.4.1
     expo-dev-client: ~2.0.1
+    expo-linking: ^3.3.0
     expo-splash-screen: ~0.17.5
     expo-status-bar: ~1.4.2
     firebase: ^9.16.0
@@ -14890,7 +14915,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.11.0":
+"qs@npm:6.11.0, qs@npm:^6.9.1":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
   dependencies:

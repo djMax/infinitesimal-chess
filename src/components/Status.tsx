@@ -11,6 +11,8 @@ import { resetGame } from '../state/actions';
 
 export const Status = observer(() => {
   const whiteToMove = GameState.whiteToMove.get();
+  const isMultiplayer = !!GameState.multiplayer.gameId.get();
+  const iAmWhite = GameState.multiplayer.isWhite.get();
   const pieceId = GameState.proposed.pieceId.get();
 
   if (GameState.gameOver.get()) {
@@ -42,6 +44,15 @@ export const Status = observer(() => {
         )}
         <ScaleAdjust />
       </>
+    );
+  }
+
+  if (isMultiplayer) {
+    return (
+      <View style={{ alignItems: 'center' }}>
+        <Text h4>{whiteToMove === iAmWhite ? 'Your move' : 'Waiting for their move...'}</Text>
+        {whiteToMove === iAmWhite && <Text>Tap on a piece to start a move</Text>}
+      </View>
     );
   }
 

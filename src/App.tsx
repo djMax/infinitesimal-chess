@@ -1,8 +1,9 @@
 import { createTheme, lightColors, darkColors, ThemeProvider, useThemeMode } from '@rneui/themed';
+import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { Platform, useColorScheme } from 'react-native';
-import { setupDynamicLinks } from './adapters/firebase';
 
+import { activateRemoteConfig } from './adapters/firebase';
 import { Navigation } from './screens/Nav';
 
 const theme = createTheme({
@@ -31,8 +32,25 @@ function ColorScheme({ children }: React.PropsWithChildren<object>) {
   return <>{children}</>;
 }
 
+SplashScreen.preventAutoHideAsync();
+
 const App = () => {
-  React.useEffect(setupDynamicLinks, []);
+  const [appReady, setAppReady] = React.useState(false);
+
+  React.useEffect(() => {
+    activateRemoteConfig()
+      .catch((e) => {
+        console.error(e);
+      })
+      .then(() => {
+        setAppReady(true);
+      });
+  }, []);
+
+  if (!appReady) {
+    return null;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <ColorScheme>

@@ -15,22 +15,35 @@ export interface RawGameState {
   multiplayer: {
     gameId: string | undefined;
     isWhite: boolean;
-  }
+    moveCount: number;
+  };
   dead: Piece[];
   whiteToMove: boolean;
   gameOver: boolean;
   size: number;
 }
 
+export interface GameMove {
+  id: string;
+  pieceId: string;
+  direction: Direction;
+  position: [number, number];
+  time?: number;
+};
+
 export interface GameHistory {
-  gameId?: string;
+  id?: string;
   name: string;
   white: string;
   black: string;
-  moves: {
-    pieceId: string;
-    direction: Direction;
-    position: Position;
-    time: number;
-  }[];
+  over: boolean;
+  moves: GameMove[];
+}
+
+export interface FirebaseGameDocument {
+  start: number;
+  white?: string;
+  black?: string;
+  over?: boolean;
+  moves: Record<number, Omit<GameMove, 'id'>>;
 }

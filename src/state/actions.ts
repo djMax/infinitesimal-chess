@@ -1,8 +1,11 @@
 import { Observable } from '@legendapp/state';
 
 import { getBaseState, GameState, ObservableGameState } from '.';
+import { GameMove } from './types';
+import { assignRemoteDb } from '../adapters/firebase';
 import { defaultBoard } from '../models';
 import { Direction, Piece } from '../models/Piece';
+import { Position } from '../models/Position';
 import { Knight } from '../models/pieces/Knight';
 import { getOverlappingPieces } from '../models/topology';
 
@@ -22,11 +25,18 @@ export function completeMove(state: ObservableGameState) {
   const rawPiece = raw.pieces[pieceIndex];
   const newPos = rawPiece.getScaledMove(raw, direction!, distance, variant);
 
-  const observablePiece = state.pieces[pieceIndex];
-  observablePiece.assign({
-    position: newPos,
-    history: [...observablePiece.history, observablePiece.position],
-  });
+  if (raw.multiplayer.gameId) {
+    const move: GameMove = {
+      id: String(raw.multiplayer.moveCount),
+      pieceId: pieceId!,
+      direction: direction!,
+      position: [newPos.x, newPos.y],
+      time: Date.now(),
+    };
+    // TODO handle errors.
+    assignRemoteDb(`games/${raw.multiplayer.gameId}/moves/${move.id}`, move);
+  }
+
   state.proposed.assign({
     pieceId: undefined,
     direction: undefined,
@@ -35,24 +45,7 @@ export function completeMove(state: ObservableGameState) {
     distance: 1,
   });
 
-  // I'm not sure why these become pieces and do not remain observables
-  const takes = state.pieces.filter(
-    (p) =>
-      p.black.get() !== rawPiece.black &&
-      p.position.overlaps(rawPiece.position, p.radius.get(), rawPiece.radius),
-  ) as unknown as Piece[];
-
-  if (takes?.length) {
-    takes.forEach((taken) => {
-      const ix = state.pieces.findIndex((p) => p.id === taken.id)!;
-      const piece = state.pieces[ix];
-      state.dead.push(piece);
-      state.pieces.splice(ix, 1);
-      if (taken.type === 'King') {
-        state.gameOver.set(true);
-      }
-    });
-  }
+  applyMove(pieceId!, newPos);
 
   state.pieces.forEach((p) => {
     if (p.canThreaten.peek()) {
@@ -62,7 +55,6 @@ export function completeMove(state: ObservableGameState) {
       p.threatened.set(false);
     }
   });
-  state.whiteToMove.set(!state.whiteToMove.get());
 }
 
 export function proposePiece(piece: Observable<Piece>) {
@@ -138,4 +130,41 @@ export function proposeDirection(direction: Direction) {
     direction,
   });
   setMoveScale(GameState.proposed.distance.peek());
+}
+
+function applyMove(pieceId: string, position: Position) {
+  const raw = GameState.peek();
+  const pieceIndex = raw.pieces.findIndex((p) => p.id === pieceId);
+  const rawPiece = raw.pieces[pieceIndex];
+  const observablePiece = GameState.pieces[pieceIndex];
+  observablePiece.assign({
+    position,
+    history: [...observablePiece.history, observablePiece.position],
+  });
+
+  // I'm not sure why these become pieces and do not remain observables
+  const takes = GameState.pieces.filter(
+    (p) =>
+      p.black.get() !== rawPiece.black &&
+      p.position.overlaps(rawPiece.position, p.radius.get(), rawPiece.radius),
+  ) as unknown as Piece[];
+
+  if (takes?.length) {
+    takes.forEach((taken) => {
+      const ix = GameState.pieces.findIndex((p) => p.id === taken.id)!;
+      const piece = GameState.pieces[ix];
+      GameState.dead.push(piece);
+      GameState.pieces.splice(ix, 1);
+      if (taken.type === 'King') {
+        GameState.gameOver.set(true);
+      }
+    });
+  }
+  GameState.whiteToMove.set(!GameState.whiteToMove.peek());
+}
+
+export function applyMoves(moves: GameMove[]) {
+  moves.forEach((move) => {
+    applyMove(move.pieceId, new Position(...move.position));
+  });
 }

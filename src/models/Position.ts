@@ -38,6 +38,10 @@ export class Position {
     return `${this.x}, ${this.y}`;
   }
 
+  nearestCenter() {
+    return new Position(Math.round(this.x + 0.5) - 1, Math.round(this.y + 0.5) - 1);
+  }
+
   static maxLength(start: Position, end: Position, len: number) {
     // Set the maximum length of the line from start to end to be len
     const height = Math.abs(start.y - end.y);

@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from '@rneui/themed';
+import * as Linking from 'expo-linking';
 import * as React from 'react';
 
 import { GameScreen } from './GameScreen';
@@ -14,13 +15,14 @@ import { RootStackParamList } from './RootStackParamList';
 import { SettingsScreen } from './SettingsScreen';
 import { trackScreen } from '../adapters/firebase';
 import { SettingsButton } from '../components/SettingsButton';
+import { handleLink, setupDynamicLinks } from '../state/links';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const Navigation = () => {
   const { theme } = useTheme();
   const routeNameRef = React.useRef<string>();
-  const navigationRef = useNavigationContainerRef();
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
 
   const navTheme = React.useMemo(
     () => ({
@@ -31,6 +33,20 @@ export const Navigation = () => {
     }),
     [theme.mode],
   );
+
+  const link = Linking.useURL() || undefined;
+  const linkHandler = React.useCallback(
+    (link?: string) => {
+      if (link && navigationRef.current) {
+        handleLink(navigationRef.current, link);
+      }
+    },
+    [navigationRef],
+  );
+  React.useEffect(() => linkHandler(link), [link]);
+  React.useEffect(() => {
+    return setupDynamicLinks(linkHandler);
+  }, [linkHandler]);
 
   return (
     <NavigationContainer
