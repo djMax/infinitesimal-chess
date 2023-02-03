@@ -3122,16 +3122,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-clipboard/clipboard@npm:^1.11.1":
-  version: 1.11.1
-  resolution: "@react-native-clipboard/clipboard@npm:1.11.1"
-  peerDependencies:
-    react: ">=16.0"
-    react-native: ">=0.57.0"
-  checksum: 954f21b9cddc1dc4f1291fcfc2101c60ef1d21eba4140e3a97314022b9c2d846c2d562176cfef495a00230c2c6c6677c758e806e0dbcf81dc8f9b64b88c9162b
-  languageName: node
-  linkType: hard
-
 "@react-native-community/cli-clean@npm:^9.2.1":
   version: 9.2.1
   resolution: "@react-native-community/cli-clean@npm:9.2.1"
@@ -8184,6 +8174,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-clipboard@npm:~4.0.1":
+  version: 4.0.2
+  resolution: "expo-clipboard@npm:4.0.2"
+  peerDependencies:
+    expo: "*"
+  checksum: 46cd2067278fcf310a59a30680bd09b3ceb3a14333e5884eecd2d8f10c1623c312fb08301ad475e5e32b6def96c13a07d9e456535249f0ade97bb61c695d2dff
+  languageName: node
+  linkType: hard
+
 "expo-constants@npm:~14.0.0, expo-constants@npm:~14.0.2":
   version: 14.0.2
   resolution: "expo-constants@npm:14.0.2"
@@ -10078,7 +10077,6 @@ __metadata:
     "@babel/core": ^7.12.9
     "@expo/webpack-config": ^0.17.2
     "@legendapp/state": ^0.23.2
-    "@react-native-clipboard/clipboard": ^1.11.1
     "@react-native-firebase/analytics": ^16.6.0
     "@react-native-firebase/app": ^16.6.0
     "@react-native-firebase/crashlytics": ^16.6.0
@@ -10099,6 +10097,7 @@ __metadata:
     eslint-config-universe: ^11.1.1
     expo: ~47.0.12
     expo-build-properties: ~0.4.1
+    expo-clipboard: ~4.0.1
     expo-dev-client: ~2.0.1
     expo-linking: ^3.3.0
     expo-splash-screen: ~0.17.5
@@ -10111,6 +10110,7 @@ __metadata:
     react: 18.1.0
     react-dom: 18.1.0
     react-native: 0.70.5
+    react-native-loading-spinner-overlay: ^3.0.1
     react-native-mmkv: ^2.6.1
     react-native-safe-area-context: 4.4.1
     react-native-screens: ~3.18.0
@@ -15132,6 +15132,16 @@ __metadata:
   version: 0.70.3
   resolution: "react-native-gradle-plugin@npm:0.70.3"
   checksum: 04a3379842bcb4709ac6b37e093a3de59acd33b28b200885843b13908fac685a77ab81d732c34090c56e5c0eec971d578b227f302bd04fe7901e8792d434f41f
+  languageName: node
+  linkType: hard
+
+"react-native-loading-spinner-overlay@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "react-native-loading-spinner-overlay@npm:3.0.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: d9e5e10bc6170084c162e717a94db7bd60a35eb8110614529caa501790ab9ddfb551239d2e9120aaa15048bfd0af03da8bed0d1ea09e7ebb88a4b39d88ed6878
   languageName: node
   linkType: hard
 

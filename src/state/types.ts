@@ -16,20 +16,13 @@ export interface RawGameState {
     gameId: string | undefined;
     isWhite: boolean;
     moveCount: number;
+    opponentName: string | undefined;
   };
   dead: Piece[];
   whiteToMove: boolean;
   gameOver: boolean;
   size: number;
 }
-
-export interface GameMove {
-  id: string;
-  pieceId: string;
-  direction: Direction;
-  position: [number, number];
-  time?: number;
-};
 
 export interface GameHistory {
   id?: string;
@@ -40,10 +33,22 @@ export interface GameHistory {
   moves: GameMove[];
 }
 
+export interface GameMove {
+  id: string;
+  // Piece id
+  p: string;
+  d: Direction;
+  to: [number, number];
+  // Time
+  t?: number;
+}
+
 export interface FirebaseGameDocument {
-  start: number;
-  white?: string;
-  black?: string;
-  over?: boolean;
-  moves: Record<number, Omit<GameMove, 'id'>>;
+  s: number;
+  w?: string;
+  b?: string;
+  wn?: string;
+  bn?: string;
+  o?: boolean;
+  m: Record<number, Omit<GameMove, 'id'>>;
 }

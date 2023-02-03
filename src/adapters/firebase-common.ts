@@ -22,11 +22,12 @@ export function getRemoteConfiguration<T extends keyof RemoteConfigs, R>(
   }
 }
 
-export async function createGame(isWhite: boolean) {
+export async function createGame(nickname: string, isWhite: boolean) {
   const gameId = String(uuid.v4());
   await setRemoteDb(`games/${gameId}`, {
     start: Date.now(),
-    [isWhite ? 'white' : 'black']: GameSettings.playerId.get(),
+    [isWhite ? 'wn' : 'bn']: nickname,
+    [isWhite ? 'w' : 'b']: GameSettings.playerId.get(),
   });
   if (Platform.OS === 'web') {
     window.history.replaceState(null, 'Multiplayer Game', `/?id=${gameId}`);
@@ -34,19 +35,21 @@ export async function createGame(isWhite: boolean) {
   return gameId;
 }
 
-function becomePlayer(ref: string, game: FirebaseGameDocument) {
+function becomePlayer(ref: string, nick: string, game: FirebaseGameDocument) {
   const playerId = GameSettings.playerId.peek();
-  if (!game.white) {
-    game.white = playerId;
-    assignRemoteDb(ref, { white: playerId });
+  if (!game.w) {
+    const update = { w: playerId, wn: nick };
+    Object.assign(game, update);
+    assignRemoteDb(ref, update);
   }
-  if (!game.black) {
-    game.black = playerId;
-    assignRemoteDb(ref, { black: playerId });
+  if (!game.b) {
+    const update = { b: playerId, bn: nick };
+    Object.assign(game, update);
+    assignRemoteDb(ref, update);
   }
 }
 
-function toArray(r: FirebaseGameDocument['moves']) {
+function toArray(r: FirebaseGameDocument['m']) {
   const entries = Object.entries(r);
   const moves: GameMove[] = [];
   entries.forEach(([ix, move]) => {
@@ -55,7 +58,7 @@ function toArray(r: FirebaseGameDocument['moves']) {
   return moves;
 }
 
-export async function joinGame(gameId: string): Promise<() => void> {
+export async function joinGame(gameId: string, nick: string): Promise<() => void> {
   let gotEvent = false;
 
   const ref = `games/${gameId}`;
@@ -70,7 +73,7 @@ export async function joinGame(gameId: string): Promise<() => void> {
       }
       */
 
-      becomePlayer(ref, game);
+      becomePlayer(ref, nick, game);
       /*
       GameList.games.unshift({
         id: gameId,
@@ -83,10 +86,11 @@ export async function joinGame(gameId: string): Promise<() => void> {
       */
 
       resetGame();
-      const moveArray = game.moves ? toArray(game.moves) : [];
+      const moveArray = game.m ? toArray(game.m) : [];
       GameState.multiplayer.assign({
         gameId,
-        isWhite: game.white === GameSettings.playerId.peek(),
+        opponentName: game.wn,
+        isWhite: game.w === GameSettings.playerId.peek(),
         moveCount: moveArray.length,
       });
       if (moveArray.length) {
@@ -94,12 +98,12 @@ export async function joinGame(gameId: string): Promise<() => void> {
       }
     }
     const expectedMove = GameState.multiplayer.moveCount.peek();
-    if (game.moves?.[expectedMove]) {
-      const m = game.moves[expectedMove];
-      const p = GameState.pieces.peek().find((p) => p.id === m.pieceId);
+    if (game.m?.[expectedMove]) {
+      const m = game.m[expectedMove];
+      const p = GameState.pieces.peek().find((p) => p.id === m.p);
       // Only process opponent move updates
       if (p!.black === GameState.multiplayer.isWhite.peek()) {
-        applyMoves([{ ...game.moves[expectedMove], id: String(expectedMove) }]);
+        applyMoves([{ ...game.m[expectedMove], id: String(expectedMove) }]);
         GameState.multiplayer.moveCount.set(expectedMove + 1);
       }
     }

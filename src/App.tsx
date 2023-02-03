@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Platform, useColorScheme } from 'react-native';
 
 import { activateRemoteConfig } from './adapters/firebase';
+import { AnimatedAppLoader } from './components/AnimatedSplash';
 import { Navigation } from './screens/Nav';
 
 const theme = createTheme({
@@ -27,12 +28,14 @@ function ColorScheme({ children }: React.PropsWithChildren<object>) {
 
   React.useEffect(() => {
     setMode(colorMode === 'dark' ? 'dark' : 'light');
-  }, [colorMode]);
+  }, [colorMode, setMode]);
 
   return <>{children}</>;
 }
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().catch(() => {
+  /* reloading the app might trigger some race conditions, ignore them */
+});
 
 const App = () => {
   const [appReady, setAppReady] = React.useState(false);
@@ -48,16 +51,20 @@ const App = () => {
       });
   }, []);
 
-  if (!appReady) {
-    return null;
-  }
-
-  return (
+  return Platform.OS === 'web' ? (
     <ThemeProvider theme={theme}>
       <ColorScheme>
         <Navigation />
       </ColorScheme>
     </ThemeProvider>
+  ) : (
+    <AnimatedAppLoader ready={appReady}>
+      <ThemeProvider theme={theme}>
+        <ColorScheme>
+          <Navigation />
+        </ColorScheme>
+      </ThemeProvider>
+    </AnimatedAppLoader>
   );
 };
 

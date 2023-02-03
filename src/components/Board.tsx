@@ -160,7 +160,7 @@ export const Board = observer(
       return {
         onTouchStart: pressHandler,
       };
-    }, [offset]);
+    }, [offset, size]);
 
     return (
       <View

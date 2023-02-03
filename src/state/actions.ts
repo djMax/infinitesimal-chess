@@ -29,10 +29,10 @@ export function completeMove(state: ObservableGameState) {
     const moveId = raw.multiplayer.moveCount;
     const move: GameMove = {
       id: String(moveId),
-      pieceId: pieceId!,
-      direction: direction!,
-      position: [newPos.x, newPos.y],
-      time: Date.now(),
+      p: pieceId!,
+      d: direction!,
+      to: [newPos.x, newPos.y],
+      t: Date.now(),
     };
     // TODO handle errors.
     assignRemoteDb(`games/${raw.multiplayer.gameId}/moves/${move.id}`, move);
@@ -168,6 +168,6 @@ function applyMove(pieceId: string, position: Position) {
 
 export function applyMoves(moves: GameMove[]) {
   moves.forEach((move) => {
-    applyMove(move.pieceId, new Position(...move.position));
+    applyMove(move.p, new Position(...move.to));
   });
 }

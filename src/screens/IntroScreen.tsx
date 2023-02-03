@@ -1,12 +1,10 @@
-import Clipboard from '@react-native-clipboard/clipboard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Text } from '@rneui/themed';
-import { Platform, ScrollView, Share } from 'react-native';
+import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RootStackParamList } from './RootStackParamList';
-import { createGame, getRemoteConfiguration } from '../adapters/firebase-common';
-import { GameState } from '../state';
+import { getRemoteConfiguration } from '../adapters/firebase-common';
 import { resetGame } from '../state/actions';
 
 const textStyle = {
@@ -53,27 +51,7 @@ export function IntroScreen({ navigation }: NativeStackScreenProps<RootStackPara
             style={{ marginBottom: 20 }}
             title="Invite Opponent"
             onPress={() => {
-              const isWhite = true;
-              createGame(isWhite).then((gameId) => {
-                const url = `https://chess.pyralis.com/play/game?id=${gameId}`;
-                Clipboard.setString(url);
-                resetGame();
-                GameState.multiplayer.assign({
-                  gameId,
-                  isWhite,
-                  moveCount: 0,
-                });
-                navigation.replace('Game');
-                if (Platform.OS === 'web') {
-                  alert("A game link copied to clipboard. Send it however you'd like");
-                } else {
-                  Share.share({
-                    message: 'Play ε Chess with me!',
-                    url,
-                    title: 'ε Chess',
-                  });
-                }
-              });
+              navigation.replace('MultiplayerSetup', {});
             }}
           />
         )}

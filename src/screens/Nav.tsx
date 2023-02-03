@@ -11,6 +11,7 @@ import * as React from 'react';
 
 import { GameScreen } from './GameScreen';
 import { IntroScreen } from './IntroScreen';
+import { MultiplayerScreen } from './MultiplayerScreen';
 import { RootStackParamList } from './RootStackParamList';
 import { SettingsScreen } from './SettingsScreen';
 import { trackScreen } from '../adapters/firebase';
@@ -43,7 +44,7 @@ export const Navigation = () => {
     },
     [navigationRef],
   );
-  React.useEffect(() => linkHandler(link), [link]);
+  React.useEffect(() => linkHandler(link), [link, linkHandler]);
   React.useEffect(() => {
     return setupDynamicLinks(linkHandler);
   }, [linkHandler]);
@@ -78,6 +79,13 @@ export const Navigation = () => {
               return <SettingsButton />;
             },
           }}
+        />
+        <Stack.Screen
+          name="MultiplayerSetup"
+          options={{
+            headerShown: false,
+          }}
+          component={MultiplayerScreen}
         />
         <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>

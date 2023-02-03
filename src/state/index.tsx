@@ -38,6 +38,7 @@ export const GameSettings = observable({
     background: 'default',
     halo: true,
   },
+  nickname: undefined as string | undefined,
   playerId: undefined as string | undefined,
 });
 

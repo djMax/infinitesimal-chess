@@ -1,3 +1,4 @@
+/* globals __dirname */
 const createExpoWebpackConfigAsync = require('@expo/webpack-config');
 const path = require('path');
 

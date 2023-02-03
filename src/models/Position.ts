@@ -1,4 +1,4 @@
-import type { Direction } from "./Piece";
+import type { Direction } from './Piece';
 
 function sign(v: number) {
   return v > 0 ? 1 : -1;
