@@ -1,7 +1,7 @@
 import { createTheme, lightColors, darkColors, ThemeProvider, useThemeMode } from '@rneui/themed';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
-import { Platform, useColorScheme } from 'react-native';
+import { ActivityIndicator, Platform, useColorScheme } from 'react-native';
 
 import { activateRemoteConfig } from './adapters/firebase';
 import { AnimatedAppLoader } from './components/AnimatedSplash';
@@ -24,11 +24,16 @@ const theme = createTheme({
 
 function ColorScheme({ children }: React.PropsWithChildren<object>) {
   const colorMode = useColorScheme();
-  const { setMode } = useThemeMode();
+  const { setMode, mode } = useThemeMode();
 
   React.useEffect(() => {
-    setMode(colorMode === 'dark' ? 'dark' : 'light');
-  }, [colorMode, setMode]);
+    // If you want a proper deps array, you have to be careful not to just
+    // blindly setMode, because that will change the value of setMode
+    const targetMode = colorMode === 'dark' ? 'dark' : 'light';
+    if (mode !== targetMode) {
+      setMode(targetMode);
+    }
+  }, [colorMode, mode, setMode]);
 
   return <>{children}</>;
 }
@@ -43,13 +48,16 @@ const App = () => {
   React.useEffect(() => {
     activateRemoteConfig()
       .catch((e) => {
-        console.error(e);
+        console.error('Failed to get remote config', e);
       })
       .then(() => {
-        SplashScreen.hideAsync();
         setAppReady(true);
       });
   }, []);
+
+  if (Platform.OS === 'web' && !appReady) {
+    return <ActivityIndicator />;
+  }
 
   return Platform.OS === 'web' ? (
     <ThemeProvider theme={theme}>

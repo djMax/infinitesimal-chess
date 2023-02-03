@@ -1,4 +1,5 @@
-import './src/wdyr';
+// Uncomment this to dig into react rendering performance
+// import './src/wdyr';
 
 import { registerRootComponent } from 'expo';
 import { LogBox } from 'react-native';

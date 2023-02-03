@@ -25,12 +25,12 @@ export function getRemoteConfiguration<T extends keyof RemoteConfigs, R>(
 export async function createGame(nickname: string, isWhite: boolean) {
   const gameId = String(uuid.v4());
   await setRemoteDb(`games/${gameId}`, {
-    start: Date.now(),
+    s: Date.now(),
     [isWhite ? 'wn' : 'bn']: nickname,
     [isWhite ? 'w' : 'b']: GameSettings.playerId.get(),
   });
   if (Platform.OS === 'web') {
-    window.history.replaceState(null, 'Multiplayer Game', `/?id=${gameId}`);
+    window.history.replaceState(null, 'Multiplayer Game', `/?id=${gameId}&nick=${nickname}`);
   }
   return gameId;
 }

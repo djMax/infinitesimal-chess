@@ -1,5 +1,5 @@
 import { observer } from '@legendapp/state/react';
-import { Button, Text } from '@rneui/themed';
+import { Button, Text, useTheme } from '@rneui/themed';
 import * as React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
@@ -7,9 +7,10 @@ import { DirectionSelection } from './DirectionSelection';
 import { KnightDirectionSelection } from './KnightDirectionSelection';
 import { ScaleAdjust } from './ScaleAdjust';
 import { GameState } from '../state';
-import { resetGame } from '../state/actions';
+import { resetGame, shareGameId } from '../state/actions';
 
 export const Status = observer(() => {
+  const { theme } = useTheme();
   const whiteToMove = GameState.whiteToMove.get();
   const isMultiplayer = !!GameState.multiplayer.gameId.get();
   const iAmWhite = GameState.multiplayer.isWhite.get();
@@ -49,16 +50,40 @@ export const Status = observer(() => {
 
   if (isMultiplayer) {
     const myMove = whiteToMove === iAmWhite;
+    const opponentName = GameState.multiplayer.opponentName.get();
+    const moveCount = GameState.multiplayer.moveCount.get();
+
+    const nothingYet = !moveCount || !opponentName;
 
     return (
       <View style={{ alignItems: 'center' }}>
         <Text h4 style={{ marginBottom: 5 }}>
           {myMove
             ? `It's your move, playing ${iAmWhite ? 'white' : 'black'}`
-            : `It's their move, playing ${iAmWhite ? 'black' : 'white'}`}
+            : `${GameState.multiplayer.opponentName.get()}'s move, playing ${
+                iAmWhite ? 'black' : 'white'
+              }`}
         </Text>
         {whiteToMove === iAmWhite && <Text>Tap on a piece to start a move</Text>}
         {!myMove && <ActivityIndicator />}
+
+        {nothingYet && (
+          <View style={{ flex: 1, marginTop: 20, paddingHorizontal: 20 }}>
+            <Text style={{ fontSize: 16, textAlign: 'center' }}>
+              Your opponent has not accepted the invitation yet.
+            </Text>
+            <Button
+              type="clear"
+              title="Send Again"
+              titleStyle={{
+                color: theme.mode === 'dark' ? theme.colors.warning : theme.colors.primary,
+              }}
+              onPress={() => {
+                shareGameId(GameState.multiplayer.gameId.peek()!);
+              }}
+            />
+          </View>
+        )}
       </View>
     );
   }

@@ -1,4 +1,6 @@
 import { Observable } from '@legendapp/state';
+import * as Clipboard from 'expo-clipboard';
+import { Platform, Share } from 'react-native';
 
 import { getBaseState, GameState, ObservableGameState } from '.';
 import { GameMove } from './types';
@@ -35,7 +37,7 @@ export function completeMove(state: ObservableGameState) {
       t: Date.now(),
     };
     // TODO handle errors.
-    assignRemoteDb(`games/${raw.multiplayer.gameId}/moves/${move.id}`, move);
+    assignRemoteDb(`games/${raw.multiplayer.gameId}/m/${move.id}`, move);
     console.log('Set move count', raw.multiplayer.moveCount + 1);
     state.multiplayer.moveCount.set(moveId + 1);
   }
@@ -170,4 +172,20 @@ export function applyMoves(moves: GameMove[]) {
   moves.forEach((move) => {
     applyMove(move.p, new Position(...move.to));
   });
+}
+
+export async function shareGameId(gameId: string) {
+  const url = `https://pyralis.page.link?link=${encodeURIComponent(
+    `https://chess.pyralis.com/?id=${gameId}`,
+  )}`;
+  if (Platform.OS === 'web') {
+    await Clipboard.setStringAsync(url).then(() => {
+      alert('A game link copied to clipboard. Send it to your opponent.');
+    });
+  } else {
+    await Share.share({
+      url,
+      title: 'Play ε Chess with me!',
+    });
+  }
 }
