@@ -5,7 +5,7 @@ declare module 'js-chess-engine' {
 
   declare class Game {
     constructor(board?: BoardConfiguration);
-    printToConsole: () => void;
+    printToConsole: (writer?: (s: string) => void) => void;
     aiMove: (level: AiLevel) => Record<string, string>;
     move: (from: string, to: string) => Record<string, string>;
     removePiece: (at: string) => void;

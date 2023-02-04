@@ -87,9 +87,31 @@ export const KnightDirectionSelection = observer(({ piece }: { piece: Piece }) =
   const [move3, setMove3] = React.useState<Direction>();
 
   React.useEffect(() => {
-    setMove1(undefined);
-    setMove2(undefined);
-    setMove3(undefined);
+    const { variant, direction } = GameState.proposed.peek();
+    if (direction && variant) {
+      const delta = Knight.getDelta(direction);
+      if (variant === 'HV') {
+        setMove1(delta[0] > 0 ? 'E' : 'W');
+        if (Math.abs(delta[0]) === 2) {
+          setMove2(delta[0] > 0 ? 'E' : 'W');
+        } else {
+          setMove2(delta[1] > 0 ? 'S' : 'N');
+        }
+        setMove3(delta[1] > 0 ? 'S' : 'N');
+      } else {
+        setMove1(delta[0] > 0 ? 'S' : 'N');
+        if (Math.abs(delta[1]) === 2) {
+          setMove2(delta[1] > 0 ? 'S' : 'N');
+        } else {
+          setMove2(delta[0] > 0 ? 'E' : 'W');
+        }
+        setMove3(delta[0] > 0 ? 'E' : 'W');
+      }
+    } else {
+      setMove1(undefined);
+      setMove2(undefined);
+      setMove3(undefined);
+    }
   }, [piece]);
 
   const moves = React.useMemo(() => {

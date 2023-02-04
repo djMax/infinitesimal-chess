@@ -182,4 +182,8 @@ export class Knight extends Piece {
     }
     return [dir as Direction, variant];
   }
+
+  static getDelta(direction: Direction) {
+    return DELTAS[direction];
+  }
 }

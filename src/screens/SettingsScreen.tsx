@@ -5,9 +5,11 @@ import { View } from 'react-native';
 
 import { RootStackParamList } from './RootStackParamList';
 import { DemoBoards } from '../models';
-import { GameSettings } from '../state';
+import { GameSettings, GameState } from '../state';
 import { resetGame } from '../state/actions';
 import { useStyles } from '../styles';
+import { initializeAi } from '../models/ai/aiManager';
+import { getFen } from '../models/ai/fen';
 
 export const SettingsScreen = observer(
   ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Settings'>) => {
@@ -59,7 +61,15 @@ export const SettingsScreen = observer(
             bottomDivider={ix < demos.length - 1}
             key={key}
             onPress={() => {
+              const ai = GameState.ai.peek();
+              const isAi = !!ai;
+              const level = ai?.level;
+              const isWhite = ai?.isWhite;
               resetGame(DemoBoards[key as keyof typeof DemoBoards](), true, true);
+              if (isAi) {
+                GameState.ai.assign({ level, isWhite });
+                initializeAi(level!, getFen(GameState.peek()));
+              }
               navigation.goBack();
             }}>
             <ListItem.Content>

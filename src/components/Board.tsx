@@ -73,10 +73,15 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
     viewStyle.top = size * boardSize - size * position.y - size * r;
   }
 
-  return (
+  const isPressable = GameState.peek().whiteToMove !== piece.black.get();
+  return isPressable ? (
     <Pressable onPress={() => onPress(piece)} style={viewStyle}>
       <PieceImage piece={piece.get()} style={imgStyle} />
     </Pressable>
+  ) : (
+    <View style={viewStyle}>
+      <PieceImage piece={piece.get()} style={imgStyle} />
+    </View>
   );
 });
 

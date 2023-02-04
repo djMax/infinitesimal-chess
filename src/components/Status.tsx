@@ -6,7 +6,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { DirectionSelection } from './DirectionSelection';
 import { KnightDirectionSelection } from './KnightDirectionSelection';
 import { ScaleAdjust } from './ScaleAdjust';
-import { getAiMove, initializeAi } from '../models/ai/aiManager';
+import { getAiMove, initializeAi, suggestMove } from '../models/ai/aiManager';
 import { getFen } from '../models/ai/fen';
 import { GameState } from '../state';
 import {
@@ -105,8 +105,7 @@ export const Status = observer(() => {
         title="Suggest a Move"
         onPress={() => {
           const raw = GameState.peek();
-          initializeAi(0, getFen(raw));
-          const move = getAiMove(raw);
+          const move = suggestMove(raw, 0);
           const pieceIndex = raw.pieces.findIndex((p) => p.id === move.p)!;
           proposePiece(GameState.pieces[pieceIndex]);
           if (move.v) {
@@ -115,6 +114,7 @@ export const Status = observer(() => {
             });
           }
           proposeDirection(move.d);
+          // TODO this isn't right - scale should match piece capabilities
           setMoveScale(1);
         }}
       />
