@@ -51,7 +51,7 @@ export const Status = observer(() => {
   if (isMultiplayer) {
     const myMove = whiteToMove === iAmWhite;
     const opponentName = GameState.multiplayer.opponentName.get();
-    const moveCount = GameState.multiplayer.moveCount.get();
+    const moveCount = GameState.moveCount.get();
 
     const nothingYet = !moveCount || !opponentName;
 

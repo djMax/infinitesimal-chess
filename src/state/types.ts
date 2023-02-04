@@ -15,9 +15,20 @@ export interface RawGameState {
   multiplayer: {
     gameId: string | undefined;
     isWhite: boolean;
-    moveCount: number;
     opponentName: string | undefined;
   };
+  ai:
+    | {
+        level: number;
+        isWhite: boolean;
+      }
+    | undefined;
+  moveCount: number;
+  halfMoveCount: number;
+  // The current en passant position, if any
+  enPassant: Position | undefined;
+  // Keep a list of the dead pieces, not even sure why we might need it,
+  // but will keep it
   dead: Piece[];
   whiteToMove: boolean;
   gameOver: boolean;
@@ -38,6 +49,7 @@ export interface GameMove {
   // Piece id
   p: string;
   d: Direction;
+  v?: string;
   to: [number, number];
   // Time
   t?: number;

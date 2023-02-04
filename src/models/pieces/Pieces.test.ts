@@ -2,6 +2,7 @@ import { Pawn } from './Pawn';
 import { GameState } from '../../state';
 import { Piece } from '../Piece';
 import { Position } from '../Position';
+import { Knight } from './Knight';
 
 const testCases = [
   { from: [0.5, 1.5], direction: 'N', expected: '0.5, 7.5' },
@@ -32,6 +33,14 @@ describe('Pieces', () => {
       const p = new Piece(true, 'Queen', new Position(from[0], from[1]), 0.5);
       const np = p.getMaximumMove(GameState.get(), direction);
       expect(np.toString()).toEqual(expected);
+    });
+  });
+
+  it('Knight should be able to figure itself out', () => {
+    const p = new Knight(true, new Position(4.5, 4.5));
+    p.availableDirections(GameState.get()).forEach((dir) => {
+      const np = p.getMaximumMove(GameState.get(), dir);
+      expect(Knight.getKnightMove(p.position, np)?.[0]).toEqual(dir);
     });
   });
 });

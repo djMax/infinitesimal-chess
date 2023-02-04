@@ -132,4 +132,54 @@ export class Knight extends Piece {
     }
     return Math.max(0, Math.min(1, scale));
   }
+
+  static getKnightMove(from: Position, to: Position): [Direction, string] | undefined {
+    const isSouth = from.y > to.y;
+    const isWest = from.x > to.x;
+    const vDist = Math.abs(from.y - to.y);
+    const hDist = Math.abs(from.x - to.x);
+    if (from.x === to.x) {
+      // This is a partial move along one axis. Assume it is a v-first move
+      // because why not.
+      if (isSouth) {
+        return ['SE', 'VH'];
+      }
+      return ['NE', 'VH'];
+    }
+    if (from.y === to.y) {
+      // This is a partial move along one axis. Assume it is a h-first move
+      // because why not.
+      if (isWest) {
+        return ['SW', 'HV'];
+      }
+      return ['NE', 'HV'];
+    }
+
+    // Ok, this is a move along two axes. So the first direction MUST
+    // be completed.
+    const variant = vDist > hDist ? 'VH' : 'HV';
+    const dir = Object.entries(DELTAS).find(([dir, delta]) => {
+      if (hDist > vDist !== Math.abs(delta[0]) > Math.abs(delta[1])) {
+        return false;
+      }
+      if (vDist > hDist) {
+        // y distance must agree
+        if (delta[1] !== to.y - from.y) {
+          return false;
+        }
+        // sign of x distance must agree
+        return (to.x - from.x) * delta[0] > 0;
+      }
+      // x distance must agree
+      if (delta[0] !== to.x - from.x) {
+        return false;
+      }
+      // sign of y distance must agree
+      return (to.y - from.y) * delta[1] > 0;
+    })?.[0];
+    if (!dir) {
+      return undefined;
+    }
+    return [dir as Direction, variant];
+  }
 }

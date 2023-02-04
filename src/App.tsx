@@ -1,11 +1,14 @@
+import { observer } from '@legendapp/state/react';
 import { createTheme, lightColors, darkColors, ThemeProvider, useThemeMode } from '@rneui/themed';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { ActivityIndicator, Platform, useColorScheme } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import { activateRemoteConfig } from './adapters/firebase';
 import { AnimatedAppLoader } from './components/AnimatedSplash';
 import { Navigation } from './screens/Nav';
+import { AppState } from './state';
 
 const theme = createTheme({
   lightColors: {
@@ -42,6 +45,8 @@ SplashScreen.preventAutoHideAsync().catch(() => {
   /* reloading the app might trigger some race conditions, ignore them */
 });
 
+const AppStateSpinner = observer(() => <Spinner visible={AppState.spinner.get()} />);
+
 const App = () => {
   const [appReady, setAppReady] = React.useState(false);
 
@@ -62,6 +67,7 @@ const App = () => {
   return Platform.OS === 'web' ? (
     <ThemeProvider theme={theme}>
       <ColorScheme>
+        <AppStateSpinner />
         <Navigation />
       </ColorScheme>
     </ThemeProvider>
@@ -69,6 +75,7 @@ const App = () => {
     <AnimatedAppLoader ready={appReady}>
       <ThemeProvider theme={theme}>
         <ColorScheme>
+          <AppStateSpinner />
           <Navigation />
         </ColorScheme>
       </ThemeProvider>

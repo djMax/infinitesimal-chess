@@ -25,13 +25,21 @@ export const getBaseState = () =>
     whiteToMove: true,
     gameOver: false,
     size: 8,
+    moveCount: 0,
+    halfMoveCount: 0,
+    enPassant: undefined,
     multiplayer: {
-      gameId: undefined as string | undefined,
+      gameId: undefined,
       isWhite: true,
+      opponentName: undefined,
     },
   } as RawGameState);
 
 export const GameState = observable<RawGameState>({ ...getBaseState() });
+
+export const AppState = observable({
+  spinner: false,
+});
 
 export const GameSettings = observable({
   boardSettings: {

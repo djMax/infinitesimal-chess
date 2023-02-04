@@ -9,6 +9,7 @@ import { useTheme } from '@rneui/themed';
 import * as Linking from 'expo-linking';
 import * as React from 'react';
 
+import { AiScreen } from './AiScreen';
 import { GameScreen } from './GameScreen';
 import { IntroScreen } from './IntroScreen';
 import { MultiplayerScreen } from './MultiplayerScreen';
@@ -86,6 +87,13 @@ export const Navigation = () => {
             headerShown: false,
           }}
           component={MultiplayerScreen}
+        />
+        <Stack.Screen
+          name="AiSetup"
+          options={{
+            headerShown: false,
+          }}
+          component={AiScreen}
         />
         <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>

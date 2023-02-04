@@ -38,8 +38,19 @@ export class Position {
     return `${this.x}, ${this.y}`;
   }
 
+  toChessPosition() {
+    const n = this.nearestCenter();
+    return `${String.fromCharCode('a'.charCodeAt(0) + n.x)}${String.fromCharCode(
+      '1'.charCodeAt(0) + n.y,
+    )}`;
+  }
+
   nearestCenter() {
     return new Position(Math.round(this.x + 0.5) - 1, Math.round(this.y + 0.5) - 1);
+  }
+
+  equals(other: Position) {
+    return this.x === other.x && this.y === other.y;
   }
 
   static maxLength(start: Position, end: Position, len: number) {
@@ -70,10 +81,16 @@ export class Position {
     return new Position(newX, newY);
   }
 
-  static getDirection(start: Position, end: Position) {
+  static getDirection(start: Position, end: Position): Direction {
     // Find the angle between start and end
     const angle = (Math.atan2(end.y - start.y, end.x - start.x) * 180) / Math.PI;
     const rounded = Math.round(angle / 45) * 45;
     return ANGLE_MAP[rounded];
+  }
+
+  static fromChessPosition(pos: string) {
+    const x = pos.charCodeAt(0) - '@'.charCodeAt(0) - 1;
+    const y = Number(pos[1]) - 1;
+    return new Position(x, y);
   }
 }

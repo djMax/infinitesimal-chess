@@ -51,7 +51,6 @@ export function MultiplayerScreen({
       GameState.multiplayer.assign({
         gameId,
         isWhite: white,
-        moveCount: 0,
       });
       shareGameId(gameId).then(() => {
         navigation.replace('Game');

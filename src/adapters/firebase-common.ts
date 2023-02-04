@@ -89,22 +89,22 @@ export async function joinGame(gameId: string, nick: string): Promise<() => void
       const moveArray = game.m ? toArray(game.m) : [];
       GameState.multiplayer.assign({
         gameId,
-        opponentName: game.wn,
+        opponentName: game.w === GameSettings.playerId.peek() ? game.bn : game.wn,
         isWhite: game.w === GameSettings.playerId.peek(),
-        moveCount: moveArray.length,
       });
+      GameState.moveCount.set(moveArray.length);
       if (moveArray.length) {
         applyMoves(moveArray);
       }
     }
-    const expectedMove = GameState.multiplayer.moveCount.peek();
+    const expectedMove = GameState.moveCount.peek();
     if (game.m?.[expectedMove]) {
       const m = game.m[expectedMove];
       const p = GameState.pieces.peek().find((p) => p.id === m.p);
       // Only process opponent move updates
       if (p!.black === GameState.multiplayer.isWhite.peek()) {
         applyMoves([{ ...game.m[expectedMove], id: String(expectedMove) }]);
-        GameState.multiplayer.moveCount.set(expectedMove + 1);
+        GameState.moveCount.set(expectedMove + 1);
       }
     }
     return true;

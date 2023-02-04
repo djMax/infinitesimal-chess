@@ -27,19 +27,20 @@ export function completeMove(state: ObservableGameState) {
   const rawPiece = raw.pieces[pieceIndex];
   const newPos = rawPiece.getScaledMove(raw, direction!, distance, variant);
 
+  const moveId = raw.moveCount;
+  const move: GameMove = {
+    id: String(moveId),
+    p: pieceId!,
+    d: direction!,
+    v: variant,
+    to: [newPos.x, newPos.y],
+    t: Date.now(),
+  };
+
   if (raw.multiplayer.gameId) {
-    const moveId = raw.multiplayer.moveCount;
-    const move: GameMove = {
-      id: String(moveId),
-      p: pieceId!,
-      d: direction!,
-      to: [newPos.x, newPos.y],
-      t: Date.now(),
-    };
     // TODO handle errors.
     assignRemoteDb(`games/${raw.multiplayer.gameId}/m/${move.id}`, move);
-    console.log('Set move count', raw.multiplayer.moveCount + 1);
-    state.multiplayer.moveCount.set(moveId + 1);
+    state.moveCount.set(moveId + 1);
   }
 
   state.proposed.assign({
@@ -60,6 +61,8 @@ export function completeMove(state: ObservableGameState) {
       p.threatened.set(false);
     }
   });
+
+  return move;
 }
 
 export function proposePiece(piece: Observable<Piece>) {
@@ -144,8 +147,22 @@ function applyMove(pieceId: string, position: Position) {
   const observablePiece = GameState.pieces[pieceIndex];
   observablePiece.assign({
     position,
-    history: [...observablePiece.history, observablePiece.position],
+    history: [...rawPiece.history, rawPiece.position],
   });
+
+  if (rawPiece.type === 'Pawn') {
+    GameState.halfMoveCount.set(0);
+
+    // En Passant is if nearest position is 2 away and it's the first pawn move
+    if (rawPiece.history.length === 1) {
+      const nearest = position.nearestCenter();
+      if (nearest.y === 4 || nearest.y === 5) {
+        GameState.enPassant.set(
+          new Position(position.x, nearest.y === 4 ? position.y - 1 : position.y + 1),
+        );
+      }
+    }
+  }
 
   // I'm not sure why these become pieces and do not remain observables
   const takes = GameState.pieces.filter(
@@ -155,6 +172,7 @@ function applyMove(pieceId: string, position: Position) {
   ) as unknown as Piece[];
 
   if (takes?.length) {
+    GameState.halfMoveCount.set(0);
     takes.forEach((taken) => {
       const ix = GameState.pieces.findIndex((p) => p.id === taken.id)!;
       const piece = GameState.pieces[ix];
@@ -165,6 +183,8 @@ function applyMove(pieceId: string, position: Position) {
       }
     });
   }
+
+  GameState.moveCount.set(raw.moveCount + 1);
   GameState.whiteToMove.set(rawPiece.black);
 }
 

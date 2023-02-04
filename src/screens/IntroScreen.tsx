@@ -57,6 +57,14 @@ export function IntroScreen({ navigation }: NativeStackScreenProps<RootStackPara
         )}
 
         <Button
+          style={{ marginBottom: 20 }}
+          title="Play an AI"
+          onPress={() => {
+            navigation.replace('AiSetup');
+          }}
+        />
+
+        <Button
           title="Local Multiplayer"
           onPress={() => {
             resetGame();

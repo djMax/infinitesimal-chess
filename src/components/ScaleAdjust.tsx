@@ -2,15 +2,34 @@ import { observer } from '@legendapp/state/react';
 import { Button, Slider, Text } from '@rneui/themed';
 import * as React from 'react';
 import { View } from 'react-native';
+import { applyMoveToAi, getAiMove } from '../models/ai/aiManager';
 
-import { GameState } from '../state';
-import { completeMove, setMoveScale } from '../state/actions';
+import { AppState, GameState } from '../state';
+import { applyMoves, completeMove, setMoveScale } from '../state/actions';
 
 export const ScaleAdjust = observer(() => {
   const id = GameState.proposed.pieceId.get();
   const direction = GameState.proposed.direction.get();
   const distance = GameState.proposed.distance.get();
   const valid = GameState.proposed.valid.get();
+
+  const isAi = GameState.ai.get();
+  const nextMove = React.useCallback(() => {
+    const move = completeMove(GameState);
+    if (isAi) {
+      AppState.spinner.set(true);
+      applyMoveToAi(GameState.peek(), move);
+      try {
+        const move = getAiMove(GameState.peek());
+        console.log('AI Move', move);
+        applyMoves([move]);
+      } catch (error) {
+        console.error('Failed to make AI move', error);
+      } finally {
+        AppState.spinner.set(false);
+      }
+    }
+  }, [isAi]);
 
   if (!direction) {
     return (
@@ -28,7 +47,7 @@ export const ScaleAdjust = observer(() => {
           disabled={valid === false}
           title="Complete Move"
           style={{ marginTop: 15 }}
-          onPress={() => completeMove(GameState)}
+          onPress={nextMove}
         />
       ) : undefined}
     </View>
