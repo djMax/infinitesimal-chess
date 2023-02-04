@@ -1,7 +1,7 @@
 import { observer } from '@legendapp/state/react';
 import { Text } from '@rneui/themed';
 import * as React from 'react';
-import { View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { Arrow, DIR_SIZE } from './Arrow';
 import { PieceImage } from './PieceImage';
@@ -20,6 +20,31 @@ const MOVE_MAP: Record<Direction, string[]> = {
   W: ['WWN', 'NWW'],
   NW: ['WNN', 'NNW'],
 };
+
+const styles = StyleSheet.create({
+  e: Platform.select({
+    web: {
+      top: 5,
+      left: -5,
+    },
+    default: {},
+  }),
+  w: Platform.select({
+    web: {
+      marginLeft: 0,
+    },
+    default: {
+      top: 1,
+      left: 2.5,
+    },
+  }),
+  s: Platform.select({
+    web: {
+      marginLeft: -6,
+    },
+    default: {},
+  }),
+});
 
 function Rosette({
   piece,
@@ -43,7 +68,13 @@ function Rosette({
       </View>
       <View style={{ flexDirection: 'row' }}>
         <View>
-          <Arrow proposed={proposed} direction="W" available={available} onPress={onPress} />
+          <Arrow
+            proposed={proposed}
+            direction="W"
+            available={available}
+            onPress={onPress}
+            style={styles.w}
+          />
         </View>
         <View style={{ ...DIR_SIZE }}>
           {piece && (
@@ -54,13 +85,25 @@ function Rosette({
           )}
         </View>
         <View>
-          <Arrow proposed={proposed} direction="E" available={available} onPress={onPress} />
+          <Arrow
+            proposed={proposed}
+            direction="E"
+            available={available}
+            onPress={onPress}
+            style={styles.e}
+          />
         </View>
       </View>
       <View style={{ flexDirection: 'row' }}>
         <View style={DIR_SIZE} />
         <View>
-          <Arrow proposed={proposed} direction="S" available={available} onPress={onPress} />
+          <Arrow
+            proposed={proposed}
+            direction="S"
+            available={available}
+            onPress={onPress}
+            style={styles.s}
+          />
         </View>
         <View style={DIR_SIZE} />
       </View>

@@ -1,3 +1,4 @@
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import {
   DarkTheme,
   DefaultTheme,
@@ -51,52 +52,54 @@ export const Navigation = () => {
   }, [linkHandler]);
 
   return (
-    <NavigationContainer
-      theme={navTheme}
-      ref={navigationRef}
-      onReady={() => {
-        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
-      }}
-      onStateChange={async () => {
-        const previousRouteName = routeNameRef.current;
-        const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
+    <ActionSheetProvider>
+      <NavigationContainer
+        theme={navTheme}
+        ref={navigationRef}
+        onReady={() => {
+          routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+        }}
+        onStateChange={async () => {
+          const previousRouteName = routeNameRef.current;
+          const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
 
-        if (previousRouteName !== currentRouteName) {
-          await trackScreen(currentRouteName);
-        }
-        routeNameRef.current = currentRouteName;
-      }}>
-      <Stack.Navigator>
-        <Stack.Screen name="Intro" component={IntroScreen} options={{ headerShown: false }} />
-        <Stack.Screen
-          name="Game"
-          component={GameScreen}
-          options={{
-            headerTitle: '',
-            headerBackTitleVisible: false,
-            headerBackVisible: false,
-            headerShadowVisible: false,
-            headerRight() {
-              return <SettingsButton />;
-            },
-          }}
-        />
-        <Stack.Screen
-          name="MultiplayerSetup"
-          options={{
-            headerShown: false,
-          }}
-          component={MultiplayerScreen}
-        />
-        <Stack.Screen
-          name="AiSetup"
-          options={{
-            headerShown: false,
-          }}
-          component={AiScreen}
-        />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+          if (previousRouteName !== currentRouteName) {
+            await trackScreen(currentRouteName);
+          }
+          routeNameRef.current = currentRouteName;
+        }}>
+        <Stack.Navigator>
+          <Stack.Screen name="Intro" component={IntroScreen} options={{ headerShown: false }} />
+          <Stack.Screen
+            name="Game"
+            component={GameScreen}
+            options={{
+              headerTitle: '',
+              headerBackTitleVisible: false,
+              headerBackVisible: false,
+              headerShadowVisible: false,
+              headerRight() {
+                return <SettingsButton />;
+              },
+            }}
+          />
+          <Stack.Screen
+            name="MultiplayerSetup"
+            options={{
+              headerShown: false,
+            }}
+            component={MultiplayerScreen}
+          />
+          <Stack.Screen
+            name="AiSetup"
+            options={{
+              headerShown: false,
+            }}
+            component={AiScreen}
+          />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ActionSheetProvider>
   );
 };

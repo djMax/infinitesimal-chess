@@ -11,6 +11,7 @@
     "build:web": "npx expo export:web"
   },
   "dependencies": {
+    "@expo/react-native-action-sheet": "^4.0.1",
     "@expo/webpack-config": "^0.17.2",
     "@legendapp/state": "^0.23.2",
     "@react-native-firebase/analytics": "^16.6.0",

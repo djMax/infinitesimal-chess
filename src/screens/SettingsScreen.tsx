@@ -1,20 +1,43 @@
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { observer } from '@legendapp/state/react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ListItem, Switch, Text } from '@rneui/themed';
+import * as React from 'react';
 import { View } from 'react-native';
 
 import { RootStackParamList } from './RootStackParamList';
+import { PieceSets } from '../components/PieceImage';
 import { DemoBoards } from '../models';
+import { initializeAi } from '../models/ai/aiManager';
+import { getFen } from '../models/ai/fen';
 import { GameSettings, GameState } from '../state';
 import { resetGame } from '../state/actions';
 import { useStyles } from '../styles';
-import { initializeAi } from '../models/ai/aiManager';
-import { getFen } from '../models/ai/fen';
 
 export const SettingsScreen = observer(
   ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Settings'>) => {
+    const { showActionSheetWithOptions } = useActionSheet();
+
     const styles = useStyles();
     const demos = Object.keys(DemoBoards) as (keyof typeof DemoBoards)[];
+
+    console.log('PIECES ARE', PieceSets);
+    const pieceSelect = React.useCallback(
+      () =>
+        showActionSheetWithOptions(
+          {
+            options: PieceSets,
+            title: 'Select a Set of Pieces',
+          },
+          (selectedIndex) => {
+            if (selectedIndex !== undefined) {
+              GameSettings.pieceSet.set(PieceSets[selectedIndex]);
+            }
+          },
+        ),
+      [showActionSheetWithOptions],
+    );
 
     return (
       <View style={styles.settingsContainer}>
@@ -31,6 +54,14 @@ export const SettingsScreen = observer(
         </ListItem>
 
         <Text style={styles.sectionTitle}>Appearance</Text>
+        <ListItem bottomDivider onPress={pieceSelect}>
+          <ListItem.Content>
+            <ListItem.Title>Piece Set</ListItem.Title>
+          </ListItem.Content>
+          <Text style={styles.rightText}>{GameSettings.pieceSet.get()}</Text>
+          <FontAwesome5 name="chevron-right" size={20} style={styles.chevron} />
+        </ListItem>
+
         <ListItem bottomDivider>
           <ListItem.Content>
             <ListItem.Title>Show Board Background</ListItem.Title>

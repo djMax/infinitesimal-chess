@@ -100,24 +100,26 @@ export const Status = observer(() => {
     <View style={{ alignItems: 'center' }}>
       <Text h4>{whiteToMove ? 'White to move' : 'Black to move'}</Text>
       <Text>Tap on a piece to start a move</Text>
-      <Button
-        type="clear"
-        title="Suggest a Move"
-        onPress={() => {
-          const raw = GameState.peek();
-          const move = suggestMove(raw, 0);
-          const pieceIndex = raw.pieces.findIndex((p) => p.id === move.p)!;
-          proposePiece(GameState.pieces[pieceIndex]);
-          if (move.v) {
-            GameState.proposed.assign({
-              variant: move.v,
-            });
-          }
-          proposeDirection(move.d);
-          // TODO this isn't right - scale should match piece capabilities
-          setMoveScale(1);
-        }}
-      />
+      {GameState.allowAi.get() && (
+        <Button
+          type="clear"
+          title="Suggest a Move"
+          onPress={() => {
+            const raw = GameState.peek();
+            const move = suggestMove(raw, 0);
+            const pieceIndex = raw.pieces.findIndex((p) => p.id === move.p)!;
+            proposePiece(GameState.pieces[pieceIndex]);
+            if (move.v) {
+              GameState.proposed.assign({
+                variant: move.v,
+              });
+            }
+            proposeDirection(move.d);
+            // TODO this isn't right - scale should match piece capabilities
+            setMoveScale(1);
+          }}
+        />
+      )}
     </View>
   );
 });

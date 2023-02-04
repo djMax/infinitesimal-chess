@@ -22,11 +22,13 @@ export function Arrow({
   available,
   proposed,
   onPress,
+  style: inStyle,
 }: {
   direction: Direction;
   available: Direction[];
   proposed?: string;
   onPress: (d: Direction) => void;
+  style?: ViewStyle;
 }) {
   const { theme } = useTheme();
   const isProposed = proposed === direction;
@@ -46,7 +48,7 @@ export function Arrow({
   }
 
   return (
-    <Pressable style={DIR_SIZE} onPress={() => onPress(direction)}>
+    <Pressable style={[DIR_SIZE, inStyle]} onPress={() => onPress(direction)}>
       <ArrowUp style={style} stroke={theme.colors.black} />
     </Pressable>
   );

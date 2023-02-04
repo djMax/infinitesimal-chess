@@ -6,6 +6,7 @@ import { configurePersistenceLayer } from './persist';
 import { GameHistory, RawGameState } from './types';
 import { Direction, Piece } from '../models/Piece';
 import { Position } from '../models/Position';
+import { PieceSetName } from '../components/PieceImage';
 
 configurePersistenceLayer();
 
@@ -48,6 +49,7 @@ export const GameSettings = observable({
   },
   nickname: undefined as string | undefined,
   playerId: undefined as string | undefined,
+  pieceSet: 'Standard' as PieceSetName,
 });
 
 export type ObservableGameState = typeof GameState;

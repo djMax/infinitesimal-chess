@@ -16,4 +16,10 @@ export const useStyles = makeStyles((theme) => ({
   settingsContainer: {
     flex: 1,
   },
+  chevron: {
+    color: theme.colors.grey4,
+  },
+  rightText: {
+    color: theme.colors.grey2,
+  },
 }));
