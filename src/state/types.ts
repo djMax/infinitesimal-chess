@@ -3,6 +3,7 @@ import { Position } from '../models/Position';
 
 export interface RawGameState {
   pieces: Piece[];
+  allowAi: boolean;
   proposed: {
     pieceId: string | undefined;
     direction: Direction | undefined;

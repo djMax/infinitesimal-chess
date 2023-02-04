@@ -1,8 +1,8 @@
+import { Knight } from './Knight';
 import { Pawn } from './Pawn';
 import { GameState } from '../../state';
 import { Piece } from '../Piece';
 import { Position } from '../Position';
-import { Knight } from './Knight';
 
 const testCases = [
   { from: [0.5, 1.5], direction: 'N', expected: '0.5, 7.5' },

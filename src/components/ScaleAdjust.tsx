@@ -2,8 +2,8 @@ import { observer } from '@legendapp/state/react';
 import { Button, Slider, Text } from '@rneui/themed';
 import * as React from 'react';
 import { View } from 'react-native';
-import { applyMoveToAi, getAiMove } from '../models/ai/aiManager';
 
+import { applyMoveToAi, getAiMove } from '../models/ai/aiManager';
 import { AppState, GameState } from '../state';
 import { applyMoves, completeMove, setMoveScale } from '../state/actions';
 
@@ -15,10 +15,10 @@ export const ScaleAdjust = observer(() => {
 
   const isAi = GameState.ai.get();
   const nextMove = React.useCallback(() => {
-    const move = completeMove(GameState);
+    const { move, taken } = completeMove(GameState);
     if (isAi) {
       AppState.spinner.set(true);
-      applyMoveToAi(GameState.peek(), move);
+      applyMoveToAi(GameState.peek(), move, taken);
       try {
         const move = getAiMove(GameState.peek());
         console.log('AI Move', move);

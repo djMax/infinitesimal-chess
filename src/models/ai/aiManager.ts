@@ -2,8 +2,8 @@ import { AiLevel, Game, status } from 'js-chess-engine';
 
 import { GameMove, RawGameState } from '../../state/types';
 import { Piece } from '../Piece';
-import { Knight } from '../pieces/Knight';
 import { Position } from '../Position';
+import { Knight } from '../pieces/Knight';
 
 let currentGame: Game;
 let level: AiLevel;
@@ -29,7 +29,6 @@ export function getAiMove(state: RawGameState): GameMove {
   console.log('Raw AI Move', move, fromPos, toPos);
   const at = state.pieces.find((p) => p.position.nearestCenter().equals(fromPos))!;
   const [direction, variant] = getDirection(at, fromPos, toPos);
-  console.log('PIECE', at, direction, variant);
   return {
     id: String(state.moveCount),
     p: at!.id,
@@ -40,11 +39,12 @@ export function getAiMove(state: RawGameState): GameMove {
   };
 }
 
-export function applyMoveToAi(state: RawGameState, move: GameMove) {
+export function applyMoveToAi(state: RawGameState, move: GameMove, takes: Piece[]) {
   const piece = state.pieces.find((p) => p.id === move.p)!;
-  console.log('Piece', move.p, piece.history, move.to);
   const from = piece.history[piece.history.length - 1].toChessPosition();
   const to = new Position(...move.to).nearestCenter().toChessPosition();
-  console.log('Apply move', from, to);
+  if (takes?.length) {
+    takes.forEach((t) => currentGame.removePiece(t.position.nearestCenter().toChessPosition()));
+  }
   currentGame.move(from, to);
 }

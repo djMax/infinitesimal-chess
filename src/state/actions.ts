@@ -11,9 +11,10 @@ import { Position } from '../models/Position';
 import { Knight } from '../models/pieces/Knight';
 import { getOverlappingPieces } from '../models/topology';
 
-export function resetGame(pieces = defaultBoard(), whiteToMove: boolean = true) {
+export function resetGame(pieces = defaultBoard(), whiteToMove: boolean = true, allowAi = false) {
   GameState.assign({
     ...getBaseState(),
+    allowAi,
     pieces,
   });
 }
@@ -51,7 +52,7 @@ export function completeMove(state: ObservableGameState) {
     distance: 1,
   });
 
-  applyMove(pieceId!, newPos);
+  const taken = applyMove(pieceId!, newPos);
 
   state.pieces.forEach((p) => {
     if (p.canThreaten.peek()) {
@@ -62,7 +63,7 @@ export function completeMove(state: ObservableGameState) {
     }
   });
 
-  return move;
+  return { move, taken };
 }
 
 export function proposePiece(piece: Observable<Piece>) {
@@ -165,11 +166,11 @@ function applyMove(pieceId: string, position: Position) {
   }
 
   // I'm not sure why these become pieces and do not remain observables
-  const takes = GameState.pieces.filter(
+  const takes = raw.pieces.filter(
     (p) =>
-      p.black.get() !== rawPiece.black &&
-      p.position.overlaps(rawPiece.position, p.radius.get(), rawPiece.radius),
-  ) as unknown as Piece[];
+      p.black !== rawPiece.black &&
+      p.position.overlaps(rawPiece.position, p.radius, rawPiece.radius),
+  );
 
   if (takes?.length) {
     GameState.halfMoveCount.set(0);
@@ -186,6 +187,7 @@ function applyMove(pieceId: string, position: Position) {
 
   GameState.moveCount.set(raw.moveCount + 1);
   GameState.whiteToMove.set(rawPiece.black);
+  return takes;
 }
 
 export function applyMoves(moves: GameMove[]) {

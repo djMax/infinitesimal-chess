@@ -48,7 +48,12 @@ export const DirectionSelection = observer(({ piece }: { piece: Piece }) => {
             default: { ...DIR_SIZE, marginRight: 6 },
           })}
         />
-        <Arrow direction="E" available={directions} onPress={proposeDirection} />
+        <Arrow
+          proposed={direction}
+          direction="E"
+          available={directions}
+          onPress={proposeDirection}
+        />
       </View>
       <View style={{ flexDirection: 'row', marginTop: 4 }}>
         <Arrow

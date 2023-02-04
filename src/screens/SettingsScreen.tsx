@@ -59,7 +59,7 @@ export const SettingsScreen = observer(
             bottomDivider={ix < demos.length - 1}
             key={key}
             onPress={() => {
-              resetGame(DemoBoards[key as keyof typeof DemoBoards](), true);
+              resetGame(DemoBoards[key as keyof typeof DemoBoards](), true, true);
               navigation.goBack();
             }}>
             <ListItem.Content>

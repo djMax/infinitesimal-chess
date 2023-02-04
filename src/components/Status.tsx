@@ -6,8 +6,16 @@ import { ActivityIndicator, View } from 'react-native';
 import { DirectionSelection } from './DirectionSelection';
 import { KnightDirectionSelection } from './KnightDirectionSelection';
 import { ScaleAdjust } from './ScaleAdjust';
+import { getAiMove, initializeAi } from '../models/ai/aiManager';
+import { getFen } from '../models/ai/fen';
 import { GameState } from '../state';
-import { resetGame, shareGameId } from '../state/actions';
+import {
+  proposeDirection,
+  proposePiece,
+  resetGame,
+  setMoveScale,
+  shareGameId,
+} from '../state/actions';
 
 export const Status = observer(() => {
   const { theme } = useTheme();
@@ -19,7 +27,7 @@ export const Status = observer(() => {
   if (GameState.gameOver.get()) {
     const king = GameState.dead.find((p) => p.type === 'King');
     return (
-      <View style={{ width: '100%', alignItems: 'center', flex: 1, alignContent: 'space-between' }}>
+      <View style={{ alignItems: 'center', flex: 1, alignContent: 'space-between' }}>
         <Text h1>Game Over</Text>
         <Text>{king?.black ? 'White' : 'Black'} Wins!</Text>
 
@@ -92,6 +100,24 @@ export const Status = observer(() => {
     <View style={{ alignItems: 'center' }}>
       <Text h4>{whiteToMove ? 'White to move' : 'Black to move'}</Text>
       <Text>Tap on a piece to start a move</Text>
+      <Button
+        type="clear"
+        title="Suggest a Move"
+        onPress={() => {
+          const raw = GameState.peek();
+          initializeAi(0, getFen(raw));
+          const move = getAiMove(raw);
+          const pieceIndex = raw.pieces.findIndex((p) => p.id === move.p)!;
+          proposePiece(GameState.pieces[pieceIndex]);
+          if (move.v) {
+            GameState.proposed.assign({
+              variant: move.v,
+            });
+          }
+          proposeDirection(move.d);
+          setMoveScale(1);
+        }}
+      />
     </View>
   );
 });

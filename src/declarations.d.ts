@@ -8,6 +8,7 @@ declare module 'js-chess-engine' {
     printToConsole: () => void;
     aiMove: (level: AiLevel) => Record<string, string>;
     move: (from: string, to: string) => Record<string, string>;
+    removePiece: (at: string) => void;
   }
 
   const status = (fen: string) => BoardConfiguration;
