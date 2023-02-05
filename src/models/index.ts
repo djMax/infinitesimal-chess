@@ -94,11 +94,14 @@ export const DemoBoards = {
   QueenInstamate() {
     return [
       new King(true, p(4, 7)),
-      ...Array(8)
+      ...Array(4)
         .fill(0)
-        .map((_, i) => new Pawn(true, p(i, 6))),
+        .map((_, i) => new Pawn(true, p(i * 2, 1))),
       new King(false, p(1, 0)),
       new Queen(false, p(4, 0)),
+      ...Array(4)
+        .fill(0)
+        .map((_, i) => new Pawn(false, p(i * 2, 6))),
     ];
   },
   BackRank() {

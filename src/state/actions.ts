@@ -4,12 +4,13 @@ import { Platform, Share } from 'react-native';
 
 import { getBaseState, GameState, ObservableGameState } from '.';
 import { GameMove } from './types';
-import { assignRemoteDb } from '../adapters/firebase';
+import { assignRemoteDb, crashlyticsLog } from '../adapters/firebase';
 import { defaultBoard } from '../models';
 import { Direction, Piece } from '../models/Piece';
 import { Position } from '../models/Position';
 import { Knight } from '../models/pieces/Knight';
 import { getOverlappingPieces } from '../models/topology';
+import { Pawn } from '../models/pieces/Pawn';
 
 export function resetGame(pieces = defaultBoard(), whiteToMove: boolean = true, allowAi = false) {
   GameState.assign({
@@ -28,6 +29,9 @@ export function completeMove(state: ObservableGameState) {
   const rawPiece = raw.pieces[pieceIndex];
   const newPos = rawPiece.getScaledMove(raw, direction!, distance, variant);
 
+  crashlyticsLog(
+    `Move ${rawPiece.black ? 'B' : 'W'} ${rawPiece.position.toString()} -> ${newPos.toString()}`,
+  );
   const moveId = raw.moveCount;
   const move: GameMove = {
     id: String(moveId),
@@ -162,6 +166,11 @@ function applyMove(pieceId: string, position: Position) {
           new Position(position.x, nearest.y === 4 ? position.y - 1 : position.y + 1),
         );
       }
+    }
+
+    if ((rawPiece as Pawn).canPromote(raw)) {
+      const newQueen = (rawPiece as Pawn).promote(raw);
+      GameState.pieces[pieceIndex].set(newQueen);
     }
   }
 

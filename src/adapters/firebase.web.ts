@@ -62,3 +62,7 @@ export async function activateRemoteConfig() {
 export function internalGetRemoteConfig(key: keyof RemoteConfigs) {
   return getValue(rConfig, key);
 }
+
+export function crashlyticsLog(log: string) {
+  console.log(log);
+}

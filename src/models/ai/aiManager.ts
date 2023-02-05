@@ -1,6 +1,7 @@
 import { AiLevel, Game, status } from 'js-chess-engine';
 
 import { getFen } from './fen';
+import { crashlyticsLog } from '../../adapters/firebase';
 import { GameMove, RawGameState } from '../../state/types';
 import { Piece } from '../Piece';
 import { Position } from '../Position';
@@ -23,8 +24,9 @@ if (__DEV__) {
   };
 }
 
-export function initializeAi(level: number, fen: string) {
-  currentGame = new Game(status(fen));
+export function initializeAi(gameLevel: AiLevel, fen: string) {
+  level = gameLevel;
+  // currentGame = new Game(status(fen));
 }
 
 function getDirection(p: Piece, from: Position, to: Position) {
@@ -41,7 +43,7 @@ function getAiMoveForEngine(game: Game, level: AiLevel, state: RawGameState): Ga
   const fromPos = Position.fromChessPosition(from);
   const toPos = Position.fromChessPosition(to);
 
-  console.log('Raw AI Move', move, fromPos, toPos);
+  crashlyticsLog(`AI Move ${from} -> ${to}`);
   if (__DEV__) {
     game.printToConsole();
   }
@@ -63,10 +65,12 @@ export function suggestMove(state: RawGameState, level: AiLevel) {
 }
 
 export function getAiMove(state: RawGameState): GameMove {
-  return getAiMoveForEngine(currentGame, level, state);
+  const game = new Game(status(getFen(state)));
+  return getAiMoveForEngine(game, level, state);
 }
 
 export function applyMoveToAi(state: RawGameState, move: GameMove, takes: Piece[]) {
+  /*
   const piece = state.pieces.find((p) => p.id === move.p)!;
   const from = piece.history[piece.history.length - 1].toChessPosition();
   const to = new Position(...move.to).nearestCenter().toChessPosition();
@@ -79,8 +83,10 @@ export function applyMoveToAi(state: RawGameState, move: GameMove, takes: Piece[
       }
     });
   }
+  crashlyticsLog(`To AI ${move.p} ${from} -> ${to} (${takes?.map((t) => t.id).join(',')})`);
   currentGame.move(from, to);
   if (__DEV__) {
     currentGame.printToConsole();
   }
+  */
 }

@@ -10146,7 +10146,7 @@ __metadata:
     react-dom: 18.1.0
     react-native: 0.70.5
     react-native-loading-spinner-overlay: ^3.0.1
-    react-native-mmkv: ^2.6.1
+    react-native-mmkv: 2.5.1
     react-native-safe-area-context: 4.4.1
     react-native-screens: ~3.18.0
     react-native-svg: 13.4.0
@@ -15187,13 +15187,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-mmkv@npm:^2.6.1":
-  version: 2.6.1
-  resolution: "react-native-mmkv@npm:2.6.1"
+"react-native-mmkv@npm:2.5.1":
+  version: 2.5.1
+  resolution: "react-native-mmkv@npm:2.5.1"
   peerDependencies:
     react: "*"
-    react-native: ">=0.71.0"
-  checksum: c73959d10e102a08bbde6a8dd041840a680faa8ef411125431afe63fdce38bf5f58cbd3985f8ef63832b8f5c0279ca39d7cd4a2ca1bde172a23eb74e644af5e0
+    react-native: "*"
+  checksum: 6f0cf484e71d8069c9b3cdb57b76eafaca40aa75f359beb6959c77d0ef66d0481d4459b1ffa94640170ce4744e337fefb38b8ccf6e1a3c3663561ede5f7a2c20
   languageName: node
   linkType: hard
 

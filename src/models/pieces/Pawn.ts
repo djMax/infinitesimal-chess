@@ -2,6 +2,7 @@ import type { RawGameState } from '../../state/types';
 import { Direction, Piece } from '../Piece';
 import { Position } from '../Position';
 import { getOverlappingPieces } from '../topology';
+import { Queen } from './Queen';
 
 const ROOT2 = Math.sqrt(2);
 
@@ -40,5 +41,19 @@ export class Pawn extends Piece {
     // Take move (diagonal) can move max of sqrt(2)
     const proposedEnd = super.getMaximumMove(state, direction);
     return Position.maxLength(this.position, proposedEnd, ROOT2);
+  }
+
+  promote(state: RawGameState): Queen {
+    const q = new Queen(this.black, this.position, this.radius);
+    q.history = this.history;
+    q.id = this.id;
+    return q;
+  }
+
+  canPromote(state: RawGameState): boolean {
+    if (this.black && this.position.y - this.radius <= 0.5) {
+      return true;
+    }
+    return this.position.y + this.radius >= state.size - 0.5;
   }
 }

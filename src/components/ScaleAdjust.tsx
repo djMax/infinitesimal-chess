@@ -16,7 +16,7 @@ export const ScaleAdjust = observer(() => {
   const isAi = GameState.ai.get();
   const nextMove = React.useCallback(() => {
     const { move, taken } = completeMove(GameState);
-    if (isAi) {
+    if (isAi && !GameState.peek().gameOver) {
       AppState.spinner.set(true);
       applyMoveToAi(GameState.peek(), move, taken);
       try {

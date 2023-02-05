@@ -1,4 +1,5 @@
 import analytics from '@react-native-firebase/analytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import database from '@react-native-firebase/database';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import remoteConfig from '@react-native-firebase/remote-config';
@@ -58,4 +59,11 @@ export async function activateRemoteConfig() {
 
 export function internalGetRemoteConfig(key: keyof RemoteConfigs) {
   return remoteConfig().getValue(key);
+}
+
+export function crashlyticsLog(log: string) {
+  if (__DEV__) {
+    console.log(log);
+  }
+  crashlytics().log(log);
 }
