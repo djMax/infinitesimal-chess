@@ -1,17 +1,10 @@
 import { Position } from './Position';
 import { maxMove } from './maxMove';
-import { Knight } from './pieces/Knight';
-import { getOverlappingPieces, isOnLine } from './topology';
-import { AllDirections, Direction, InvertedDirections, PieceType } from './types';
+import { getOverlappingPieces } from './topology';
+import { Direction, PieceType } from './types';
 import type { RawGameState } from '../state/types';
 
 const DEFAULT_RADIUS = 0.35;
-
-interface Threat {
-  piece: Piece;
-  direction: Direction;
-  variant?: string;
-}
 
 export class Piece {
   public history: Position[] = [];
@@ -41,6 +34,20 @@ export class Piece {
     }
   }
 
+  copyWithMove<T extends Piece>(pos: Position, baseInstance?: Piece): T {
+    const copy = baseInstance || new Piece(this.black, this.type, pos, this.radius);
+    Object.assign(copy, {
+      id: this.id,
+      history: [...this.history],
+      threatened: this.threatened,
+      canThreaten: this.canThreaten,
+      proposedPositionWillBeThreatened: this.proposedPositionWillBeThreatened,
+    });
+    copy.id = this.id;
+    copy.history = [...this.history];
+    return copy as T;
+  }
+
   /**
    * Get the available directions this piece can move in.
    */
@@ -54,7 +61,7 @@ export class Piece {
     if (overlap === undefined) {
       return end;
     }
-    if (overlap.pieces[0].black === this.black) {
+    if (this.sameTeam(overlap.pieces[0])) {
       return overlap.min;
     }
     return overlap.max;
@@ -106,49 +113,7 @@ export class Piece {
     return true;
   }
 
-  canBeTaken(state: RawGameState, position: Position): Threat[] {
-    const takers: Record<string, Threat> = {};
-    const opponent = state.pieces.filter((p) => p.black !== this.black);
-    AllDirections.forEach((direction) => {
-      const rayEnd = maxMove(position, this.radius, state, direction);
-      const candidates = getOverlappingPieces(this, rayEnd, opponent);
-      candidates?.pieces
-        .filter((p) => {
-          if (p.type === 'Knight') {
-            // We need to check this punk separately.
-            return false;
-          }
-          const hasDirection = p.availableDirections(state).includes(direction);
-          switch (p.type) {
-            case 'Bishop':
-            case 'Rook':
-            case 'Queen':
-              return hasDirection;
-            case 'King':
-            case 'Pawn':
-              return hasDirection && position.squareDistance(p.position) < 2;
-          }
-        })
-        .forEach((p) => {
-          takers[p.id] = { piece: p, direction: InvertedDirections[direction] };
-        });
-      const knights = opponent.filter((p) => p.type === 'Knight') as Knight[];
-      knights.forEach((k: Knight) => {
-        // Find the first direction where the knight can take the target
-        AllDirections.find((d) => {
-          const { HV, VH } = k.getLines(d);
-          if (isOnLine(HV, position, this.radius + k.radius)) {
-            takers[k.id] = { piece: k, direction: d, variant: 'HV' };
-            return true;
-          }
-          if (isOnLine(VH, position, this.radius + k.radius)) {
-            takers[k.id] = { piece: k, direction: d, variant: 'VH' };
-            return true;
-          }
-          return false;
-        });
-      });
-    });
-    return Object.values(takers);
+  sameTeam(other: Piece) {
+    return other.black === this.black;
   }
 }

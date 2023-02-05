@@ -12,6 +12,10 @@ export class Pawn extends Piece {
     super(black, 'Pawn', position, radius);
   }
 
+  copyWithMove<T extends Piece>(pos: Position, baseInstance?: Piece | undefined): T {
+    return super.copyWithMove(pos, new Pawn(this.black, pos, this.radius));
+  }
+
   availableDirections(state: RawGameState): Direction[] {
     return this.filterForBounds(
       this.black ? ['S', 'SW', 'SE'] : ['N', 'NW', 'NE'],

@@ -11,6 +11,7 @@ import { Position } from '../models/Position';
 import { Knight } from '../models/pieces/Knight';
 import { Pawn } from '../models/pieces/Pawn';
 import { getOverlappingPieces } from '../models/topology';
+import { findThreats } from '../models/topology/planning';
 import { Direction } from '../models/types';
 
 export function resetGame(pieces = defaultBoard(), whiteToMove: boolean = true, allowAi = false) {
@@ -31,7 +32,9 @@ export function completeMove(state: ObservableGameState) {
   const newPos = rawPiece.getScaledMove(raw, direction!, distance, variant);
 
   crashlyticsLog(
-    `Move ${rawPiece.id} ${rawPiece.black ? 'B' : 'W'} ${rawPiece.position.toString()} -> ${newPos.toString()}`,
+    `Move ${rawPiece.id} ${
+      rawPiece.black ? 'B' : 'W'
+    } ${rawPiece.position.toString()} -> ${newPos.toString()}`,
   );
   const moveId = raw.moveCount;
   const move: GameMove = {
@@ -60,6 +63,7 @@ export function completeMove(state: ObservableGameState) {
   const taken = applyMove(pieceId!, newPos);
 
   state.pieces.forEach((p) => {
+    // Reset all the cached values
     if (p.canThreaten.peek()) {
       p.canThreaten.set(false);
     }
@@ -134,7 +138,7 @@ export function setMoveScale(scale: number, updateThreats = false) {
   });
   if (updateThreats) {
     requestAnimationFrame(() => {
-      const threats = piece.canBeTaken(game, newPosition);
+      const threats = findThreats(game, piece, newPosition);
 
       for (let i = 0; i < game.pieces.length; i += 1) {
         const t = game.pieces[i];

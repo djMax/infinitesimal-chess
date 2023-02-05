@@ -6,8 +6,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { DirectionSelection } from './DirectionSelection';
 import { KnightDirectionSelection } from './KnightDirectionSelection';
 import { ScaleAdjust } from './ScaleAdjust';
-import { getAiMove, initializeAi, suggestMove } from '../models/ai/aiManager';
-import { getFen } from '../models/ai/fen';
+import { suggestMove } from '../models/ai/aiManager';
 import { GameState } from '../state';
 import {
   proposeDirection,

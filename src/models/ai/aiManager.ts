@@ -6,8 +6,9 @@ import { GameMove, RawGameState } from '../../state/types';
 import { Piece } from '../Piece';
 import { Position } from '../Position';
 import { Knight } from '../pieces/Knight';
+import { findThreats } from '../topology/planning';
 
-let currentGame: Game;
+// let currentGame: Game;
 let level: AiLevel;
 
 if (__DEV__) {
@@ -40,14 +41,19 @@ function getAiMoveForEngine(game: Game, level: AiLevel, state: RawGameState): Ga
   const opposingKing = state.pieces.find(
     (p) => p.type === 'King' && p.black === state.whiteToMove,
   )!;
-  const threat = opposingKing.canBeTaken(state, opposingKing.position);
-  if (threat.length) {
-    const takeSpot = threat[0].piece.getScaledMove(state, threat[0].direction, 1, threat[0].variant);
+  const threats = findThreats(state, opposingKing, opposingKing.position);
+  if (threats.length) {
+    const takeSpot = threats[0].piece.getScaledMove(
+      state,
+      threats[0].direction,
+      1,
+      threats[0].variant,
+    );
     return {
       id: String(state.moveCount),
-      p: threat[0].piece.id,
-      d: threat[0].direction,
-      v: threat[0].variant,
+      p: threats[0].piece.id,
+      d: threats[0].direction,
+      v: threats[0].variant,
       to: [takeSpot.x, takeSpot.y],
       t: Date.now(),
     };

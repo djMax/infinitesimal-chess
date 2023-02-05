@@ -11,4 +11,8 @@ export class Queen extends Piece {
   availableDirections(state: RawGameState): Direction[] {
     return this.filterForBounds(AllDirections, state.size);
   }
+
+  copyWithMove<T extends Piece>(pos: Position, baseInstance?: Piece | undefined): T {
+    return super.copyWithMove(pos, new Queen(this.black, pos));
+  }
 }

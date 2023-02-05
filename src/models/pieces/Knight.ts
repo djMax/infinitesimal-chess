@@ -19,9 +19,13 @@ export const DELTAS: Record<Direction, [number, number]> = {
 // in essentially a cloud of sqrt(5) around its starting point.
 // TODO create another Knight class that is limited to sqrt(5) moves
 export class Knight extends Piece {
-  constructor(black: boolean, position: Position) {
-    super(black, 'Knight', position);
+  constructor(black: boolean, position: Position, radius?: number) {
+    super(black, 'Knight', position, radius);
     this.moveVariants = ['HV', 'VH'];
+  }
+
+  copyWithMove<T extends Piece>(pos: Position, baseInstance?: Piece | undefined): T {
+    return super.copyWithMove(pos, new Knight(this.black, pos));
   }
 
   getEndPoint(direction: Direction) {
@@ -89,7 +93,7 @@ export class Knight extends Piece {
     // Is our piece within range?
     return !state.pieces.find(
       (other) =>
-        other.black === this.black &&
+        other.sameTeam(this) &&
         other !== this &&
         other.position.overlaps(position, other.radius, this.radius),
     );

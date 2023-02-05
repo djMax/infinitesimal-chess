@@ -117,4 +117,10 @@ export const DemoBoards = {
   NoPawns() {
     return defaultBoard().filter((p) => !(p instanceof Pawn));
   },
+  OnePawn() {
+    return [
+      ...defaultBoard().filter((p) => !(p instanceof Pawn)),
+      new Pawn(true, new Position(0.5, 6.5)),
+    ];
+  },
 } as const;

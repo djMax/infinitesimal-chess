@@ -29,7 +29,7 @@
         "ITSAppUsesNonExemptEncryption": false,
         "LSApplicationCategoryType": "public.app-category.board-games"
       },
-      "buildNumber": "23"
+      "buildNumber": "27"
     },
     "android": {
       "adaptiveIcon": {
@@ -55,7 +55,7 @@
           ]
         }
       ],
-      "versionCode": 13
+      "versionCode": 15
     },
     "web": {
       "favicon": "./assets/favicon.png"
