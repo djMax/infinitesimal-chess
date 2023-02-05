@@ -1,3 +1,4 @@
+import { beginBatch, endBatch } from '@legendapp/state';
 import { observer } from '@legendapp/state/react';
 import { Button, Slider, Text } from '@rneui/themed';
 import * as React from 'react';
@@ -13,7 +14,9 @@ export const ScaleAdjust = observer(() => {
   const distance = GameState.proposed.distance.get();
   const valid = GameState.proposed.valid.get();
   const slideComplete = React.useCallback((value: number) => {
+    beginBatch();
     setMoveScale(value, true);
+    endBatch();
   }, []);
 
   const isAi = GameState.ai.get();

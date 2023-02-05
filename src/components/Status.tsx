@@ -1,4 +1,6 @@
 import { observer } from '@legendapp/state/react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Button, Text, useTheme } from '@rneui/themed';
 import * as React from 'react';
 import { ActivityIndicator, View } from 'react-native';
@@ -7,17 +9,13 @@ import { DirectionSelection } from './DirectionSelection';
 import { KnightDirectionSelection } from './KnightDirectionSelection';
 import { ScaleAdjust } from './ScaleAdjust';
 import { suggestMove } from '../models/ai/aiManager';
+import { RootStackParamList } from '../screens/RootStackParamList';
 import { GameState } from '../state';
-import {
-  proposeDirection,
-  proposePiece,
-  resetGame,
-  setMoveScale,
-  shareGameId,
-} from '../state/actions';
+import { proposeDirection, proposePiece, setMoveScale, shareGameId } from '../state/actions';
 
 export const Status = observer(() => {
   const { theme } = useTheme();
+  const nav = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const whiteToMove = GameState.whiteToMove.get();
   const isMultiplayer = !!GameState.multiplayer.gameId.get();
   const iAmWhite = GameState.multiplayer.isWhite.get();
@@ -33,7 +31,7 @@ export const Status = observer(() => {
           <Button
             title="New Game"
             style={{ marginTop: 25, width: '100%' }}
-            onPress={() => resetGame()}
+            onPress={() => nav.replace('Intro')}
           />
         </View>
       </View>

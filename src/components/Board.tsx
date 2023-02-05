@@ -1,5 +1,6 @@
-import { Observable } from '@legendapp/state';
+import { beginBatch, endBatch, Observable } from '@legendapp/state';
 import { For, observer } from '@legendapp/state/react';
+// import { useTraceUpdates } from '@legendapp/state/trace';
 import { useTheme } from '@rneui/themed';
 import * as React from 'react';
 import { Platform, Pressable, View, ViewStyle } from 'react-native';
@@ -27,6 +28,7 @@ interface PressablePieceProps {
 }
 
 const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) => {
+  // useTraceUpdates(piece.peek().id);
   const boardSize = GameState.size.get();
   const r = piece.radius.get();
   const pos = piece.position.get();
@@ -47,8 +49,7 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
         height: size * r * 2,
       };
 
-  const proposedId = GameState.proposed.pieceId.get();
-
+  const isProposed = piece.isProposed.get();
   const threatened = piece.threatened.get();
   const canThreaten = piece.canThreaten.get();
   const proposedWillBeThreated = piece.proposedPositionWillBeThreatened.get();
@@ -66,7 +67,7 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
   }
 
   let isCentered = false;
-  if (proposedId === piece.id.get()) {
+  if (isProposed) {
     Object.assign(imgStyle, {
       borderRadius: size * r,
       backgroundColor: piece.black ? '#00FF00B0' : '#00FF0050',
@@ -94,7 +95,7 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
           }}
         />
       )}
-      {isCentered && proposedId === piece.id.get() && (
+      {isCentered && isProposed && (
         <View
           style={{
             position: 'absolute',
@@ -107,7 +108,7 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
           }}
         />
       )}
-      <PieceImage piece={piece.get()} style={imgStyle} />
+      <PieceImage piece={piece.peek()} style={imgStyle} />
     </Pressable>
   );
 });
@@ -128,7 +129,9 @@ function handleBoardPress(x: number, y: number) {
   if (piece instanceof Knight) {
     if (p.direction && p.variant) {
       const scale = piece.getScaleToNearestPoint(p.direction, p.variant, new Position(x, y));
+      beginBatch();
       setMoveScale(scale, true);
+      endBatch();
     }
     return;
   }
@@ -139,6 +142,7 @@ function handleBoardPress(x: number, y: number) {
     return;
   }
 
+  beginBatch();
   const dir = piece.availableDirections(g);
   const start = piece.position;
   const end = new Position(x, y);
@@ -152,6 +156,7 @@ function handleBoardPress(x: number, y: number) {
     const perc = Math.sqrt(moveD) / Math.sqrt(maxD);
     setMoveScale(Math.max(0, Math.min(1, perc)), true);
   }
+  endBatch();
 }
 
 export const Board = observer(

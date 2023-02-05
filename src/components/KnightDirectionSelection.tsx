@@ -1,3 +1,4 @@
+import { beginBatch, endBatch } from '@legendapp/state';
 import { observer } from '@legendapp/state/react';
 import { Text } from '@rneui/themed';
 import * as React from 'react';
@@ -113,6 +114,7 @@ function Rosette({
 function setKnightMove(move1: Direction, move2: Direction, move3: Direction) {
   const heading = `${move1}${move2}${move3}`;
   const direction = Object.entries(MOVE_MAP).find(([_, v]) => v.includes(heading))![0] as Direction;
+  beginBatch();
   GameState.proposed.assign({
     direction,
     variant: ['N', 'S'].includes(move1) ? 'VH' : 'HV',
@@ -120,6 +122,7 @@ function setKnightMove(move1: Direction, move2: Direction, move3: Direction) {
   const exDist = GameState.proposed.distance.peek();
   // Default to full move if no distance has been selected
   setMoveScale(exDist || 1, true);
+  endBatch();
 }
 
 export const KnightDirectionSelection = observer(({ piece }: { piece: Piece }) => {

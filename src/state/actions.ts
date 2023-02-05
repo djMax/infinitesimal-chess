@@ -1,8 +1,8 @@
-import { Observable } from '@legendapp/state';
+import { beginBatch, endBatch, Observable } from '@legendapp/state';
 import * as Clipboard from 'expo-clipboard';
 import { Platform, Share } from 'react-native';
 
-import { getBaseState, GameState, ObservableGameState } from '.';
+import { getBaseState, GameState, ObservableGameState, AppState } from '.';
 import { GameMove } from './types';
 import { assignRemoteDb, crashlyticsLog } from '../adapters/firebase';
 import { defaultBoard } from '../models';
@@ -64,6 +64,9 @@ export function completeMove(state: ObservableGameState) {
 
   state.pieces.forEach((p) => {
     // Reset all the cached values
+    if (p.isProposed) {
+      p.isProposed.set(false);
+    }
     if (p.canThreaten.peek()) {
       p.canThreaten.set(false);
     }
@@ -80,18 +83,27 @@ export function completeMove(state: ObservableGameState) {
 
 export function proposePiece(piece: Observable<Piece>) {
   const game = GameState.peek();
+  const rawPiece = piece.peek();
   if (game.whiteToMove === piece.black.get() || piece.id.get() === game.proposed.pieceId) {
     return;
   }
-  const d = piece.availableDirections(game);
+  const d = rawPiece.availableDirections(game);
+  beginBatch();
+  if (game.proposed.pieceId && game.proposed.pieceId !== piece.id.peek()) {
+    const exPiece = game.pieces.findIndex((p) => p.id === game.proposed.pieceId!);
+    GameState.pieces[exPiece].isProposed.set(false);
+  }
   GameState.proposed.assign({
-    pieceId: piece.id.get(),
+    pieceId: rawPiece.id,
     direction: d.length === 1 ? d[0] : undefined,
     availableDirections: d,
     distance: 0,
-    position: piece.position.get(),
-    variant: piece.moveVariants[0],
+    position: rawPiece.position,
+    variant: rawPiece.moveVariants[0],
   });
+  piece.isProposed.set(true);
+  endBatch();
+
   requestAnimationFrame(() => {
     const allInvolved = new Set();
     const rawPiece = piece.peek();
@@ -110,6 +122,7 @@ export function proposePiece(piece: Observable<Piece>) {
         });
       }
     });
+    beginBatch();
     game.pieces.forEach((p, ix) => {
       const canThreaten = p.canThreaten;
       const nowCanThreaten = allInvolved.has(p.id);
@@ -119,6 +132,7 @@ export function proposePiece(piece: Observable<Piece>) {
         GameState.pieces[ix].canThreaten.set(true);
       }
     });
+    endBatch();
   });
 }
 
@@ -126,7 +140,7 @@ export function setMoveScale(scale: number, updateThreats = false) {
   const game = GameState.peek();
   const piece = game.pieces.find((p) => p.id === game.proposed.pieceId)!;
   const newPosition = piece.getScaledMove(
-    GameState.peek(),
+    game,
     game.proposed.direction!,
     scale,
     game.proposed.variant,
@@ -137,42 +151,44 @@ export function setMoveScale(scale: number, updateThreats = false) {
     valid: piece.isValid(game, newPosition),
   });
   if (updateThreats) {
-    requestAnimationFrame(() => {
-      const threats = findThreats(game, piece, newPosition);
+    AppState.spinner.set(true);
+    const threats = findThreats(game, piece, newPosition);
 
-      for (let i = 0; i < game.pieces.length; i += 1) {
-        const t = game.pieces[i];
-        if (t.canThreaten) {
-          const distance = t.position.squareDistance(newPosition);
-          const isThreatened = distance < (t.radius + piece.radius) ** 2;
-          if (isThreatened !== t.threatened) {
-            GameState.pieces[i].threatened.set(isThreatened);
-          }
-          if (!isThreatened) {
-            // Ok, is this in the list of pieces to hit me?
-            if (threats.find((op) => t.id === op.piece.id)) {
-              GameState.pieces[i].proposedPositionWillBeThreatened.set(true);
-            } else if (t.proposedPositionWillBeThreatened) {
-              GameState.pieces[i].proposedPositionWillBeThreatened.set(false);
-            }
-          }
-        } else if (t.black !== piece.black) {
+    for (let i = 0; i < game.pieces.length; i += 1) {
+      const t = game.pieces[i];
+      if (t.canThreaten) {
+        const distance = t.position.squareDistance(newPosition);
+        const isThreatened = distance < (t.radius + piece.radius) ** 2;
+        if (isThreatened !== t.threatened) {
+          GameState.pieces[i].threatened.set(isThreatened);
+        }
+        if (!isThreatened) {
+          // Ok, is this in the list of pieces to hit me?
           if (threats.find((op) => t.id === op.piece.id)) {
             GameState.pieces[i].proposedPositionWillBeThreatened.set(true);
           } else if (t.proposedPositionWillBeThreatened) {
             GameState.pieces[i].proposedPositionWillBeThreatened.set(false);
           }
         }
+      } else if (t.black !== piece.black) {
+        if (threats.find((op) => t.id === op.piece.id)) {
+          GameState.pieces[i].proposedPositionWillBeThreatened.set(true);
+        } else if (t.proposedPositionWillBeThreatened) {
+          GameState.pieces[i].proposedPositionWillBeThreatened.set(false);
+        }
       }
-    });
+    }
+    AppState.spinner.set(false);
   }
 }
 
 export function proposeDirection(direction: Direction) {
+  beginBatch();
   GameState.proposed.assign({
     direction,
   });
   setMoveScale(GameState.proposed.distance.peek());
+  endBatch();
 }
 
 function applyMove(pieceId: string, position: Position) {

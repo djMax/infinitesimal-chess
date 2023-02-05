@@ -20,6 +20,7 @@ export class Piece {
   public threatened: boolean = false;
   public canThreaten: boolean = false;
   public proposedPositionWillBeThreatened: boolean = false;
+  public isProposed: boolean = false;
 
   constructor(
     public black: boolean,

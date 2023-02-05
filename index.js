@@ -1,5 +1,5 @@
 // Uncomment this to dig into react rendering performance
-// import './src/wdyr';
+import './src/wdyr';
 
 import { registerRootComponent } from 'expo';
 
