@@ -5,7 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ListItem, Switch, Text } from '@rneui/themed';
 import { AiLevel } from 'js-chess-engine';
 import * as React from 'react';
-import { View } from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 
 import { RootStackParamList } from './RootStackParamList';
 import { PieceSets } from '../components/PieceImage';
@@ -40,75 +40,77 @@ export const SettingsScreen = observer(
     );
 
     return (
-      <View style={styles.settingsContainer}>
-        <Text style={styles.sectionTitle}>Actions</Text>
-        <ListItem
-          bottomDivider
-          onPress={() => {
-            navigation.popToTop();
-            navigation.replace('Intro');
-          }}>
-          <ListItem.Content>
-            <ListItem.Title>New Game</ListItem.Title>
-          </ListItem.Content>
-        </ListItem>
-
-        <Text style={styles.sectionTitle}>Appearance</Text>
-        <ListItem bottomDivider onPress={pieceSelect}>
-          <ListItem.Content>
-            <ListItem.Title>Piece Set</ListItem.Title>
-          </ListItem.Content>
-          <Text style={styles.rightText}>{GameSettings.pieceSet.get()}</Text>
-          <FontAwesome5 name="chevron-right" size={20} style={styles.chevron} />
-        </ListItem>
-
-        <ListItem bottomDivider>
-          <ListItem.Content>
-            <ListItem.Title>Show Board Background</ListItem.Title>
-          </ListItem.Content>
-          <Switch
-            value={GameSettings.boardSettings.background.get() === 'default'}
-            onValueChange={(v) => {
-              GameSettings.boardSettings.background.set(v ? 'default' : 'none');
-            }}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItem.Content>
-            <ListItem.Title>Show Halo Around Pieces</ListItem.Title>
-          </ListItem.Content>
-          <Switch
-            value={GameSettings.boardSettings.halo.get()}
-            onValueChange={(v) => {
-              GameSettings.boardSettings.halo.set(v);
-            }}
-          />
-        </ListItem>
-
-        <Text style={styles.sectionTitle}>Sample Games</Text>
-        {demos.map((key, ix) => (
+      <SafeAreaView style={styles.settingsContainer}>
+        <ScrollView>
+          <Text style={styles.sectionTitle}>Actions</Text>
           <ListItem
-            bottomDivider={ix < demos.length - 1}
-            key={key}
+            bottomDivider
             onPress={() => {
-              const ai = GameState.ai.peek();
-              const isAi = !!ai;
-              const level = ai?.level! as AiLevel;
-              const isWhite = ai?.isWhite;
-              resetGame(DemoBoards[key as keyof typeof DemoBoards](), true, true);
-              if (isAi) {
-                GameState.ai.assign({ level, isWhite });
-                initializeAi(level, getFen(GameState.peek()));
-              }
-              navigation.goBack();
+              navigation.popToTop();
+              navigation.replace('Intro');
             }}>
             <ListItem.Content>
-              <ListItem.Title>{key.replace(/([A-Z])/g, ' $1')}</ListItem.Title>
+              <ListItem.Title>New Game</ListItem.Title>
             </ListItem.Content>
           </ListItem>
-        ))}
-      </View>
+
+          <Text style={styles.sectionTitle}>Appearance</Text>
+          <ListItem bottomDivider onPress={pieceSelect}>
+            <ListItem.Content>
+              <ListItem.Title>Piece Set</ListItem.Title>
+            </ListItem.Content>
+            <Text style={styles.rightText}>{GameSettings.pieceSet.get()}</Text>
+            <FontAwesome5 name="chevron-right" size={20} style={styles.chevron} />
+          </ListItem>
+
+          <ListItem bottomDivider>
+            <ListItem.Content>
+              <ListItem.Title>Show Board Background</ListItem.Title>
+            </ListItem.Content>
+            <Switch
+              value={GameSettings.boardSettings.background.get() === 'default'}
+              onValueChange={(v) => {
+                GameSettings.boardSettings.background.set(v ? 'default' : 'none');
+              }}
+            />
+          </ListItem>
+
+          <ListItem>
+            <ListItem.Content>
+              <ListItem.Title>Show Halo Around Pieces</ListItem.Title>
+            </ListItem.Content>
+            <Switch
+              value={GameSettings.boardSettings.halo.get()}
+              onValueChange={(v) => {
+                GameSettings.boardSettings.halo.set(v);
+              }}
+            />
+          </ListItem>
+
+          <Text style={styles.sectionTitle}>Sample Games</Text>
+          {demos.map((key, ix) => (
+            <ListItem
+              bottomDivider={ix < demos.length - 1}
+              key={key}
+              onPress={() => {
+                const ai = GameState.ai.peek();
+                const isAi = !!ai;
+                const level = ai?.level! as AiLevel;
+                const isWhite = ai?.isWhite;
+                resetGame(DemoBoards[key as keyof typeof DemoBoards](), true, true);
+                if (isAi) {
+                  GameState.ai.assign({ level, isWhite });
+                  initializeAi(level, getFen(GameState.peek()));
+                }
+                navigation.goBack();
+              }}>
+              <ListItem.Content>
+                <ListItem.Title>{key.replace(/([A-Z])/g, ' $1')}</ListItem.Title>
+              </ListItem.Content>
+            </ListItem>
+          ))}
+        </ScrollView>
+      </SafeAreaView>
     );
   },
 );
