@@ -43,7 +43,7 @@ export const ScaleAdjust = observer(() => {
   }
 
   return (
-    <View>
+    <View style={{ paddingHorizontal: 15 }}>
       <Slider
         maximumValue={1}
         minimumValue={0}

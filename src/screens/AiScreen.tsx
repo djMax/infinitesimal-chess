@@ -47,7 +47,7 @@ export function AiScreen({ navigation }: NativeStackScreenProps<RootStackParamLi
       level,
       isWhite: !white,
     });
-    navigation.navigate('Game');
+    navigation.replace('Game');
   }, [level, navigation, white]);
 
   return (

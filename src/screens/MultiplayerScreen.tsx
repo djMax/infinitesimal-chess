@@ -63,7 +63,7 @@ export function MultiplayerScreen({
     console.log('Joining game', gameId);
     joinGame(gameId!, nickname!).then(() => {
       console.log('Joined');
-      navigation.navigate('Game');
+      navigation.replace('Game');
     });
   }, [navigation, nickname, gameId]);
 
