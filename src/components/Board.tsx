@@ -29,10 +29,11 @@ interface PressablePieceProps {
 const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) => {
   const boardSize = GameState.size.get();
   const r = piece.radius.get();
+  const pos = piece.position.get();
   const viewStyle: ViewStyle = {
     position: 'absolute',
-    left: size * piece.position.x.get() - size * r,
-    top: size * boardSize - size * piece.position.y.get() - size * r,
+    left: size * pos.x - size * r,
+    top: size * boardSize - size * pos.y - size * r,
   };
   const imgStyle = GameSettings.boardSettings.halo.get()
     ? {
@@ -50,6 +51,8 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
 
   const threatened = piece.threatened.get();
   const canThreaten = piece.canThreaten.get();
+  const proposedWillBeThreated = piece.proposedPositionWillBeThreatened.get();
+
   if (threatened) {
     Object.assign(imgStyle, {
       borderRadius: size * r,
@@ -62,6 +65,7 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
     });
   }
 
+  let isCentered = false;
   if (proposedId === piece.id.get()) {
     Object.assign(imgStyle, {
       borderRadius: size * r,
@@ -71,17 +75,40 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
     const position = GameState.proposed.position!.get()!;
     viewStyle.left = size * position.x - size * r;
     viewStyle.top = size * boardSize - size * position.y - size * r;
+    isCentered = Math.abs(position.x - 0.5) % 1 < 0.03 && Math.abs(position.y - 0.5) % 1 < 0.03;
   }
 
   const isPressable = GameState.peek().whiteToMove !== piece.black.get();
-  return isPressable ? (
-    <Pressable onPress={() => onPress(piece)} style={viewStyle}>
+  return (
+    <Pressable onPress={isPressable ? () => onPress(piece) : undefined} style={viewStyle}>
+      {proposedWillBeThreated && (
+        <View
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 3,
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            backgroundColor: 'red',
+          }}
+        />
+      )}
+      {isCentered && proposedId === piece.id.get() && (
+        <View
+          style={{
+            position: 'absolute',
+            left: -5,
+            top: -5,
+            right: -5,
+            bottom: -5,
+            borderRadius: size * r * 2,
+            backgroundColor: '#00000055',
+          }}
+        />
+      )}
       <PieceImage piece={piece.get()} style={imgStyle} />
     </Pressable>
-  ) : (
-    <View style={viewStyle}>
-      <PieceImage piece={piece.get()} style={imgStyle} />
-    </View>
   );
 });
 
@@ -101,7 +128,7 @@ function handleBoardPress(x: number, y: number) {
   if (piece instanceof Knight) {
     if (p.direction && p.variant) {
       const scale = piece.getScaleToNearestPoint(p.direction, p.variant, new Position(x, y));
-      setMoveScale(scale);
+      setMoveScale(scale, true);
     }
     return;
   }
@@ -123,7 +150,7 @@ function handleBoardPress(x: number, y: number) {
     const maxD = piece.position.squareDistance(maxMove);
     const moveD = piece.position.squareDistance(move);
     const perc = Math.sqrt(moveD) / Math.sqrt(maxD);
-    setMoveScale(Math.max(0, Math.min(1, perc)));
+    setMoveScale(Math.max(0, Math.min(1, perc)), true);
   }
 }
 

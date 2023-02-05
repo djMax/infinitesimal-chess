@@ -4,9 +4,10 @@ import uuid from 'react-native-uuid';
 
 import { configurePersistenceLayer } from './persist';
 import { GameHistory, RawGameState } from './types';
-import { Direction, Piece } from '../models/Piece';
-import { Position } from '../models/Position';
 import { PieceSetName } from '../components/PieceImage';
+import { Piece } from '../models/Piece';
+import { Position } from '../models/Position';
+import { Direction } from '../models/types';
 
 configurePersistenceLayer();
 

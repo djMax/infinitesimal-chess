@@ -3,6 +3,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { observer } from '@legendapp/state/react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ListItem, Switch, Text } from '@rneui/themed';
+import { AiLevel } from 'js-chess-engine';
 import * as React from 'react';
 import { View } from 'react-native';
 
@@ -22,7 +23,6 @@ export const SettingsScreen = observer(
     const styles = useStyles();
     const demos = Object.keys(DemoBoards) as (keyof typeof DemoBoards)[];
 
-    console.log('PIECES ARE', PieceSets);
     const pieceSelect = React.useCallback(
       () =>
         showActionSheetWithOptions(
@@ -94,12 +94,12 @@ export const SettingsScreen = observer(
             onPress={() => {
               const ai = GameState.ai.peek();
               const isAi = !!ai;
-              const level = ai?.level;
+              const level = ai?.level! as AiLevel;
               const isWhite = ai?.isWhite;
               resetGame(DemoBoards[key as keyof typeof DemoBoards](), true, true);
               if (isAi) {
                 GameState.ai.assign({ level, isWhite });
-                initializeAi(level!, getFen(GameState.peek()));
+                initializeAi(level, getFen(GameState.peek()));
               }
               navigation.goBack();
             }}>

@@ -105,11 +105,20 @@ export function getPiecesOnLine(coords: Position[], radius: number, pieces: Piec
     const enlargedPiece = shapes.createCircle();
     // Find out where l and enlargedPiece intersect
     const intersection = line.intersection(enlargedPiece);
-    if (intersection.getNumPoints() < 2) {
-      return false;
-    }
-    return true;
+    return intersection.getNumPoints() >= 2;
   });
+}
+
+export function isOnLine(coords: Position[], pos: Position, radiusSum: number) {
+  const line = geo.createLineString(coords.map((c) => new Coordinate(c.x, c.y)));
+  const shapes = new (jsts as any).util.GeometricShapeFactory();
+  shapes.setNumPoints(64);
+  shapes.setCentre(new Coordinate(pos.x, pos.y));
+  shapes.setSize(radiusSum * 2);
+  const enlargedPiece = shapes.createCircle();
+  // Find out where l and enlargedPiece intersect
+  const intersection = line.intersection(enlargedPiece);
+  return intersection.getNumPoints() >= 2;
 }
 
 export function nearestPoint(lineStart: Position, lineEnd: Position, point: Position) {

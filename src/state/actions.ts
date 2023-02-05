@@ -6,11 +6,12 @@ import { getBaseState, GameState, ObservableGameState } from '.';
 import { GameMove } from './types';
 import { assignRemoteDb, crashlyticsLog } from '../adapters/firebase';
 import { defaultBoard } from '../models';
-import { Direction, Piece } from '../models/Piece';
+import { Piece } from '../models/Piece';
 import { Position } from '../models/Position';
 import { Knight } from '../models/pieces/Knight';
-import { getOverlappingPieces } from '../models/topology';
 import { Pawn } from '../models/pieces/Pawn';
+import { getOverlappingPieces } from '../models/topology';
+import { Direction } from '../models/types';
 
 export function resetGame(pieces = defaultBoard(), whiteToMove: boolean = true, allowAi = false) {
   GameState.assign({
@@ -30,7 +31,7 @@ export function completeMove(state: ObservableGameState) {
   const newPos = rawPiece.getScaledMove(raw, direction!, distance, variant);
 
   crashlyticsLog(
-    `Move ${rawPiece.black ? 'B' : 'W'} ${rawPiece.position.toString()} -> ${newPos.toString()}`,
+    `Move ${rawPiece.id} ${rawPiece.black ? 'B' : 'W'} ${rawPiece.position.toString()} -> ${newPos.toString()}`,
   );
   const moveId = raw.moveCount;
   const move: GameMove = {
@@ -65,6 +66,9 @@ export function completeMove(state: ObservableGameState) {
     if (p.threatened.peek()) {
       p.threatened.set(false);
     }
+    if (p.proposedPositionWillBeThreatened.peek()) {
+      p.proposedPositionWillBeThreatened.set(false);
+    }
   });
 
   return { move, taken };
@@ -94,23 +98,27 @@ export function proposePiece(piece: Observable<Piece>) {
         rawPiece instanceof Knight
           ? rawPiece.getTargets(dir, game)
           : getOverlappingPieces(rawPiece, end, game.pieces);
-      if (overlap?.pieces && overlap.pieces[0].black !== piece.black.get()) {
-        overlap.pieces.forEach((p) => allInvolved.add(p.id));
+      if (overlap?.pieces.length) {
+        overlap.pieces.forEach((p) => {
+          if (p.black !== piece.black.peek()) {
+            allInvolved.add(p.id);
+          }
+        });
       }
     });
-    GameState.pieces.forEach((p) => {
-      const canThreaten = p.canThreaten.peek();
-      const nowCanThreaten = allInvolved.has(p.id.peek());
+    game.pieces.forEach((p, ix) => {
+      const canThreaten = p.canThreaten;
+      const nowCanThreaten = allInvolved.has(p.id);
       if (canThreaten && !nowCanThreaten) {
-        p.canThreaten.set(false);
+        GameState.pieces[ix].canThreaten.set(false);
       } else if (!canThreaten && nowCanThreaten) {
-        p.canThreaten.set(true);
+        GameState.pieces[ix].canThreaten.set(true);
       }
     });
   });
 }
 
-export function setMoveScale(scale: number) {
+export function setMoveScale(scale: number, updateThreats = false) {
   const game = GameState.peek();
   const piece = game.pieces.find((p) => p.id === game.proposed.pieceId)!;
   const newPosition = piece.getScaledMove(
@@ -124,18 +132,36 @@ export function setMoveScale(scale: number) {
     position: newPosition,
     valid: piece.isValid(game, newPosition),
   });
-  requestAnimationFrame(() => {
-    for (let i = 0; i < game.pieces.length; i += 1) {
-      const t = game.pieces[i];
-      if (t.canThreaten) {
-        const distance = t.position.squareDistance(newPosition);
-        const isThreatened = distance < (t.radius + piece.radius) ** 2;
-        if (isThreatened !== t.threatened) {
-          GameState.pieces[i].threatened.set(isThreatened);
+  if (updateThreats) {
+    requestAnimationFrame(() => {
+      const threats = piece.canBeTaken(game, newPosition);
+
+      for (let i = 0; i < game.pieces.length; i += 1) {
+        const t = game.pieces[i];
+        if (t.canThreaten) {
+          const distance = t.position.squareDistance(newPosition);
+          const isThreatened = distance < (t.radius + piece.radius) ** 2;
+          if (isThreatened !== t.threatened) {
+            GameState.pieces[i].threatened.set(isThreatened);
+          }
+          if (!isThreatened) {
+            // Ok, is this in the list of pieces to hit me?
+            if (threats.find((op) => t.id === op.piece.id)) {
+              GameState.pieces[i].proposedPositionWillBeThreatened.set(true);
+            } else if (t.proposedPositionWillBeThreatened) {
+              GameState.pieces[i].proposedPositionWillBeThreatened.set(false);
+            }
+          }
+        } else if (t.black !== piece.black) {
+          if (threats.find((op) => t.id === op.piece.id)) {
+            GameState.pieces[i].proposedPositionWillBeThreatened.set(true);
+          } else if (t.proposedPositionWillBeThreatened) {
+            GameState.pieces[i].proposedPositionWillBeThreatened.set(false);
+          }
         }
       }
-    }
-  });
+    });
+  }
 }
 
 export function proposeDirection(direction: Direction) {

@@ -25,11 +25,10 @@ export const Status = observer(() => {
   const pieceId = GameState.proposed.pieceId.get();
 
   if (GameState.gameOver.get()) {
-    const king = GameState.dead.find((p) => p.type === 'King');
     return (
       <View style={{ alignItems: 'center', flex: 1, alignContent: 'space-between' }}>
         <Text h1>Game Over</Text>
-        <Text>{king?.black ? 'White' : 'Black'} Wins!</Text>
+        <Text>{GameState.whiteToMove.get() ? 'Black' : 'White'} Wins!</Text>
 
         <View style={{ width: '100%' }}>
           <Button
@@ -116,7 +115,7 @@ export const Status = observer(() => {
             }
             proposeDirection(move.d);
             // TODO this isn't right - scale should match piece capabilities
-            setMoveScale(1);
+            setMoveScale(1, true);
           }}
         />
       )}

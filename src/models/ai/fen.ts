@@ -3,7 +3,7 @@
 
 import { canCastle } from '../../state/castle';
 import { RawGameState } from '../../state/types';
-import { PieceType } from '../Piece';
+import { PieceType } from '../types';
 
 const TypeToNameMap: Record<PieceType, string> = {
   Pawn: 'p',

@@ -1,8 +1,9 @@
+import { Queen } from './Queen';
 import type { RawGameState } from '../../state/types';
-import { Direction, Piece } from '../Piece';
+import { Piece } from '../Piece';
 import { Position } from '../Position';
 import { getOverlappingPieces } from '../topology';
-import { Queen } from './Queen';
+import { Direction } from '../types';
 
 const ROOT2 = Math.sqrt(2);
 

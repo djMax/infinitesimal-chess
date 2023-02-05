@@ -1,14 +1,17 @@
 import { Position } from './Position';
-import { getOverlappingPieces } from './topology';
+import { maxMove } from './maxMove';
+import { Knight } from './pieces/Knight';
+import { getOverlappingPieces, isOnLine } from './topology';
+import { AllDirections, Direction, InvertedDirections, PieceType } from './types';
 import type { RawGameState } from '../state/types';
-
-export type CardinalDirection = 'N' | 'S' | 'E' | 'W';
-
-export type Direction = CardinalDirection | 'NE' | 'NW' | 'SE' | 'SW';
 
 const DEFAULT_RADIUS = 0.35;
 
-export type PieceType = 'King' | 'Queen' | 'Bishop' | 'Knight' | 'Rook' | 'Pawn';
+interface Threat {
+  piece: Piece;
+  direction: Direction;
+  variant?: string;
+}
 
 export class Piece {
   public history: Position[] = [];
@@ -23,6 +26,7 @@ export class Piece {
   // direction is made, the piece can be taken
   public threatened: boolean = false;
   public canThreaten: boolean = false;
+  public proposedPositionWillBeThreatened: boolean = false;
 
   constructor(
     public black: boolean,
@@ -61,43 +65,7 @@ export class Piece {
    * @param direction The direction to move.
    */
   getMaximumMove(state: RawGameState, direction: Direction): Position {
-    const boardSize = state.size;
-    const southMoveLimit = this.position.y - this.radius;
-    const northMoveLimit = boardSize - this.radius - this.position.y;
-    const eastMoveLimit = boardSize - this.radius - this.position.x;
-    const westMoveLimit = this.position.x - this.radius;
-
-    const faredge = boardSize - this.radius;
-    switch (direction) {
-      case 'E':
-        return new Position(faredge, this.position.y);
-      case 'N':
-        return new Position(this.position.x, faredge);
-      case 'S':
-        return new Position(this.position.x, this.radius);
-      case 'W':
-        return new Position(this.radius, this.position.y);
-      case 'NE':
-        if (northMoveLimit > eastMoveLimit) {
-          return new Position(this.position.x + eastMoveLimit, this.position.y + eastMoveLimit);
-        }
-        return new Position(this.position.x + northMoveLimit, this.position.y + northMoveLimit);
-      case 'SE':
-        if (southMoveLimit > eastMoveLimit) {
-          return new Position(this.position.x + eastMoveLimit, this.position.y - eastMoveLimit);
-        }
-        return new Position(this.position.x + southMoveLimit, this.position.y - southMoveLimit);
-      case 'NW':
-        if (northMoveLimit > westMoveLimit) {
-          return new Position(this.position.x - westMoveLimit, this.position.y + westMoveLimit);
-        }
-        return new Position(this.position.x - northMoveLimit, this.position.y + northMoveLimit);
-      case 'SW':
-        if (southMoveLimit > westMoveLimit) {
-          return new Position(this.position.x - westMoveLimit, this.position.y - westMoveLimit);
-        }
-        return new Position(this.position.x - southMoveLimit, this.position.y - southMoveLimit);
-    }
+    return maxMove(this.position, this.radius, state, direction);
   }
 
   getScaledMove(
@@ -136,5 +104,51 @@ export class Piece {
   // but the Knight can jump over, so needs this special handling.
   isValid(state: RawGameState, position: Position): boolean {
     return true;
+  }
+
+  canBeTaken(state: RawGameState, position: Position): Threat[] {
+    const takers: Record<string, Threat> = {};
+    const opponent = state.pieces.filter((p) => p.black !== this.black);
+    AllDirections.forEach((direction) => {
+      const rayEnd = maxMove(position, this.radius, state, direction);
+      const candidates = getOverlappingPieces(this, rayEnd, opponent);
+      candidates?.pieces
+        .filter((p) => {
+          if (p.type === 'Knight') {
+            // We need to check this punk separately.
+            return false;
+          }
+          const hasDirection = p.availableDirections(state).includes(direction);
+          switch (p.type) {
+            case 'Bishop':
+            case 'Rook':
+            case 'Queen':
+              return hasDirection;
+            case 'King':
+            case 'Pawn':
+              return hasDirection && position.squareDistance(p.position) < 2;
+          }
+        })
+        .forEach((p) => {
+          takers[p.id] = { piece: p, direction: InvertedDirections[direction] };
+        });
+      const knights = opponent.filter((p) => p.type === 'Knight') as Knight[];
+      knights.forEach((k: Knight) => {
+        // Find the first direction where the knight can take the target
+        AllDirections.find((d) => {
+          const { HV, VH } = k.getLines(d);
+          if (isOnLine(HV, position, this.radius + k.radius)) {
+            takers[k.id] = { piece: k, direction: d, variant: 'HV' };
+            return true;
+          }
+          if (isOnLine(VH, position, this.radius + k.radius)) {
+            takers[k.id] = { piece: k, direction: d, variant: 'VH' };
+            return true;
+          }
+          return false;
+        });
+      });
+    });
+    return Object.values(takers);
   }
 }

@@ -114,4 +114,7 @@ export const DemoBoards = {
       new Queen(false, p(7, 7)),
     ];
   },
+  NoPawns() {
+    return defaultBoard().filter((p) => !(p instanceof Pawn));
+  },
 } as const;

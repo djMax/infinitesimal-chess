@@ -1,8 +1,9 @@
 import { Knight } from './Knight';
 import { Pawn } from './Pawn';
-import { GameState } from '../../state';
+import { GameState, getBaseState } from '../../state';
 import { Piece } from '../Piece';
 import { Position } from '../Position';
+import { defaultBoard, DemoBoards } from '..';
 
 const testCases = [
   { from: [0.5, 1.5], direction: 'N', expected: '0.5, 7.5' },
@@ -42,5 +43,19 @@ describe('Pieces', () => {
       const np = p.getMaximumMove(GameState.get(), dir);
       expect(Knight.getKnightMove(p.position, np)?.[0]).toEqual(dir);
     });
+  });
+
+  it('Should be able to tell when things will be taken', () => {
+    const p = DemoBoards.NoPawns();
+    const k = p.find((p) => p.type === 'King' && !p.black)!;
+    const r = p.find((p) => p.type === 'Rook' && !p.black)!;
+    const state = {
+      ...getBaseState(),
+      pieces: p,
+    };
+    // expect(k.canBeTaken(state, k.position).length).toEqual(0);
+    // expect(r.canBeTaken(state, r.position).length).toEqual(1);
+    // expect(k.canBeTaken(state, k.position.add([0, 5])).length).toEqual(1);
+    expect(k.canBeTaken(state, k.position.add([0, 6])).length).toEqual(4);
   });
 });

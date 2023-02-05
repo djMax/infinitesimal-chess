@@ -5,8 +5,9 @@ import { Platform, StyleSheet, View } from 'react-native';
 
 import { Arrow, DIR_SIZE } from './Arrow';
 import { PieceImage } from './PieceImage';
-import { Direction, Piece } from '../models/Piece';
+import { Piece } from '../models/Piece';
 import { Knight } from '../models/pieces/Knight';
+import { Direction } from '../models/types';
 import { GameState } from '../state';
 import { setMoveScale } from '../state/actions';
 
@@ -30,9 +31,7 @@ const styles = StyleSheet.create({
     default: {},
   }),
   w: Platform.select({
-    web: {
-      marginLeft: 0,
-    },
+    web: {},
     default: {
       top: 1,
       left: 2.5,
@@ -120,7 +119,7 @@ function setKnightMove(move1: Direction, move2: Direction, move3: Direction) {
   });
   const exDist = GameState.proposed.distance.peek();
   // Default to full move if no distance has been selected
-  setMoveScale(exDist || 1);
+  setMoveScale(exDist || 1, true);
 }
 
 export const KnightDirectionSelection = observer(({ piece }: { piece: Piece }) => {

@@ -1,5 +1,6 @@
-import { Direction, Piece } from '../models/Piece';
+import { Piece } from '../models/Piece';
 import { Position } from '../models/Position';
+import { Direction } from '../models/types';
 
 export interface RawGameState {
   pieces: Piece[];

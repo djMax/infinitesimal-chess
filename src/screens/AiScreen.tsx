@@ -2,6 +2,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Picker } from '@react-native-picker/picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, CheckBox, Text, useTheme } from '@rneui/themed';
+import { AiLevel } from 'js-chess-engine';
 import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
 
 export function AiScreen({ navigation }: NativeStackScreenProps<RootStackParamList, 'AiSetup'>) {
   const [white, setWhite] = React.useState(true);
-  const [level, setLevel] = React.useState(0);
+  const [level, setLevel] = React.useState<AiLevel>(0);
   const { theme } = useTheme();
 
   const startGame = React.useCallback(() => {

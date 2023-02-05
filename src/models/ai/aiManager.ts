@@ -37,7 +37,22 @@ function getDirection(p: Piece, from: Position, to: Position) {
 }
 
 function getAiMoveForEngine(game: Game, level: AiLevel, state: RawGameState): GameMove {
-  // TODO see if we can take the king. If so, do it.
+  const opposingKing = state.pieces.find(
+    (p) => p.type === 'King' && p.black === state.whiteToMove,
+  )!;
+  const threat = opposingKing.canBeTaken(state, opposingKing.position);
+  if (threat.length) {
+    const takeSpot = threat[0].piece.getScaledMove(state, threat[0].direction, 1, threat[0].variant);
+    return {
+      id: String(state.moveCount),
+      p: threat[0].piece.id,
+      d: threat[0].direction,
+      v: threat[0].variant,
+      to: [takeSpot.x, takeSpot.y],
+      t: Date.now(),
+    };
+  }
+
   const move = game.aiMove(level);
   const [from, to] = Object.entries(move)[0];
   const fromPos = Position.fromChessPosition(from);

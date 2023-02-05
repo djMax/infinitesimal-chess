@@ -12,6 +12,9 @@ export const ScaleAdjust = observer(() => {
   const direction = GameState.proposed.direction.get();
   const distance = GameState.proposed.distance.get();
   const valid = GameState.proposed.valid.get();
+  const slideComplete = React.useCallback((value: number) => {
+    setMoveScale(value, true);
+  }, []);
 
   const isAi = GameState.ai.get();
   const nextMove = React.useCallback(() => {
@@ -41,7 +44,13 @@ export const ScaleAdjust = observer(() => {
 
   return (
     <View>
-      <Slider maximumValue={1} minimumValue={0} value={distance} onValueChange={setMoveScale} />
+      <Slider
+        maximumValue={1}
+        minimumValue={0}
+        value={distance}
+        onValueChange={setMoveScale}
+        onSlidingComplete={slideComplete}
+      />
       {distance ? (
         <Button
           disabled={valid === false}

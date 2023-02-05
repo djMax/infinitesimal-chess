@@ -2,7 +2,7 @@ import { useTheme } from '@rneui/themed';
 import { Pressable, View, ViewStyle } from 'react-native';
 
 import { ArrowUp } from './svg/ArrowUp';
-import { Direction } from '../models/Piece';
+import { Direction } from '../models/types';
 
 export const DIR_SIZE = { width: 30, height: 30 };
 

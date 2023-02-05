@@ -1,7 +1,8 @@
 import { RawGameState } from '../../state/types';
-import { Direction, Piece } from '../Piece';
+import { Piece } from '../Piece';
 import { Position } from '../Position';
 import { getPiecesOnLine, nearestPoint } from '../topology';
+import { Direction } from '../types';
 
 export const DELTAS: Record<Direction, [number, number]> = {
   N: [1, 2],
@@ -94,18 +95,18 @@ export class Knight extends Piece {
     );
   }
 
-  getTargets(dir: Direction, state: RawGameState) {
+  getLines(dir: Direction) {
     const delta = DELTAS[dir];
-    const l1 = getPiecesOnLine(
-      [this.position, this.position.add([delta[0], 0]), this.position.add(delta)],
-      this.radius,
-      state.pieces,
-    );
-    const l2 = getPiecesOnLine(
-      [this.position, this.position.add([0, delta[1]]), this.position.add(delta)],
-      this.radius,
-      state.pieces,
-    );
+    return {
+      HV: [this.position, this.position.add([delta[0], 0]), this.position.add(delta)],
+      VH: [this.position, this.position.add([0, delta[1]]), this.position.add(delta)],
+    };
+  }
+
+  getTargets(dir: Direction, state: RawGameState) {
+    const { HV, VH } = this.getLines(dir);
+    const l1 = getPiecesOnLine(HV, this.radius, state.pieces);
+    const l2 = getPiecesOnLine(VH, this.radius, state.pieces);
     const union = [...new Set([...l1, ...l2])];
     return { pieces: union };
   }

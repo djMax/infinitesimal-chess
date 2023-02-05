@@ -1,6 +1,7 @@
 import type { RawGameState } from '../../state/types';
-import { Direction, Piece } from '../Piece';
+import { Piece } from '../Piece';
 import { Position } from '../Position';
+import { Direction } from '../types';
 
 export class Rook extends Piece {
   constructor(black: boolean, position: Position) {
