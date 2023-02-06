@@ -4,18 +4,18 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, CheckBox, Text, useTheme } from '@rneui/themed';
 import { AiLevel } from 'js-chess-engine';
 import * as React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { RootStackParamList } from './RootStackParamList';
 import { initializeAi } from '../models/ai/aiManager';
 import { getFen } from '../models/ai/fen';
 import { GameState } from '../state';
 import { resetGame } from '../state/actions';
+import { useStyles } from '../styles';
 
 const CHECKBOX_SIZE = 24;
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   checkbox: {
     backgroundColor: 'transparent',
     marginTop: 20,
@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
   },
-  section: {},
   scroller: {
     flex: 1,
     justifyContent: 'space-around',
@@ -39,6 +38,7 @@ export function AiScreen({ navigation }: NativeStackScreenProps<RootStackParamLi
   const [white, setWhite] = React.useState(true);
   const [level, setLevel] = React.useState<AiLevel>(0);
   const { theme } = useTheme();
+  const styles = useStyles();
 
   const startGame = React.useCallback(() => {
     resetGame();
@@ -51,26 +51,33 @@ export function AiScreen({ navigation }: NativeStackScreenProps<RootStackParamLi
   }, [level, navigation, white]);
 
   return (
-    <SafeAreaView
+    <View
       style={{ flex: 1, alignContent: 'space-between', paddingHorizontal: 20, paddingBottom: 20 }}>
-      <ScrollView contentInset={{ top: 20 }} contentContainerStyle={styles.scroller}>
-        <View style={styles.section}>
-          <Text style={styles.text}>Choose AI Level</Text>
-          <Picker selectedValue={level} onValueChange={setLevel}>
-            <Picker.Item label="Well-trained monkey" value="0" />
-            <Picker.Item label="Beginner" value="1" />
-            <Picker.Item label="Intermediate" value="2" />
-            <Picker.Item label="Advanced" value="3" />
-            <Picker.Item label="Experienced" value="4" />
+      <Pressable style={styles.topX} onPress={() => navigation.goBack()}>
+        <FontAwesome5 name="times" size={24} color={theme.colors.black} />
+      </Pressable>
+      <ScrollView contentInset={{ top: 20 }} contentContainerStyle={localStyles.scroller}>
+        <View>
+          <Text style={localStyles.text}>Choose AI Level</Text>
+          <Picker style={{ marginTop: 20 }} selectedValue={level} onValueChange={setLevel}>
+            <Picker.Item
+              style={{ color: theme.colors.black }}
+              label="Well-trained monkey"
+              value="0"
+            />
+            <Picker.Item color={theme.colors.black} label="Beginner" value="1" />
+            <Picker.Item color={theme.colors.black} label="Intermediate" value="2" />
+            <Picker.Item color={theme.colors.black} label="Advanced" value="3" />
+            <Picker.Item color={theme.colors.black} label="Experienced" value="4" />
           </Picker>
         </View>
-        <View style={styles.section}>
-          <Text style={styles.text}>Which side will you play?</Text>
+        <View>
+          <Text style={localStyles.text}>Which side will you play?</Text>
           <CheckBox
             size={32}
             title="White"
-            textStyle={styles.cbText}
-            containerStyle={styles.checkbox}
+            textStyle={localStyles.cbText}
+            containerStyle={localStyles.checkbox}
             checkedIcon={
               <FontAwesome5 color={theme.colors.black} name="dot-circle" size={CHECKBOX_SIZE} />
             }
@@ -83,8 +90,8 @@ export function AiScreen({ navigation }: NativeStackScreenProps<RootStackParamLi
           <CheckBox
             size={32}
             title="Black"
-            textStyle={styles.cbText}
-            containerStyle={styles.checkbox}
+            textStyle={localStyles.cbText}
+            containerStyle={localStyles.checkbox}
             checkedIcon={
               <FontAwesome5 color={theme.colors.black} name="dot-circle" size={CHECKBOX_SIZE} />
             }
@@ -97,7 +104,12 @@ export function AiScreen({ navigation }: NativeStackScreenProps<RootStackParamLi
         </View>
       </ScrollView>
 
-      <Button style={{ marginBottom: 20 }} title="Let's Go!" onPress={startGame} />
-    </SafeAreaView>
+      <Button
+        containerStyle={styles.button}
+        titleStyle={styles.buttonText}
+        title="Let's Go!"
+        onPress={startGame}
+      />
+    </View>
   );
 }

@@ -7,8 +7,10 @@ import { View } from 'react-native';
 import { applyMoveToAi, getAiMove } from '../models/ai/aiManager';
 import { AppState, GameState } from '../state';
 import { applyMoves, completeMove, setMoveScale } from '../state/actions';
+import { useStyles } from '../styles';
 
 export const ScaleAdjust = observer(() => {
+  const styles = useStyles();
   const id = GameState.proposed.pieceId.get();
   const direction = GameState.proposed.direction.get();
   const distance = GameState.proposed.distance.get();
@@ -57,6 +59,8 @@ export const ScaleAdjust = observer(() => {
       {distance ? (
         <Button
           disabled={valid === false}
+          containerStyle={styles.button}
+          titleStyle={styles.buttonText}
           title="Complete Move"
           style={{ marginTop: 15 }}
           onPress={nextMove}

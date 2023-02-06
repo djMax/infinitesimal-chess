@@ -44,6 +44,7 @@ export const SettingsScreen = observer(
         <ScrollView>
           <Text style={styles.sectionTitle}>Actions</Text>
           <ListItem
+            containerStyle={styles.settingsItem}
             bottomDivider
             onPress={() => {
               navigation.popToTop();
@@ -55,7 +56,7 @@ export const SettingsScreen = observer(
           </ListItem>
 
           <Text style={styles.sectionTitle}>Appearance</Text>
-          <ListItem bottomDivider onPress={pieceSelect}>
+          <ListItem bottomDivider containerStyle={styles.settingsItem} onPress={pieceSelect}>
             <ListItem.Content>
               <ListItem.Title>Piece Set</ListItem.Title>
             </ListItem.Content>
@@ -63,7 +64,7 @@ export const SettingsScreen = observer(
             <FontAwesome5 name="chevron-right" size={20} style={styles.chevron} />
           </ListItem>
 
-          <ListItem bottomDivider>
+          <ListItem containerStyle={styles.settingsItem} bottomDivider>
             <ListItem.Content>
               <ListItem.Title>Show Board Background</ListItem.Title>
             </ListItem.Content>
@@ -75,7 +76,7 @@ export const SettingsScreen = observer(
             />
           </ListItem>
 
-          <ListItem>
+          <ListItem containerStyle={styles.settingsItem}>
             <ListItem.Content>
               <ListItem.Title>Show Halo Around Pieces</ListItem.Title>
             </ListItem.Content>
@@ -90,6 +91,7 @@ export const SettingsScreen = observer(
           <Text style={styles.sectionTitle}>Sample Games</Text>
           {demos.map((key, ix) => (
             <ListItem
+              containerStyle={styles.settingsItem}
               bottomDivider={ix < demos.length - 1}
               key={key}
               onPress={() => {

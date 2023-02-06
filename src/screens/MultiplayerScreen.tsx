@@ -2,17 +2,17 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, CheckBox, Input, Text, useTheme } from '@rneui/themed';
 import * as React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { RootStackParamList } from './RootStackParamList';
 import { createGame, joinGame } from '../adapters/firebase-common';
 import { GameSettings, GameState } from '../state';
 import { resetGame, shareGameId } from '../state/actions';
+import { useStyles } from '../styles';
 
 const CHECKBOX_SIZE = 24;
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   checkbox: {
     backgroundColor: 'transparent',
     marginTop: 20,
@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
   },
-  section: {},
   scroller: {
     flex: 1,
     justifyContent: 'space-around',
@@ -43,6 +42,7 @@ export function MultiplayerScreen({
   );
   const [white, setWhite] = React.useState(true);
   const { theme } = useTheme();
+  const styles = useStyles();
 
   const startGame = React.useCallback(() => {
     GameSettings.nickname.set(nickname!);
@@ -68,22 +68,27 @@ export function MultiplayerScreen({
   }, [navigation, nickname, gameId]);
 
   return (
-    <SafeAreaView
+    <View
       style={{ flex: 1, alignContent: 'space-between', paddingHorizontal: 20, paddingBottom: 20 }}>
-      <ScrollView contentInset={{ top: 20 }} contentContainerStyle={styles.scroller}>
-        <View style={styles.section}>
-          <Text style={styles.text}>Pick a nickname</Text>
+      <Pressable style={styles.topX} onPress={() => navigation.goBack()}>
+        <FontAwesome5 name="times" size={24} color={theme.colors.black} />
+      </Pressable>
+      <ScrollView contentInset={{ top: 20 }} contentContainerStyle={localStyles.scroller}>
+        <View>
+          <Text style={localStyles.text}>Pick a nickname</Text>
           <Input value={nickname} onChangeText={setNickname} autoFocus />
         </View>
-        <View style={styles.section}>
-          <Text style={styles.text}>{gameId ? 'You will play:' : 'Which side will you play?'}</Text>
+        <View>
+          <Text style={localStyles.text}>
+            {gameId ? 'You will play:' : 'Which side will you play?'}
+          </Text>
           {(!gameId || white) && (
             <CheckBox
               disabled={!!gameId}
               size={32}
               title="White"
-              textStyle={styles.cbText}
-              containerStyle={styles.checkbox}
+              textStyle={localStyles.cbText}
+              containerStyle={localStyles.checkbox}
               checkedIcon={
                 <FontAwesome5 color={theme.colors.black} name="dot-circle" size={CHECKBOX_SIZE} />
               }
@@ -100,8 +105,8 @@ export function MultiplayerScreen({
               disabled={!!gameId}
               size={32}
               title="Black"
-              textStyle={styles.cbText}
-              containerStyle={styles.checkbox}
+              textStyle={localStyles.cbText}
+              containerStyle={localStyles.checkbox}
               checkedIcon={
                 <FontAwesome5 color={theme.colors.black} name="dot-circle" size={CHECKBOX_SIZE} />
               }
@@ -116,11 +121,12 @@ export function MultiplayerScreen({
       </ScrollView>
 
       <Button
+        containerStyle={styles.button}
+        titleStyle={styles.buttonText}
         disabled={!nickname?.trim()}
-        style={{ marginBottom: 20 }}
         title={gameId ? 'Join Game' : 'Invite Opponent'}
         onPress={gameId ? join : startGame}
       />
-    </SafeAreaView>
+    </View>
   );
 }

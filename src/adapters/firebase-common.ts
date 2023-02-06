@@ -7,8 +7,8 @@ import { GameSettings, GameState } from '../state';
 import { applyMoves, resetGame } from '../state/actions';
 import { FirebaseGameDocument, GameMove } from '../state/types';
 
-export function getRemoteConfiguration<T extends keyof RemoteConfigs, R>(
-  key: T,
+export function getRemoteConfiguration<R>(
+  key: keyof RemoteConfigs,
   type: 'string' | 'boolean' | 'number',
 ): R {
   const config = internalGetRemoteConfig(key);

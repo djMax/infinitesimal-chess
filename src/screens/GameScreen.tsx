@@ -1,8 +1,9 @@
 import { observer } from '@legendapp/state/react';
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Board } from '../components/Board';
+import { SettingsButton } from '../components/SettingsButton';
 import { useStyles } from '../styles';
 
 export const GameScreen = observer(() => {
@@ -15,6 +16,11 @@ export const GameScreen = observer(() => {
 
   return (
     <SafeAreaView style={styles.boardContainer}>
+      <View style={{ width: '100%', paddingRight: 20, paddingBottom: 15 }}>
+        <View style={styles.topX}>
+          <SettingsButton />
+        </View>
+      </View>
       <Board size={size} top={top} left={left} />
     </SafeAreaView>
   );

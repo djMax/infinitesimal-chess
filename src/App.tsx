@@ -16,6 +16,10 @@ const theme = createTheme({
       default: lightColors.platform.android,
       ios: lightColors.platform.ios,
     }),
+    background: '#F2F3F3',
+    // secondary: '#FF7379',
+    primary: '#FF6469',
+    // black: '#E6E1E5',
   },
   darkColors: {
     ...Platform.select({

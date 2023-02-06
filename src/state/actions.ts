@@ -254,7 +254,9 @@ export function applyMoves(moves: GameMove[]) {
 export async function shareGameId(gameId: string) {
   const url = `https://pyralis.page.link?link=${encodeURIComponent(
     `https://chess.pyralis.com/?id=${gameId}`,
-  )}`;
+  )}&st=${encodeURIComponent('ε Chess')}&sd=${encodeURIComponent(
+    'A game of chess where the pieces can move partial amounts.',
+  )}si=${encodeURIComponent('https://chess.pyralis.com/social.png')}`;
   if (Platform.OS === 'web') {
     await Clipboard.setStringAsync(url).then(() => {
       alert('A game link copied to clipboard. Send it to your opponent.');

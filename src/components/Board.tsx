@@ -79,7 +79,7 @@ const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) 
     isCentered = Math.abs(position.x - 0.5) % 1 < 0.03 && Math.abs(position.y - 0.5) % 1 < 0.03;
   }
 
-  const isPressable = GameState.peek().whiteToMove !== piece.black.get();
+  const isPressable = GameState.get().whiteToMove !== piece.black.peek();
   return (
     <Pressable onPress={isPressable ? () => onPress(piece) : undefined} style={viewStyle}>
       {proposedWillBeThreated && (

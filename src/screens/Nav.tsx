@@ -17,7 +17,6 @@ import { MultiplayerScreen } from './MultiplayerScreen';
 import { RootStackParamList } from './RootStackParamList';
 import { SettingsScreen } from './SettingsScreen';
 import { trackScreen } from '../adapters/firebase';
-import { SettingsButton } from '../components/SettingsButton';
 import { handleLink, setupDynamicLinks } from '../state/links';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -32,9 +31,12 @@ export const Navigation = () => {
       dark: theme.mode === 'dark',
       colors: {
         ...(theme.mode === 'dark' ? DarkTheme : DefaultTheme).colors,
+        background: theme.colors.background,
+        primary: theme.colors.primary,
+        text: theme.colors.black,
       },
     }),
-    [theme.mode],
+    [theme.mode, theme.colors],
   );
 
   const link = Linking.useURL() || undefined;
@@ -74,18 +76,13 @@ export const Navigation = () => {
             name="Game"
             component={GameScreen}
             options={{
-              headerTitle: '',
-              headerBackTitleVisible: false,
-              headerBackVisible: false,
-              headerShadowVisible: false,
-              headerRight() {
-                return <SettingsButton />;
-              },
+              headerShown: false,
             }}
           />
           <Stack.Screen
             name="MultiplayerSetup"
             options={{
+              presentation: 'modal',
               headerShown: false,
             }}
             component={MultiplayerScreen}
@@ -94,6 +91,7 @@ export const Navigation = () => {
             name="AiSetup"
             options={{
               headerShown: false,
+              presentation: 'modal',
             }}
             component={AiScreen}
           />
