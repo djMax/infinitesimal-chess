@@ -29,7 +29,7 @@
         "ITSAppUsesNonExemptEncryption": false,
         "LSApplicationCategoryType": "public.app-category.board-games"
       },
-      "buildNumber": "40"
+      "buildNumber": "41"
     },
     "android": {
       "adaptiveIcon": {
@@ -55,7 +55,7 @@
           ]
         }
       ],
-      "versionCode": 40
+      "versionCode": 41
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -79,5 +79,9 @@
         }
       ]
     ]
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-5250702741281167~4181557042",
+    "ios_app_id": "ca-app-pub-5250702741281167~8482311436"
   }
 }

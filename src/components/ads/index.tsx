@@ -6,6 +6,7 @@ import { getRemoteConfiguration } from '../../adapters/firebase-common';
 const AdUnits = {
   multiplayerWait: {
     ios: 'ca-app-pub-5250702741281167/7907596361',
+    android: 'ca-app-pub-5250702741281167/9242312036',
   },
 };
 
