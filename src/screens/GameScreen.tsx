@@ -1,9 +1,11 @@
 import { observer } from '@legendapp/state/react';
-import { useWindowDimensions, View } from 'react-native';
+import { Platform, ScrollView, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Board } from '../components/Board';
 import { SettingsButton } from '../components/SettingsButton';
+import { MultiplayerWaitBanner } from '../components/ads';
+import { GameState } from '../state';
 import { useStyles } from '../styles';
 
 export const GameScreen = observer(() => {
@@ -21,7 +23,13 @@ export const GameScreen = observer(() => {
           <SettingsButton />
         </View>
       </View>
-      <Board size={size} top={top} left={left} />
+      <ScrollView>
+        <Board size={size} top={top} left={left} />
+      </ScrollView>
+
+      {Boolean(GameState.multiplayer.gameId.get() || Platform.OS === 'web') && (
+        <MultiplayerWaitBanner />
+      )}
     </SafeAreaView>
   );
 });

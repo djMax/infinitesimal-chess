@@ -60,11 +60,7 @@ export function AiScreen({ navigation }: NativeStackScreenProps<RootStackParamLi
         <View>
           <Text style={localStyles.text}>Choose AI Level</Text>
           <Picker style={{ marginTop: 20 }} selectedValue={level} onValueChange={setLevel}>
-            <Picker.Item
-              style={{ color: theme.colors.black }}
-              label="Well-trained monkey"
-              value="0"
-            />
+            <Picker.Item color={theme.colors.black} label="Well-trained monkey" value="0" />
             <Picker.Item color={theme.colors.black} label="Beginner" value="1" />
             <Picker.Item color={theme.colors.black} label="Intermediate" value="2" />
             <Picker.Item color={theme.colors.black} label="Advanced" value="3" />

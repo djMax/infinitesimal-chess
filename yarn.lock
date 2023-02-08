@@ -1482,6 +1482,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.12.5":
+  version: 7.20.13
+  resolution: "@babel/runtime@npm:7.20.13"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: 09b7a97a05c80540db6c9e4ddf8c5d2ebb06cae5caf3a87e33c33f27f8c4d49d9c67a2d72f1570e796045288fad569f98a26ceba0c4f5fad2af84b6ad855c4fb
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.0.0, @babel/template@npm:^7.18.10, @babel/template@npm:^7.20.7, @babel/template@npm:^7.3.3, @babel/template@npm:^7.8.6":
   version: 7.20.7
   resolution: "@babel/template@npm:7.20.7"
@@ -2614,6 +2623,13 @@ __metadata:
   version: 1.2.1
   resolution: "@humanwhocodes/object-schema@npm:1.2.1"
   checksum: a824a1ec31591231e4bad5787641f59e9633827d0a2eaae131a288d33c9ef0290bd16fda8da6f7c0fcb014147865d12118df10db57f27f41e20da92369fcb3f1
+  languageName: node
+  linkType: hard
+
+"@iabtcf/core@npm:^1.5.3":
+  version: 1.5.5
+  resolution: "@iabtcf/core@npm:1.5.5"
+  checksum: 0aaf8f7faa351f84e0ae90000111453d2a099785f7242fa67f99982473f5c2b47efd26dd78103135ae9a0923c8bebf09e6e707d63da6a4f2b87e1d7d1ec5cec7
   languageName: node
   linkType: hard
 
@@ -6243,6 +6259,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"compare-urls@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "compare-urls@npm:2.0.0"
+  dependencies:
+    normalize-url: ^2.0.1
+  checksum: 706a305fcbafac63e3e3dafe71283b2fbef05ed18f64636e13bf201cdca164ff16463a7004023535497828f69b822ce44c3b43fcaa0e99d8976b26b1f326595c
+  languageName: node
+  linkType: hard
+
 "compare-versions@npm:^3.4.0":
   version: 3.6.0
   resolution: "compare-versions@npm:3.6.0"
@@ -7082,6 +7107,13 @@ __metadata:
   version: 1.1.2
   resolution: "depd@npm:1.1.2"
   checksum: 6b406620d269619852885ce15965272b829df6f409724415e0002c8632ab6a8c0a08ec1f0bd2add05dc7bd7507606f7e2cc034fa24224ab829580040b835ecd9
+  languageName: node
+  linkType: hard
+
+"dequal@npm:^2.0.2":
+  version: 2.0.3
+  resolution: "dequal@npm:2.0.3"
+  checksum: 8679b850e1a3d0ebbc46ee780d5df7b478c23f335887464023a631d1b9af051ad4a6595a44220f9ff8ff95a8ddccf019b5ad778a976fd7bbf77383d36f412f90
   languageName: node
   linkType: hard
 
@@ -8411,6 +8443,17 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 5a626fb60e06fac00c81caef19d6b0e16e46950fc4b08a484339c6c461cc7106c25c93c110108fd367b23a13ccb06a3c03da518a6d43dfb2a5f8c7f28f94b5b9
+  languageName: node
+  linkType: hard
+
+"expo-web-browser@npm:~12.0.0":
+  version: 12.0.0
+  resolution: "expo-web-browser@npm:12.0.0"
+  dependencies:
+    compare-urls: ^2.0.0
+  peerDependencies:
+    expo: "*"
+  checksum: af13169ea8f5de5ab92e3022757cedaa1b9c0392efc28e449a0e3faa43f01f5dd6efd1a543e18ff5e8f7068b2da1156884e0401bb910c95205a89cc365201d85
   languageName: node
   linkType: hard
 
@@ -10136,6 +10179,7 @@ __metadata:
     expo-linking: ^3.3.0
     expo-splash-screen: ~0.17.5
     expo-status-bar: ~1.4.2
+    expo-web-browser: ~12.0.0
     firebase: ^9.16.0
     jest: ^26.6.3
     jest-expo: ^47.0.1
@@ -10145,6 +10189,7 @@ __metadata:
     react: 18.1.0
     react-dom: 18.1.0
     react-native: 0.70.5
+    react-native-google-mobile-ads: ^9.1.1
     react-native-loading-spinner-overlay: ^3.0.1
     react-native-mmkv: 2.5.1
     react-native-safe-area-context: 4.4.1
@@ -10650,6 +10695,13 @@ __metadata:
   version: 3.0.3
   resolution: "is-path-inside@npm:3.0.3"
   checksum: abd50f06186a052b349c15e55b182326f1936c89a78bf6c8f2b707412517c097ce04bc49a0ca221787bc44e1049f51f09a2ffb63d22899051988d3a618ba13e9
+  languageName: node
+  linkType: hard
+
+"is-plain-obj@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "is-plain-obj@npm:1.1.0"
+  checksum: 0ee04807797aad50859652a7467481816cbb57e5cc97d813a7dcd8915da8195dc68c436010bf39d195226cde6a2d352f4b815f16f26b7bf486a5754290629931
   languageName: node
   linkType: hard
 
@@ -13365,6 +13417,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"normalize-url@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "normalize-url@npm:2.0.1"
+  dependencies:
+    prepend-http: ^2.0.0
+    query-string: ^5.0.1
+    sort-keys: ^2.0.0
+  checksum: 30e337ee03fc7f360c7d2b966438657fabd2628925cc58bffc893982fe4d2c59b397ae664fa2c319cd83565af73eee88906e80bc5eec91bc32b601920e770d75
+  languageName: node
+  linkType: hard
+
 "normalize-url@npm:^3.0.0":
   version: 3.3.0
   resolution: "normalize-url@npm:3.3.0"
@@ -14651,6 +14714,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prepend-http@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "prepend-http@npm:2.0.0"
+  checksum: 7694a9525405447662c1ffd352fcb41b6410c705b739b6f4e3a3e21cf5fdede8377890088e8934436b8b17ba55365a615f153960f30877bf0d0392f9e93503ea
+  languageName: node
+  linkType: hard
+
 "prettier-linter-helpers@npm:^1.0.0":
   version: 1.0.0
   resolution: "prettier-linter-helpers@npm:1.0.0"
@@ -14966,6 +15036,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"query-string@npm:^5.0.1":
+  version: 5.1.1
+  resolution: "query-string@npm:5.1.1"
+  dependencies:
+    decode-uri-component: ^0.2.0
+    object-assign: ^4.1.0
+    strict-uri-encode: ^1.0.0
+  checksum: 4ac760d9778d413ef5f94f030ed14b1a07a1708dd13fd3bc54f8b9ef7b425942c7577f30de0bf5a7d227ee65a9a0350dfa3a43d1d266880882fb7ce4c434a4dd
+  languageName: node
+  linkType: hard
+
 "query-string@npm:^7.1.3":
   version: 7.1.3
   resolution: "query-string@npm:7.1.3"
@@ -15167,6 +15248,16 @@ __metadata:
     jscodeshift: ^0.13.1
     nullthrows: ^1.1.1
   checksum: 2a50ad71e09bc8cbb3694057cf47d6e9665c16f3968d1dc2b71e83c8c4e7be3b07b74bea08750ec9c8f6c60e6c746a5f695963c8694e5a76edcbce35a53a6a06
+  languageName: node
+  linkType: hard
+
+"react-native-google-mobile-ads@npm:^9.1.1":
+  version: 9.1.1
+  resolution: "react-native-google-mobile-ads@npm:9.1.1"
+  dependencies:
+    "@iabtcf/core": ^1.5.3
+    use-deep-compare-effect: ^1.8.1
+  checksum: 915421f8ca51e769d7e1bf45340cb7ae38cfb3a70992f1ef554679bf2494708608367348afa6e6a677a63409eb7891f4ef4c31dee1c7209219ad941fc24cb860
   languageName: node
   linkType: hard
 
@@ -16485,6 +16576,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sort-keys@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "sort-keys@npm:2.0.0"
+  dependencies:
+    is-plain-obj: ^1.0.0
+  checksum: f0fd827fa9f8f866e98588d2a38c35209afbf1e9a05bb0e4ceeeb8bbf31d923c8902b0a7e0f561590ddb65e58eba6a74f74b991c85360bcc52e83a3f0d1cffd7
+  languageName: node
+  linkType: hard
+
 "source-list-map@npm:^2.0.0":
   version: 2.0.1
   resolution: "source-list-map@npm:2.0.1"
@@ -16800,6 +16900,13 @@ __metadata:
   version: 1.0.1
   resolution: "stream-shift@npm:1.0.1"
   checksum: 59b82b44b29ec3699b5519a49b3cedcc6db58c72fb40c04e005525dfdcab1c75c4e0c180b923c380f204bed78211b9bad8faecc7b93dece4d004c3f6ec75737b
+  languageName: node
+  linkType: hard
+
+"strict-uri-encode@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "strict-uri-encode@npm:1.1.0"
+  checksum: 9466d371f7b36768d43f7803f26137657559e4c8b0161fb9e320efb8edba3ae22f8e99d4b0d91da023b05a13f62ec5412c3f4f764b5788fac11d1fea93720bb3
   languageName: node
   linkType: hard
 
@@ -17959,6 +18066,18 @@ __metadata:
     punycode: 1.3.2
     querystring: 0.2.0
   checksum: 50d100d3dd2d98b9fe3ada48cadb0b08aa6be6d3ac64112b867b56b19be4bfcba03c2a9a0d7922bfd7ac17d4834e88537749fe182430dfd9b68e520175900d90
+  languageName: node
+  linkType: hard
+
+"use-deep-compare-effect@npm:^1.8.1":
+  version: 1.8.1
+  resolution: "use-deep-compare-effect@npm:1.8.1"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+    dequal: ^2.0.2
+  peerDependencies:
+    react: ">=16.13"
+  checksum: 2b9b6291df3f772f44d259b352e5d998963ccee0db2efeb76bb05525d928064aeeb69bb0dee5a5e428fea7cf3db67c097a770ebd30caa080662b565f6ef02b2e
   languageName: node
   linkType: hard
 

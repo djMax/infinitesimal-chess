@@ -72,13 +72,12 @@ export function IntroScreen({ navigation }: NativeStackScreenProps<RootStackPara
             {Platform.OS === 'web' && (
               <View
                 style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
                   marginVertical: 30,
+                  alignItems: 'center',
                 }}>
                 <View>
                   <Pressable
+                    style={{ marginBottom: 20 }}
                     accessibilityRole="link"
                     href="https://apps.apple.com/us/app/%CE%B5-chess/id1668163621">
                     <Image
