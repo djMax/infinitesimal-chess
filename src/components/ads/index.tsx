@@ -1,5 +1,10 @@
 import { Platform, View } from 'react-native';
-import mobileAds, { BannerAd, BannerAdSize, MaxAdContentRating, TestIds } from 'react-native-google-mobile-ads';
+import mobileAds, {
+  BannerAd,
+  BannerAdSize,
+  MaxAdContentRating,
+  TestIds,
+} from 'react-native-google-mobile-ads';
 
 import { getRemoteConfiguration } from '../../adapters/firebase-common';
 
