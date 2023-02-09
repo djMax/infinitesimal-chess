@@ -2,7 +2,7 @@
   "expo": {
     "name": "ε Chess",
     "slug": "infinitesimal-chess",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "scheme": "infinitesimalchess",
     "icon": "./assets/icon.png",
@@ -29,7 +29,7 @@
         "ITSAppUsesNonExemptEncryption": false,
         "LSApplicationCategoryType": "public.app-category.board-games"
       },
-      "buildNumber": "43"
+      "buildNumber": "44"
     },
     "android": {
       "adaptiveIcon": {
@@ -55,7 +55,7 @@
           ]
         }
       ],
-      "versionCode": 42
+      "versionCode": 43
     },
     "web": {
       "favicon": "./assets/favicon.png"
