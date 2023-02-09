@@ -6,7 +6,7 @@ import { View } from 'react-native';
 
 import { applyMoveToAi, getAiMove } from '../models/ai/aiManager';
 import { AppState, GameState } from '../state';
-import { applyMoves, completeMove, setMoveScale } from '../state/actions';
+import { applyMoves, completeProposedMove, setMoveScale } from '../state/actions';
 import { useStyles } from '../styles';
 
 export const ScaleAdjust = observer(() => {
@@ -23,7 +23,7 @@ export const ScaleAdjust = observer(() => {
 
   const isAi = GameState.ai.get();
   const nextMove = React.useCallback(() => {
-    const { move, taken } = completeMove(GameState);
+    const { move, taken } = completeProposedMove(GameState);
     if (isAi && !GameState.peek().gameOver) {
       AppState.spinner.set(true);
       applyMoveToAi(GameState.peek(), move, taken);

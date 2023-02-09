@@ -123,4 +123,9 @@ export const DemoBoards = {
       new Pawn(true, new Position(0.5, 6.5)),
     ];
   },
+  Castle() {
+    return defaultBoard().filter(
+      (p) => ['King', 'Rook'].includes(p.type) || p.id === 'BBishop3' || p.id === 'WBishop6',
+    );
+  },
 } as const;

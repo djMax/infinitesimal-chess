@@ -23,14 +23,24 @@ export function resetGame(pieces = defaultBoard(), whiteToMove: boolean = true, 
 }
 
 // Commit the proposed move and update state
-export function completeMove(state: ObservableGameState) {
+export function completeProposedMove(state: ObservableGameState) {
   const raw = state.peek();
   const { pieceId, direction, distance, variant } = raw.proposed;
 
   const pieceIndex = raw.pieces.findIndex((p) => p.id === pieceId);
   const rawPiece = raw.pieces[pieceIndex];
   const newPos = rawPiece.getScaledMove(raw, direction!, distance, variant);
+  return completeMove(state, rawPiece, direction!, variant, newPos);
+}
 
+export function completeMove(
+  state: ObservableGameState,
+  rawPiece: Piece,
+  direction: Direction,
+  variant: string | undefined,
+  newPos: Position,
+) {
+  const raw = state.peek();
   crashlyticsLog(
     `Move ${rawPiece.id} ${
       rawPiece.black ? 'B' : 'W'
@@ -39,7 +49,7 @@ export function completeMove(state: ObservableGameState) {
   const moveId = raw.moveCount;
   const move: GameMove = {
     id: String(moveId),
-    p: pieceId!,
+    p: rawPiece.id,
     d: direction!,
     v: variant,
     to: [newPos.x, newPos.y],
@@ -60,7 +70,7 @@ export function completeMove(state: ObservableGameState) {
     distance: 1,
   });
 
-  const taken = applyMove(pieceId!, newPos);
+  const taken = applyMove(rawPiece.id, newPos);
 
   state.pieces.forEach((p) => {
     // Reset all the cached values
@@ -196,6 +206,10 @@ function applyMove(pieceId: string, position: Position) {
   const pieceIndex = raw.pieces.findIndex((p) => p.id === pieceId);
   const rawPiece = raw.pieces[pieceIndex];
   const observablePiece = GameState.pieces[pieceIndex];
+
+  const isCastle = rawPiece.type === 'King' && position.squareDistance(rawPiece.position) === 4;
+  const isLeft = position.x < rawPiece.position.x;
+
   observablePiece.assign({
     position,
     history: [...rawPiece.history, rawPiece.position],
@@ -220,24 +234,37 @@ function applyMove(pieceId: string, position: Position) {
     }
   }
 
-  // I'm not sure why these become pieces and do not remain observables
-  const takes = raw.pieces.filter(
-    (p) =>
-      p.black !== rawPiece.black &&
-      p.position.overlaps(rawPiece.position, p.radius, rawPiece.radius),
-  );
-
-  if (takes?.length) {
-    GameState.halfMoveCount.set(0);
-    takes.forEach((taken) => {
-      const ix = GameState.pieces.findIndex((p) => p.id === taken.id)!;
-      const piece = GameState.pieces[ix];
-      GameState.dead.push(piece);
-      GameState.pieces.splice(ix, 1);
-      if (taken.type === 'King') {
-        GameState.gameOver.set(true);
-      }
+  let takes: Piece[];
+  if (isCastle) {
+    takes = [];
+    const rookPosition = isLeft ? 0.5 : GameState.size.peek() - 0.5;
+    const rookIndex = raw.pieces.findIndex(
+      (p) => p.sameTeam(rawPiece) && p.position.x === rookPosition,
+    )!;
+    const rawRook = raw.pieces[rookIndex];
+    GameState.pieces[rookIndex].assign({
+      position: rawRook.position.add([isLeft ? 3 : -2, 0]),
+      history: [...rawRook.history, rawRook.position],
     });
+  } else {
+    // I'm not sure why these become pieces and do not remain observables
+    takes = raw.pieces.filter(
+      (p) =>
+        !p.sameTeam(rawPiece) && p.position.overlaps(rawPiece.position, p.radius, rawPiece.radius),
+    );
+
+    if (takes?.length) {
+      GameState.halfMoveCount.set(0);
+      takes.forEach((taken) => {
+        const ix = GameState.pieces.findIndex((p) => p.id === taken.id)!;
+        const piece = GameState.pieces[ix];
+        GameState.dead.push(piece);
+        GameState.pieces.splice(ix, 1);
+        if (taken.type === 'King') {
+          GameState.gameOver.set(true);
+        }
+      });
+    }
   }
 
   GameState.moveCount.set(raw.moveCount + 1);

@@ -52,6 +52,9 @@ export interface GameMove {
   p: string;
   d: Direction;
   v?: string;
+  // Note that a castle is recorded as a king move to the
+  // target position, which would be an invalid move otherwise.
+  // So when applying the move, care needs to be taken to realize that
   to: [number, number];
   // Time
   t?: number;
