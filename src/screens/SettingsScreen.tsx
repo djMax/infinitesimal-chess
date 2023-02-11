@@ -1,6 +1,7 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { observer } from '@legendapp/state/react';
+import { useTraceUpdates, useTraceListeners } from '@legendapp/state/trace';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ListItem, Switch, Text } from '@rneui/themed';
 import { AiLevel } from 'js-chess-engine';
@@ -18,8 +19,9 @@ import { useStyles } from '../styles';
 
 export const SettingsScreen = observer(
   ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Settings'>) => {
+    useTraceListeners('SettingScreen');
+    useTraceUpdates('SettingScreen');
     const { showActionSheetWithOptions } = useActionSheet();
-
     const styles = useStyles();
     const demos = Object.keys(DemoBoards) as (keyof typeof DemoBoards)[];
 
@@ -38,6 +40,9 @@ export const SettingsScreen = observer(
         ),
       [showActionSheetWithOptions],
     );
+    console.log('RENDER SETTINGS SCREEN', GameSettings.boardSettings.background.get());
+    const background = GameSettings.boardSettings.background.get();
+    const pieceSet = GameSettings.pieceSet.get();
 
     return (
       <SafeAreaView style={styles.settingsContainer}>
@@ -60,7 +65,7 @@ export const SettingsScreen = observer(
             <ListItem.Content>
               <ListItem.Title>Piece Set</ListItem.Title>
             </ListItem.Content>
-            <Text style={styles.rightText}>{GameSettings.pieceSet.get()}</Text>
+            <Text style={styles.rightText}>{pieceSet}</Text>
             <FontAwesome5 name="chevron-right" size={20} style={styles.chevron} />
           </ListItem>
 
@@ -69,8 +74,9 @@ export const SettingsScreen = observer(
               <ListItem.Title>Show Board Background</ListItem.Title>
             </ListItem.Content>
             <Switch
-              value={GameSettings.boardSettings.background.get() === 'default'}
+              value={background === 'default'}
               onValueChange={(v) => {
+                console.log("SET IT", v);
                 GameSettings.boardSettings.background.set(v ? 'default' : 'none');
               }}
             />

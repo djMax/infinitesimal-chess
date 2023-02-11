@@ -1,6 +1,6 @@
 import { beginBatch, endBatch, Observable } from '@legendapp/state';
 import { For, observer } from '@legendapp/state/react';
-// import { useTraceUpdates } from '@legendapp/state/trace';
+// import { useTraceUpdates, useTraceListeners } from '@legendapp/state/trace';
 import { useTheme } from '@rneui/themed';
 import * as React from 'react';
 import { Platform, Pressable, View, ViewStyle } from 'react-native';
@@ -29,6 +29,7 @@ interface PressablePieceProps {
 
 const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) => {
   // useTraceUpdates(piece.peek().id);
+  // useTraceListeners(piece.peek().id);
   const boardSize = GameState.size.get();
   const r = piece.radius.get();
   const pos = piece.position.get();
@@ -122,6 +123,7 @@ function getBoardPosition(x: number, y: number, squareSize: number, boardSize: n
 function handleBoardPress(x: number, y: number) {
   const g = GameState.peek();
   const p = g.proposed;
+
   if (!p.pieceId) {
     return;
   }
@@ -129,9 +131,9 @@ function handleBoardPress(x: number, y: number) {
   if (piece instanceof Knight) {
     if (p.direction && p.variant) {
       const scale = piece.getScaleToNearestPoint(p.direction, p.variant, new Position(x, y));
-      beginBatch();
+      //beginBatch();
       setMoveScale(scale, true);
-      endBatch();
+      //endBatch();
     }
     return;
   }
@@ -142,7 +144,7 @@ function handleBoardPress(x: number, y: number) {
     return;
   }
 
-  beginBatch();
+  // beginBatch();
   const dir = piece.availableDirections(g);
   const start = piece.position;
   const end = new Position(x, y);
@@ -156,7 +158,7 @@ function handleBoardPress(x: number, y: number) {
     const perc = Math.sqrt(moveD) / Math.sqrt(maxD);
     setMoveScale(Math.max(0, Math.min(1, perc)), true);
   }
-  endBatch();
+  // endBatch();
 }
 
 export const Board = observer(

@@ -94,12 +94,12 @@ export function completeMove(
 export function proposePiece(piece: Observable<Piece>) {
   const game = GameState.peek();
   const rawPiece = piece.peek();
-  if (game.whiteToMove === piece.black.get() || piece.id.get() === game.proposed.pieceId) {
+  if (game.whiteToMove === rawPiece.black || piece.id.get() === game.proposed.pieceId) {
     return;
   }
   const d = rawPiece.availableDirections(game);
-  beginBatch();
-  if (game.proposed.pieceId && game.proposed.pieceId !== piece.id.peek()) {
+  // beginBatch();
+  if (game.proposed.pieceId && game.proposed.pieceId !== rawPiece.id) {
     const exPiece = game.pieces.findIndex((p) => p.id === game.proposed.pieceId!);
     GameState.pieces[exPiece].isProposed.set(false);
   }
@@ -112,11 +112,12 @@ export function proposePiece(piece: Observable<Piece>) {
     variant: rawPiece.moveVariants[0],
   });
   piece.isProposed.set(true);
-  endBatch();
+  // endBatch();
+
+  console.log('Proposing piece', GameState.peek());
 
   requestAnimationFrame(() => {
     const allInvolved = new Set();
-    const rawPiece = piece.peek();
     d.forEach((dir) => {
       // Find the overlapping piece for this direction
       const end = piece.getMaximumMove(game, dir);
@@ -132,7 +133,7 @@ export function proposePiece(piece: Observable<Piece>) {
         });
       }
     });
-    beginBatch();
+    // beginBatch();
     game.pieces.forEach((p, ix) => {
       const canThreaten = p.canThreaten;
       const nowCanThreaten = allInvolved.has(p.id);
@@ -142,7 +143,7 @@ export function proposePiece(piece: Observable<Piece>) {
         GameState.pieces[ix].canThreaten.set(true);
       }
     });
-    endBatch();
+    // endBatch();
   });
 }
 
@@ -193,12 +194,12 @@ export function setMoveScale(scale: number, updateThreats = false) {
 }
 
 export function proposeDirection(direction: Direction) {
-  beginBatch();
+  // beginBatch();
   GameState.proposed.assign({
     direction,
   });
   setMoveScale(GameState.proposed.distance.peek());
-  endBatch();
+  // endBatch();
 }
 
 function applyMove(pieceId: string, position: Position) {
@@ -283,7 +284,7 @@ export async function shareGameId(gameId: string) {
     `https://chess.pyralis.com/?id=${gameId}`,
   )}&st=${encodeURIComponent('ε Chess')}&sd=${encodeURIComponent(
     'A game of chess where the pieces can move partial amounts.',
-  )}si=${encodeURIComponent('https://chess.pyralis.com/social.png')}`;
+  )}&si=${encodeURIComponent('https://chess.pyralis.com/social.png')}`;
   if (Platform.OS === 'web') {
     await Clipboard.setStringAsync(url).then(() => {
       alert('A game link copied to clipboard. Send it to your opponent.');
