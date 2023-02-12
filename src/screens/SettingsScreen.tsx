@@ -40,9 +40,10 @@ export const SettingsScreen = observer(
         ),
       [showActionSheetWithOptions],
     );
-    console.log('RENDER SETTINGS SCREEN', GameSettings.boardSettings.background.get());
+
     const background = GameSettings.boardSettings.background.get();
     const pieceSet = GameSettings.pieceSet.get();
+    const halo = GameSettings.boardSettings.halo.get();
 
     return (
       <SafeAreaView style={styles.settingsContainer}>
@@ -76,7 +77,6 @@ export const SettingsScreen = observer(
             <Switch
               value={background === 'default'}
               onValueChange={(v) => {
-                console.log("SET IT", v);
                 GameSettings.boardSettings.background.set(v ? 'default' : 'none');
               }}
             />
@@ -87,7 +87,7 @@ export const SettingsScreen = observer(
               <ListItem.Title>Show Halo Around Pieces</ListItem.Title>
             </ListItem.Content>
             <Switch
-              value={GameSettings.boardSettings.halo.get()}
+              value={halo}
               onValueChange={(v) => {
                 GameSettings.boardSettings.halo.set(v);
               }}

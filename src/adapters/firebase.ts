@@ -22,14 +22,12 @@ export async function setRemoteDb(ref: string, doc: any) {
 
 export async function assignRemoteDb(ref: string, doc: any) {
   const gameRef = database().ref(ref);
-  console.log('Assign', ref, doc);
   await gameRef.update(doc);
 }
 
 export async function getDbAndNotify(docRef: string, fn: (v: any) => boolean) {
   const gameRef = database().ref(docRef);
   const handler = gameRef.on('value', (snapshot) => {
-    console.log('Got new snapshot', docRef, snapshot.val());
     fn(snapshot.val());
   });
   return () => gameRef.off('value', handler);

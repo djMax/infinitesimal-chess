@@ -131,9 +131,9 @@ function handleBoardPress(x: number, y: number) {
   if (piece instanceof Knight) {
     if (p.direction && p.variant) {
       const scale = piece.getScaleToNearestPoint(p.direction, p.variant, new Position(x, y));
-      //beginBatch();
+      beginBatch();
       setMoveScale(scale, true);
-      //endBatch();
+      endBatch();
     }
     return;
   }
@@ -144,7 +144,7 @@ function handleBoardPress(x: number, y: number) {
     return;
   }
 
-  // beginBatch();
+  beginBatch();
   const dir = piece.availableDirections(g);
   const start = piece.position;
   const end = new Position(x, y);
@@ -158,7 +158,7 @@ function handleBoardPress(x: number, y: number) {
     const perc = Math.sqrt(moveD) / Math.sqrt(maxD);
     setMoveScale(Math.max(0, Math.min(1, perc)), true);
   }
-  // endBatch();
+  endBatch();
 }
 
 export const Board = observer(

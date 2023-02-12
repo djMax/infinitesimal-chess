@@ -3003,7 +3003,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@legendapp/state@npm:^0.23.4":
+"@legendapp/state@npm:0.23.4":
   version: 0.23.4
   resolution: "@legendapp/state@npm:0.23.4"
   peerDependencies:
@@ -3021,6 +3021,27 @@ __metadata:
     react-native-mmkv:
       optional: true
   checksum: 2cb08cbd41073c235e622f445de1eab1d7bb81af34f0da307be3c89bb395920d257bb7e658810080949259ae8b8ab63fe3dcb0ba764fe17d9028f2f2f4feea86
+  languageName: node
+  linkType: hard
+
+"@legendapp/state@patch:@legendapp/state@npm%3A0.23.4#./.yarn/patches/@legendapp-state-npm-0.23.4-86227e883f.patch::locator=infinitesimal-chess%40workspace%3A.":
+  version: 0.23.4
+  resolution: "@legendapp/state@patch:@legendapp/state@npm%3A0.23.4#./.yarn/patches/@legendapp-state-npm-0.23.4-86227e883f.patch::version=0.23.4&hash=b877be&locator=infinitesimal-chess%40workspace%3A."
+  peerDependencies:
+    "@tanstack/react-query": ^4.14.6
+    react: ">=16.8"
+    react-native: ">=0.61"
+    react-native-mmkv: ^2
+  peerDependenciesMeta:
+    "@tanstack/react-query":
+      optional: true
+    react:
+      optional: true
+    react-native:
+      optional: true
+    react-native-mmkv:
+      optional: true
+  checksum: 7a6c2c30151a41a32f4e7bdcfe1f1f00534ee8892b1ffa4fda640c0823f9e9777e12f53a3266bac7e51cf2b226ca3d499ac59be1dfc4c82bf1b74d11621ce49a
   languageName: node
   linkType: hard
 

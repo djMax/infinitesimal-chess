@@ -98,7 +98,7 @@ export function proposePiece(piece: Observable<Piece>) {
     return;
   }
   const d = rawPiece.availableDirections(game);
-  // beginBatch();
+  beginBatch();
   if (game.proposed.pieceId && game.proposed.pieceId !== rawPiece.id) {
     const exPiece = game.pieces.findIndex((p) => p.id === game.proposed.pieceId!);
     GameState.pieces[exPiece].isProposed.set(false);
@@ -112,7 +112,7 @@ export function proposePiece(piece: Observable<Piece>) {
     variant: rawPiece.moveVariants[0],
   });
   piece.isProposed.set(true);
-  // endBatch();
+  endBatch();
 
   console.log('Proposing piece', GameState.peek());
 
@@ -133,7 +133,7 @@ export function proposePiece(piece: Observable<Piece>) {
         });
       }
     });
-    // beginBatch();
+    beginBatch();
     game.pieces.forEach((p, ix) => {
       const canThreaten = p.canThreaten;
       const nowCanThreaten = allInvolved.has(p.id);
@@ -143,7 +143,7 @@ export function proposePiece(piece: Observable<Piece>) {
         GameState.pieces[ix].canThreaten.set(true);
       }
     });
-    // endBatch();
+    endBatch();
   });
 }
 
@@ -194,12 +194,12 @@ export function setMoveScale(scale: number, updateThreats = false) {
 }
 
 export function proposeDirection(direction: Direction) {
-  // beginBatch();
+  beginBatch();
   GameState.proposed.assign({
     direction,
   });
   setMoveScale(GameState.proposed.distance.peek());
-  // endBatch();
+  endBatch();
 }
 
 function applyMove(pieceId: string, position: Position) {

@@ -16,9 +16,9 @@ export const ScaleAdjust = observer(() => {
   const distance = GameState.proposed.distance.get();
   const valid = GameState.proposed.valid.get();
   const slideComplete = React.useCallback((value: number) => {
-    // beginBatch();
+    beginBatch();
     setMoveScale(value, true);
-    // endBatch();
+    endBatch();
   }, []);
 
   const isAi = GameState.ai.get();
