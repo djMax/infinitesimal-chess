@@ -1,6 +1,6 @@
 import { beginBatch, endBatch, Observable } from '@legendapp/state';
 import { For, observer } from '@legendapp/state/react';
-// import { useTraceUpdates } from '@legendapp/state/trace';
+// import { useTraceUpdates, useTraceListeners } from '@legendapp/state/trace';
 import { useTheme } from '@rneui/themed';
 import * as React from 'react';
 import { Platform, Pressable, View, ViewStyle } from 'react-native';
@@ -29,6 +29,7 @@ interface PressablePieceProps {
 
 const PressablePiece = observer(({ piece, size, onPress }: PressablePieceProps) => {
   // useTraceUpdates(piece.peek().id);
+  // useTraceListeners(piece.peek().id);
   const boardSize = GameState.size.get();
   const r = piece.radius.get();
   const pos = piece.position.get();
@@ -122,6 +123,7 @@ function getBoardPosition(x: number, y: number, squareSize: number, boardSize: n
 function handleBoardPress(x: number, y: number) {
   const g = GameState.peek();
   const p = g.proposed;
+
   if (!p.pieceId) {
     return;
   }

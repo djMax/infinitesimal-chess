@@ -34,7 +34,6 @@ export async function setRemoteDb(docRef: string, doc: any) {
 export async function assignRemoteDb(docRef: string, doc: any) {
   const db = getDatabase(app);
   const gameRef = ref(db, docRef);
-  console.log('Assign', docRef, doc);
   return update(gameRef, doc);
 }
 
@@ -42,7 +41,6 @@ export async function getDbAndNotify(docRef: string, fn: (v: any) => boolean) {
   const db = getDatabase(app);
   const gameRef = ref(db, docRef);
   const sub = onValue(gameRef, (snapshot) => {
-    console.log('Got new snapshot', docRef, snapshot.val());
     fn(snapshot.val());
   });
   return sub;

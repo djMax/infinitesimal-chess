@@ -94,12 +94,12 @@ export function completeMove(
 export function proposePiece(piece: Observable<Piece>) {
   const game = GameState.peek();
   const rawPiece = piece.peek();
-  if (game.whiteToMove === piece.black.get() || piece.id.get() === game.proposed.pieceId) {
+  if (game.whiteToMove === rawPiece.black || piece.id.get() === game.proposed.pieceId) {
     return;
   }
   const d = rawPiece.availableDirections(game);
   beginBatch();
-  if (game.proposed.pieceId && game.proposed.pieceId !== piece.id.peek()) {
+  if (game.proposed.pieceId && game.proposed.pieceId !== rawPiece.id) {
     const exPiece = game.pieces.findIndex((p) => p.id === game.proposed.pieceId!);
     GameState.pieces[exPiece].isProposed.set(false);
   }
@@ -114,9 +114,10 @@ export function proposePiece(piece: Observable<Piece>) {
   piece.isProposed.set(true);
   endBatch();
 
+  console.log('Proposing piece', GameState.peek());
+
   requestAnimationFrame(() => {
     const allInvolved = new Set();
-    const rawPiece = piece.peek();
     d.forEach((dir) => {
       // Find the overlapping piece for this direction
       const end = piece.getMaximumMove(game, dir);
@@ -283,7 +284,7 @@ export async function shareGameId(gameId: string) {
     `https://chess.pyralis.com/?id=${gameId}`,
   )}&st=${encodeURIComponent('ε Chess')}&sd=${encodeURIComponent(
     'A game of chess where the pieces can move partial amounts.',
-  )}si=${encodeURIComponent('https://chess.pyralis.com/social.png')}`;
+  )}&si=${encodeURIComponent('https://chess.pyralis.com/social.png')}`;
   if (Platform.OS === 'web') {
     await Clipboard.setStringAsync(url).then(() => {
       alert('A game link copied to clipboard. Send it to your opponent.');

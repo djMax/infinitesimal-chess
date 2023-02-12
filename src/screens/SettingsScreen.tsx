@@ -19,7 +19,6 @@ import { useStyles } from '../styles';
 export const SettingsScreen = observer(
   ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Settings'>) => {
     const { showActionSheetWithOptions } = useActionSheet();
-
     const styles = useStyles();
     const demos = Object.keys(DemoBoards) as (keyof typeof DemoBoards)[];
 
@@ -38,6 +37,10 @@ export const SettingsScreen = observer(
         ),
       [showActionSheetWithOptions],
     );
+
+    const background = GameSettings.boardSettings.background.get();
+    const pieceSet = GameSettings.pieceSet.get();
+    const halo = GameSettings.boardSettings.halo.get();
 
     return (
       <SafeAreaView style={styles.settingsContainer}>
@@ -60,7 +63,7 @@ export const SettingsScreen = observer(
             <ListItem.Content>
               <ListItem.Title>Piece Set</ListItem.Title>
             </ListItem.Content>
-            <Text style={styles.rightText}>{GameSettings.pieceSet.get()}</Text>
+            <Text style={styles.rightText}>{pieceSet}</Text>
             <FontAwesome5 name="chevron-right" size={20} style={styles.chevron} />
           </ListItem>
 
@@ -69,7 +72,7 @@ export const SettingsScreen = observer(
               <ListItem.Title>Show Board Background</ListItem.Title>
             </ListItem.Content>
             <Switch
-              value={GameSettings.boardSettings.background.get() === 'default'}
+              value={background === 'default'}
               onValueChange={(v) => {
                 GameSettings.boardSettings.background.set(v ? 'default' : 'none');
               }}
@@ -81,7 +84,7 @@ export const SettingsScreen = observer(
               <ListItem.Title>Show Halo Around Pieces</ListItem.Title>
             </ListItem.Content>
             <Switch
-              value={GameSettings.boardSettings.halo.get()}
+              value={halo}
               onValueChange={(v) => {
                 GameSettings.boardSettings.halo.set(v);
               }}
