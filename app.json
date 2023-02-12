@@ -2,7 +2,7 @@
   "expo": {
     "name": "ε Chess",
     "slug": "infinitesimal-chess",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "scheme": "infinitesimalchess",
     "icon": "./assets/icon.png",
