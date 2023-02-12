@@ -1,7 +1,6 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { observer } from '@legendapp/state/react';
-// import { useTraceUpdates, useTraceListeners } from '@legendapp/state/trace';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ListItem, Switch, Text } from '@rneui/themed';
 import { AiLevel } from 'js-chess-engine';
@@ -19,8 +18,6 @@ import { useStyles } from '../styles';
 
 export const SettingsScreen = observer(
   ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Settings'>) => {
-    // useTraceListeners('SettingScreen');
-    // useTraceUpdates('SettingScreen');
     const { showActionSheetWithOptions } = useActionSheet();
     const styles = useStyles();
     const demos = Object.keys(DemoBoards) as (keyof typeof DemoBoards)[];
