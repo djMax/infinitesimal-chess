@@ -35,7 +35,7 @@ export const getBaseState = () =>
       isWhite: true,
       opponentName: undefined,
     },
-  } as RawGameState);
+  }) as RawGameState;
 
 export const GameState = observable<RawGameState>({ ...getBaseState() });
 

@@ -15,16 +15,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "googleServicesFile": "./config/GoogleService-Info.plist",
       "bundleIdentifier": "com.pyralis.infinitesimalchess",
-      "associatedDomains": [
-        "applinks:chess.pyralis.com"
-      ],
+      "associatedDomains": ["applinks:chess.pyralis.com"],
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "LSApplicationCategoryType": "public.app-category.board-games"
@@ -49,10 +45,7 @@
               "pathPrefix": "/game"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
       "versionCode": 44
